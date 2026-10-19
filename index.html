@@ -530,10 +530,9 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
 }
 
 @media (min-width:1024px){
-  .side .capture{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:8px}
-  .side .capture .btn.primary{min-height:50px;font-size:15px;gap:6px;padding:0 6px}
-  .side .capture .btnrow{display:contents}
-  .side .capture .btn{min-height:50px;font-size:13px;padding:0 6px;gap:5px;white-space:nowrap}
+  .side .capture{display:flex;flex-direction:column;gap:8px}
+  .side .capture .btnrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .side .capture .btn{font-size:14px;padding:0 8px;gap:6px;white-space:nowrap}
   .side .capture .btn svg{width:18px;height:18px}
   .evalhead{display:none}
   .prep{gap:12px}
@@ -549,7 +548,9 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
   .side .metabox .field input,.side .metabox .daterow .btn{min-height:38px}
   .side .metagrid{gap:6px}
   .side .boxhead b{font-size:13.5px}
-  .side .capture .btn,.side .capture .btn.primary{min-height:44px}
+  .side .capture .btn{min-height:40px}
+  .side .capture .btn.primary{min-height:48px;font-size:17px;gap:8px}
+  .side .capture .btn.primary svg{width:22px;height:22px}
   .side .tips summary{min-height:24px;font-size:13.5px}
   .side details.tips{padding-top:8px}
   .side .hist,.side .evalbox{padding-top:8px;gap:6px}
