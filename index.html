@@ -484,10 +484,11 @@ body.mode-eval #modeBtn{border-color:var(--maroon);color:var(--maroon)}
 .trimtimes b{font-family:var(--f-num);color:var(--ink);font-size:15px}
 .trimtools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .trimtools .btn{white-space:normal;line-height:1.25;min-height:44px;padding:4px 8px}
-.trimact{display:grid;grid-template-columns:1.4fr 1fr auto;gap:10px;align-items:stretch}
+.trimact{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:stretch}
+.trimact .btn.skip{background:var(--surface);color:var(--accent);border:2px solid var(--accent)}
 .trimact .btn.primary{min-height:56px;font-size:17px}
 .trimact .btn.primary svg,#trimSheet h2 svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
-@media (max-width:560px){.trimact{grid-template-columns:1fr 1fr}.trimact .btn.primary{grid-column:1/-1}.trimtools .btn{font-size:12px}}
+@media (max-width:560px){.trimact .btn.primary{font-size:14px;min-height:56px;padding:0 6px;gap:6px;line-height:1.25}.trimact .btn.primary svg{display:none}.trimtools .btn{font-size:12px}}
 .pdfbusy{position:fixed;inset:0;z-index:60;background:rgba(15,12,10,.55);display:grid;place-items:center;padding:20px}
 .pdfbusy>div{background:var(--surface);border-radius:20px;padding:22px 24px;width:min(380px,100%);display:flex;flex-direction:column;gap:12px;text-align:center}
 .pdfhead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:6px 4px 2px;border-bottom:3px solid var(--maroon)}
@@ -497,7 +498,54 @@ body.mode-eval #modeBtn{border-color:var(--maroon);color:var(--maroon)}
 body.pdfmode #results{width:880px;max-width:none}
 body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmpbtn,body.pdfmode #copyBtn,body.pdfmode .novid{display:none!important}
 @media (max-width:560px){.tools .iconbtn{width:46px!important;font-size:8.8px!important}}
-@media (min-width:1024px){.side{max-height:calc(100vh - 100px);overflow-y:auto;overscroll-behavior:contain;border-radius:var(--r)}}
+
+.metabox{display:flex;flex-direction:column;gap:10px;padding:12px 14px;border-radius:14px;background:var(--maroon-soft);border:1.5px solid color-mix(in srgb,var(--maroon) 35%,transparent)}
+.sumprint{white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;font-size:14px;line-height:1.6;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink)}
+@media (min-width:1024px){
+  .prep{gap:14px;padding:18px 20px}
+  .prep-grid{gap:12px}
+  #viewSeg .vimg{height:62px}
+  .btn.primary{min-height:58px}
+  .side .btn{min-height:46px}
+  .field select,.field input,.csel-btn{min-height:48px}
+  .daterow .btn{min-height:48px}
+  .hist,.evalbox{padding-top:10px;gap:8px}
+  .side .rec{font-size:12.5px}
+}
+
+.metabox{gap:8px;padding:10px 12px}
+.metagrid{gap:8px}
+.metabox .field input,.metabox .daterow .btn{min-height:44px}
+.metabox .daterow .btn{padding:0 14px}
+.evalbtns{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.evalbtns .btn.dlpdf{min-height:46px;font-size:14.5px;padding:0 10px;gap:6px}
+.evalbtns .btn.ghost{min-height:46px;font-size:13px}
+@media (min-width:1024px){
+  #viewSeg .vimg{height:44px;margin-bottom:2px}
+  #viewSeg button{padding:6px 6px}
+  body.mode-eval .side .rec{display:none}
+  .side .tips summary{min-height:28px}
+  .side details.tips{padding-top:10px}
+  .capture{gap:8px}
+  .side .btn.primary{min-height:54px;font-size:18px}
+  .side .btnrow .btn{min-height:44px}
+  .modebadge{padding:3px 12px;font-size:12.5px}
+}
+
+@media (min-width:1024px){
+  #viewSeg button{flex-direction:row;flex-wrap:wrap;justify-content:center;column-gap:8px;min-height:60px;text-align:left}
+  #viewSeg button .vimg{height:48px;margin:0}
+  #viewSeg button{display:grid;grid-template-columns:auto auto;grid-template-rows:auto auto;align-content:center;justify-content:center}
+  #viewSeg button .vimg{grid-row:1/3}
+  #viewSeg button small{grid-column:2}
+  .side .capture{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:8px}
+  .side .capture .btn.primary{min-height:50px;font-size:15px;gap:6px;padding:0 6px}
+  .side .capture .btnrow{display:contents}
+  .side .capture .btn{min-height:50px;font-size:13px;padding:0 6px;gap:5px;white-space:nowrap}
+  .side .capture .btn svg{width:18px;height:18px}
+  .evalhead{display:none}
+  .prep{gap:12px}
+}
 </style>
 
 </head>
@@ -511,7 +559,7 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
   <div class="tools">
   <button class="iconbtn" type="button" id="helpBtn" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.2-2.5 3.8"/><circle cx="12" cy="17.2" r=".6" fill="currentColor"/></svg><span class="lbl">사용 방법</span></button>
   <button class="iconbtn" type="button" id="themeBtn"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"></svg><span class="lbl"></span></button>
-  <button class="iconbtn" type="button" id="modeBtn"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M4 7h13l-3-3M20 17H7l3 3"/></svg><span class="lbl">수행평가 모드</span></button>
+  <button class="iconbtn" type="button" id="modeBtn"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M4 7h13l-3-3M20 17H7l3 3"/></svg><span class="lbl">평가 모드</span></button>
   <button class="iconbtn" type="button" id="openSettings" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.5 7.5 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.6 7.6 0 0 0-1.7-1L15 3.5h-4L10.7 6a7.6 7.6 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7.5 7.5 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7.6 7.6 0 0 0 1.7 1l.3 2.5h4l.3-2.5a7.6 7.6 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6ZM13 15.5A3.5 3.5 0 1 1 13 8.5a3.5 3.5 0 0 1 0 7Z" transform="translate(-1 0)"/></svg><span class="lbl">채점 기준</span></button>
   </div>
 </header>
@@ -525,6 +573,15 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
       <div class="selrow full">
         <div class="field"><label for="sport">종목</label><select id="sport"></select></div>
         <div class="field"><label for="motion">자세</label><select id="motion"></select></div>
+      </div>
+      <div class="metabox full" id="metaBox" hidden>
+        <div class="boxhead"><b>학생 정보</b><span class="note">날짜·학번·이름 입력 후 촬영</span></div>
+        <div class="metagrid">
+          <div class="field mdate"><label for="mDate" class="sr">날짜</label><div class="daterow"><input type="date" id="mDate" aria-label="날짜"><button class="btn small" type="button" id="mToday">오늘</button></div></div>
+          <div class="field"><label for="mNo" class="sr">학번</label><input type="text" id="mNo" inputmode="numeric" autocomplete="off" placeholder="학번 (예: 10101)"></div>
+          <div class="field"><label for="mName" class="sr">이름</label><input type="text" id="mName" autocomplete="off" placeholder="이름"></div>
+        </div>
+        <p class="fberr" id="metaErr" hidden>날짜, 학번, 이름을 먼저 입력해 주세요.</p>
       </div>
       <div class="field"><span class="flabel" id="viewLbl">촬영 방향</span>
         <div class="seg" role="radiogroup" aria-labelledby="viewLbl" id="viewSeg">
@@ -550,21 +607,13 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
     </details>
     <div class="hist" id="histBox">
       <div class="boxhead"><b>분석 기록</b><span class="cnt" id="histCnt"></span><button class="btn small ghost" type="button" id="histClear" hidden>기록 지우기</button></div>
-      <ol class="histlist" id="histList"></ol>
-      <p class="note" id="histEmpty">분석한 영상이 여기에 순서대로 쌓여요.<br>누르면 그 결과를 다시 볼 수 있어요.</p>
+      <div class="field"><label for="histSel" class="sr">분석 기록 선택</label><select id="histSel"></select></div>
     </div>
     <div class="evalbox" id="evalBox" hidden>
-      <div class="boxhead"><b>학생 정보</b><span class="note">입력 후 촬영하세요</span></div>
-      <div class="metagrid">
-        <div class="field mdate"><label for="mDate">날짜</label><div class="daterow"><input type="date" id="mDate"><button class="btn small" type="button" id="mToday">오늘</button></div></div>
-        <div class="field"><label for="mNo">학번</label><input type="text" id="mNo" inputmode="numeric" autocomplete="off" placeholder="예) 10101"></div>
-        <div class="field"><label for="mName">이름</label><input type="text" id="mName" autocomplete="off" placeholder="예) 김철수"></div>
-      </div>
-      <p class="fberr" id="metaErr" hidden>날짜, 학번, 이름을 먼저 입력해 주세요.</p>
-      <div class="boxhead" style="margin-top:6px"><b>평가 기록</b><span class="cnt" id="evalCnt"></span></div>
+      <div class="boxhead evalhead"><b>평가 기록</b><span class="cnt" id="evalCnt"></span></div>
       <div class="field"><label for="evalSel" class="sr">평가 기록 선택</label><select id="evalSel"></select></div>
-      <div class="evalbtns"><button class="btn primary dlpdf" type="button" id="evalPdf"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>전체 결과 PDF 다운로드</button><button class="btn small ghost" type="button" id="evalClear">목록 비우기</button></div>
-      <p class="note" id="evalMsg">평가 기록은 이 기기에만 저장되고 다른 곳으로 전송되지 않아요.</p>
+      <div class="evalbtns"><button class="btn primary dlpdf" type="button" id="evalPdf"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>전체 PDF 다운로드</button><button class="btn small ghost" type="button" id="evalClear">목록 비우기</button></div>
+      <p class="note" id="evalMsg" hidden></p>
     </div>
     <div class="privacy"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10V8a5 5 0 0 1 10 0v2h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h1Zm2 0h6V8a3 3 0 0 0-6 0v2Z"/></svg>영상은 이 기기에서만 분석되고 저장·전송되지 않아요</div>
   </section>
@@ -573,13 +622,13 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
 <main class="work" id="work">
   <section class="card" id="trimSheet" hidden>
     <h2><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg>분석할 구간 자르기</h2>
-    <p class="trimguide">분석하고 싶은 동작 부분만 남겨 주세요.<br>녹화 버튼을 누르러 오가는 장면이 들어가면 분석 정확도가 떨어져요. 자를 필요가 없으면 <b>건너뛰기</b>를 누르세요.</p>
+    <p class="trimguide">분석하고 싶은 동작 부분만 남겨 주세요.<br>녹화 버튼을 누르러 오가는 장면이 들어가면 분석 정확도가 떨어져요. 자를 필요가 없으면 <b>바로 분석하기(건너뛰기)</b>를 누르세요.</p>
     <div class="trimplayer"><video id="trimVid" playsinline muted controls preload="auto"></video></div>
     <div class="trimbar" id="trimBar"><div class="tsel" id="tSel"></div><div class="tnow" id="tNow"></div><button type="button" class="th" id="thA" aria-label="시작 지점"></button><button type="button" class="th" id="thB" aria-label="끝 지점"></button></div>
     <div class="trimtimes"><span>시작 <b id="tA">0.0초</b></span><span>길이 <b id="tLen">0.0초</b></span><span>끝 <b id="tB">0.0초</b></span></div>
-    <div class="trimtools"><button class="btn small" type="button" id="setA">지금 위치를 시작으로</button><button class="btn small" type="button" id="playSel">선택 구간 재생</button><button class="btn small" type="button" id="setB">지금 위치를 끝으로</button></div>
+    <div class="trimtools"><button class="btn small" type="button" id="setA">지금 위치를 시작으로</button><button class="btn small" type="button" id="setB">지금 위치를 끝으로</button><button class="btn small" type="button" id="playSel">선택 구간 재생</button></div>
     <p class="note" id="trimNote">분석은 최대 15초까지 할 수 있어요.</p>
-    <div class="trimact"><button class="btn primary" type="button" id="trimGo"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg>자르고 분석하기</button><button class="btn" type="button" id="trimSkip">건너뛰기 (전체 분석)</button><button class="btn small ghost" type="button" id="trimCancel">취소</button></div>
+    <div class="trimact"><button class="btn primary" type="button" id="trimGo"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg>자르고 분석하기</button><button class="btn primary skip" type="button" id="trimSkip">바로 분석하기(건너뛰기)</button></div>
   </section>
 
   <section class="card" id="progSheet" hidden>
@@ -636,7 +685,7 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
 
     <section class="card">
       <div class="sec-head"><h2><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>결과 요약</h2><button class="btn small" id="copyBtn" type="button">요약 복사</button></div>
-      <textarea id="summary" readonly aria-label="결과 요약"></textarea>
+      <textarea id="summary" readonly aria-label="결과 요약"></textarea><div class="sumprint" id="sumPrint" hidden></div>
       <p class="note">복사해서 과제 제출란이나 기록지에 붙여 넣으세요.<br>자동 분석 결과는 교사의 최종 판단을 돕는 참고 자료예요.</p>
     </section>
   </div>
@@ -670,7 +719,7 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
     <li><div><b>종목·자세 고르기</b><span>왼쪽에서 종목과 자세를 골라요.<br>오른쪽에 기준 자세 그림과 채점 항목이 나와요.</span></div></li>
     <li class="sub"><div><b>채점 기준(수행평가) 설정하기</b><span>오른쪽 위 '채점 기준'에서 일치·부분 일치 기준 점수, 등급 구간, 기준 난이도(학생용·선수용)를 정해요.<br>설정은 이 기기에 저장되고, 맨 아래에서 평가 기준표(PDF)도 내려받을 수 있어요.<br>*채점 기준을 설정하지 않아도 동작분석을 사용할 수 있어요.</span></div></li>
     <li><div><b>촬영 방향 정하기</b><span>측면 또는 정면을 골라요.<br>추천 방향으로 찍으면 더 정확해요.</span></div></li>
-    <li><div><b>촬영하거나 영상 올리기</b><span>'촬영하기'는 뒤 카메라, '셀프 촬영'은 앞 카메라로 찍어요.<br>찍어 둔 영상은 '영상 불러오기'로 올려요.<br>전신이 나오게, 한 사람만, 3~8초로 찍어요.<br>찍은 뒤에는 분석할 동작 구간만 남기도록 자르고, 필요 없으면 '건너뛰기'를 눌러요.</span></div></li>
+    <li><div><b>촬영하거나 영상 올리기</b><span>'촬영하기'는 뒤 카메라, '셀프 촬영'은 앞 카메라로 찍어요.<br>찍어 둔 영상은 '영상 불러오기'로 올려요.<br>전신이 나오게, 한 사람만, 3~8초로 찍어요.<br>찍은 뒤에는 분석할 동작 구간만 남기도록 자르고, 필요 없으면 '바로 분석하기(건너뛰기)'를 눌러요.</span></div></li>
     <li><div><b>결과 확인하기</b><span>기준 자세와의 일치율과 등급, 수정할 동작과 잘한 동작을 확인해요.</span></div></li>
     <li><div><b>영상으로 비교하기</b><span>'내 동작 다시 보기'의 '피드백' 탭과 항목별 '영상에서 확인하기'로 기준값(초록)과 내 값(노랑)을 비교해요.</span></div></li>
     <li><div><b>다른 방향·결과 저장</b><span>'다른 방향으로 분석하기'로 같은 영상을 다시 채점할 수 있어요.<br>'요약 복사'로 결과를 제출란에 붙여 넣어요.</span></div></li>
@@ -2134,6 +2183,9 @@ $('#helpBtn').onclick=openHelp;$('#closeHelp').onclick=closeHelp;
 $('#openSettings').onclick=openDrawer;$('#closeSettings').onclick=closeDrawer;$('#scrim').onclick=()=>{if(!$('#fbBox').hidden)closeFb();else if(!$('#helpBox').hidden)closeHelp();else closeDrawer()};
 document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(document.querySelector('#fbBox .csel.open'))return;if(!$('#fbBox').hidden)closeFb();else if(!$('#helpBox').hidden)closeHelp();else if(!$('#drawer').hidden)closeDrawer()});
 $('#againBtn').onclick=()=>$('#camBack').click();
+/* 왼쪽 패널 고정: 화면보다 길면 아래 끝이 보이는 위치에서 멈춤 */
+(function(){const side=$('#drop');const fit=()=>{if(innerWidth<1024){side.style.top='';return}const h=side.offsetHeight;const top=84;side.style.top=Math.min(top,innerHeight-h-12)+'px'};
+  try{new ResizeObserver(fit).observe(side)}catch(e){}addEventListener('resize',fit);fit()})();
 /* ================= 촬영 요령 펼치기 ================= */
 $('#tips').addEventListener('toggle',()=>{$('#tipState').textContent=$('#tips').open?'(접기)':'(펼치기)'});
 
@@ -2150,9 +2202,9 @@ const VIDS={};let ENTRIES=[];
 let MODE=store.get('pe.mode','class');if(MODE!=='eval')MODE='class';
 function applyMode(){document.body.classList.toggle('mode-eval',MODE==='eval');
   $('#modeBadge').textContent=MODE==='eval'?'수행평가 모드':'체육수업 모드';
-  $('#modeBtn .lbl').textContent=MODE==='eval'?'수업 모드':'수행평가 모드';
+  $('#modeBtn .lbl').textContent=MODE==='eval'?'수업 모드':'평가 모드';
   $('#modeBtn').setAttribute('aria-label',(MODE==='eval'?'체육수업':'수행평가')+' 모드로 바꾸기');
-  $('#histBox').hidden=MODE==='eval';$('#evalBox').hidden=MODE!=='eval';renderLists()}
+  $('#histBox').hidden=MODE==='eval';$('#evalBox').hidden=MODE!=='eval';$('#metaBox').hidden=MODE!=='eval';renderLists()}
 $('#modeBtn').onclick=()=>{MODE=MODE==='eval'?'class':'eval';store.set('pe.mode',MODE);applyMode();hideResults()};
 
 /* 학생 정보 */
@@ -2164,7 +2216,7 @@ function readMeta(){return{date:$('#mDate').value,no:$('#mNo').value.trim(),name
 function metaErrOff(){$('#metaErr').hidden=true}
 ['#mNo','#mName','#mDate'].forEach(q=>$(q).addEventListener('input',metaErrOff));
 function metaOk(){if(MODE!=='eval')return true;const m=readMeta();if(m.date&&m.no&&m.name)return true;
-  $('#metaErr').hidden=false;const q=!m.date?'#mDate':!m.no?'#mNo':'#mName';$(q).focus();$('#evalBox').scrollIntoView({block:'center',behavior:'smooth'});return false}
+  $('#metaErr').hidden=false;const q=!m.date?'#mDate':!m.no?'#mNo':'#mName';$(q).focus();$('#metaBox').scrollIntoView({block:'center',behavior:'smooth'});return false}
 document.querySelectorAll('label[for="camBack"],label[for="camSelf"],label[for="file"]').forEach(l=>l.addEventListener('click',e=>{if(!metaOk()){e.preventDefault();e.stopPropagation()}},true));
 
 /* 기록 저장 · 목록 */
@@ -2178,14 +2230,14 @@ async function saveEntry(ev){const id='e'+Date.now().toString(36)+Math.random().
   renderLists();markHist(id)}
 function entryLabel(e){const m=MOTION[e.sp+'.'+e.mo];return`${m?m.sport.name+' '+m.name:'동작'} · ${VIEWNAME[e.view]}`}
 function renderLists(){const cls=ENTRIES.filter(e=>e.mode==='class'),ev=ENTRIES.filter(e=>e.mode==='eval');
-  $('#histList').innerHTML=cls.map((e,i)=>`<li><button type="button" data-id="${e.id}"><span class="n">${i+1}</span><span class="t"><b>${entryLabel(e)}</b><small>${new Date(e.ts).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})} ${fmtTime(e.ts)}</small></span><span class="sc">${e.total}%</span></button></li>`).join('');
-  $('#histCnt').textContent=cls.length?cls.length+'개':'';$('#histEmpty').hidden=!!cls.length;$('#histClear').hidden=!cls.length;
-  $('#histList').querySelectorAll('button').forEach(b=>b.onclick=()=>showEntry(b.dataset.id));
-  const sel=$('#evalSel');sel.innerHTML=`<option value="">${ev.length?'기록을 골라 결과 보기':'아직 평가 기록이 없어요'}</option>`+ev.map((e,i)=>`<option value="${e.id}">${i+1}. ${e.meta?`${e.meta.date} · ${e.meta.no} ${e.meta.name}`:''} · ${entryLabel(e)} · ${e.total}%</option>`).join('');
+  const hs=$('#histSel');hs.innerHTML=`<option value="">${cls.length?'기록을 골라 결과 다시 보기':'분석한 영상이 여기에 순서대로 쌓여요'}</option>`+cls.map((e,i)=>`<option value="${e.id}">${i+1}. ${new Date(e.ts).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})} ${fmtTime(e.ts)} · ${entryLabel(e)} · ${e.total}%</option>`).join('');
+  if(last&&last.entryId&&cls.some(e=>e.id===last.entryId))hs.value=last.entryId;hs._refresh&&hs._refresh();
+  $('#histCnt').textContent=cls.length?cls.length+'개':'';$('#histClear').hidden=!cls.length;
+  const sel=$('#evalSel');sel.innerHTML=`<option value="">${ev.length?`평가 기록 ${ev.length}명 · 골라서 결과 보기`:'평가 기록이 아직 없어요'}</option>`+ev.map((e,i)=>`<option value="${e.id}">${i+1}. ${e.meta?`${e.meta.date} · ${e.meta.no} ${e.meta.name}`:''} · ${entryLabel(e)} · ${e.total}%</option>`).join('');
   if(last&&last.entryId&&ev.some(e=>e.id===last.entryId))sel.value=last.entryId;sel._refresh&&sel._refresh();
   $('#evalCnt').textContent=ev.length?ev.length+'명':'';$('#evalPdf').disabled=!ev.length}
-function markHist(id){$('#histList').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));const s=$('#evalSel');if(id&&[...s.options].some(o=>o.value===id)){s.value=id;s._refresh&&s._refresh()}}
-$('#evalSel').addEventListener('change',e=>{if(e.target.value)showEntry(e.target.value)});
+function markHist(id){['#evalSel','#histSel'].forEach(q=>{const s=$(q);if(id&&[...s.options].some(o=>o.value===id)){s.value=id;s._refresh&&s._refresh()}})}
+['#evalSel','#histSel'].forEach(q=>$(q).addEventListener('change',e=>{if(e.target.value)showEntry(e.target.value)}));
 function twoTap(btn,label,fn){let armed=false,t=null;btn.onclick=()=>{if(!armed){armed=true;btn.textContent='한 번 더 누르면 지워져요';t=setTimeout(()=>{armed=false;btn.textContent=label},2500);return}clearTimeout(t);armed=false;btn.textContent=label;fn()}}
 twoTap($('#histClear'),'기록 지우기',async()=>{const ids=ENTRIES.filter(e=>e.mode==='class').map(e=>e.id);await DB.del(ids);ENTRIES=ENTRIES.filter(e=>!ids.includes(e.id));ids.forEach(id=>delete VIDS[id]);renderLists();if(last&&ids.includes(last.entryId))hideResults()});
 twoTap($('#evalClear'),'목록 비우기',async()=>{const ids=ENTRIES.filter(e=>e.mode==='eval').map(e=>e.id);await DB.del(ids);ENTRIES=ENTRIES.filter(e=>!ids.includes(e.id));ids.forEach(id=>delete VIDS[id]);renderLists();if(last&&ids.includes(last.entryId))hideResults()});
@@ -2229,7 +2281,7 @@ function closeTrim(){$('#trimSheet').hidden=true;const v=$('#trimVid');v.pause()
   $('#playSel').onclick=()=>{TRIM.loop=true;v.currentTime=TRIM.a;v.play().catch(()=>{})};
   $('#trimGo').onclick=()=>{if(!metaOk())return;const f=TRIM.file;const r={t0:TRIM.a,t1:TRIM.b};closeTrim();setProg('자른 구간을 불러오는 중…',0.01);runStudent(f,TRIM.dur?r:null)};
   $('#trimSkip').onclick=()=>{if(!metaOk())return;const f=TRIM.file;closeTrim();setProg('촬영한 영상을 불러오는 중…',0.01);runStudent(f,null)};
-  $('#trimCancel').onclick=()=>{closeTrim();setStep(1)};})();
+})();
 
 /* ================= 수행평가 전체 PDF ================= */
 function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('PDF 도구를 불러오지 못했어요. 인터넷 연결을 확인해 주세요.'));document.head.appendChild(s)})}
@@ -2252,10 +2304,10 @@ function pdfFromJpegs(pages){const enc=new TextEncoder();const parts=[];let len=
   return new Blob(parts,{type:'application/pdf'})}
 const b64u8=d=>{const b=atob(d.split(',')[1]);const u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u};
 function inlineSvgPaint(root){root.querySelectorAll('svg *').forEach(el=>{const cs=getComputedStyle(el);['stroke','fill'].forEach(k=>{const v=cs[k];if(v&&v!=='none'&&!/url\(/.test(v))el.style[k]=v})})}
-async function captureResults(h2c){const R=$('#results');const ta=$('#summary');ta.style.height=ta.scrollHeight+4+'px';inlineSvgPaint(R);
+async function captureResults(h2c){const R=$('#results');const ta=$('#summary');const sp=$('#sumPrint');sp.textContent=ta.value;sp.hidden=false;ta.hidden=true;inlineSvgPaint(R);
   const S=1.6;const bg=getComputedStyle(document.body).backgroundColor;
   const cv=await h2c(R,{scale:S,backgroundColor:bg,useCORS:true,logging:false,windowWidth:1180,ignoreElements:el=>el.classList&&(el.classList.contains('replay')||el.classList.contains('cmpbtn')||el.classList.contains('resbtns')||el.id==='fbBar'||el.id==='copyBtn'||el.id==='noVid')});
-  ta.style.height='';
+  ta.hidden=false;sp.hidden=true;
   const top=R.getBoundingClientRect().top;const cuts=[...R.children].filter(c=>!c.hidden&&c.offsetHeight).map(c=>(c.getBoundingClientRect().bottom-top)*S);
   const pageH=Math.floor(cv.width*(841.89-44)/(595.28-44));const out=[];let y=0;
   while(y<cv.height-2){let end=Math.min(cv.height,y+pageH);if(end<cv.height){const ok=cuts.filter(c=>c>y+pageH*0.35&&c<=y+pageH);if(ok.length)end=Math.ceil(Math.max(...ok))+Math.round(10*S)}
@@ -2274,11 +2326,11 @@ $('#evalPdf').onclick=async()=>{const list=ENTRIES.filter(e=>e.mode==='eval');if
       ph.innerHTML=`<div><h2>수행평가 동작분석 결과</h2><span class="note">급식대장의 동작분석 · ${m.sport.name} ${m.name} (${VIEWNAME[e.view]})</span></div><div class="who">${e.meta?`${e.meta.no} ${e.meta.name}<small>${e.meta.date}</small>`:''}</div>`;ph.hidden=false;
       await new Promise(r=>setTimeout(r,120));pages.push(...await captureResults(h2c));ph.hidden=true}
     $('#pdfBar').style.width='100%';const blob=pdfFromJpegs(pages);const d=list[0].meta&&list[0].meta.date||today();
-    const r=await savePdf(blob,`수행평가_동작분석_${d}_${list.length}명.pdf`);msg.textContent=r==='saved'?`${list.length}명의 결과를 PDF로 저장했어요.`:'저장을 취소했어요.'}
-  catch(err){console.error(err);msg.textContent=err.message||'PDF를 만들지 못했어요.'}
+    const r=await savePdf(blob,`수행평가_동작분석_${d}_${list.length}명.pdf`);msg.hidden=false;msg.textContent=r==='saved'?`${list.length}명의 결과를 PDF로 저장했어요.`:'저장을 취소했어요.'}
+  catch(err){console.error(err);msg.hidden=false;msg.textContent=err.message||'PDF를 만들지 못했어요.'}
   finally{document.body.classList.remove('pdfmode');$('#pdfHead').hidden=true;if(keepTheme)document.documentElement.dataset.theme=keepTheme;else delete document.documentElement.dataset.theme;
     ov.hidden=true;if(keepId)await showEntry(keepId,{quiet:true});else hideResults();if(last)drawChart(last)}};
-enhanceSelect($('#evalSel'));applyMode();
+enhanceSelect($('#evalSel'));enhanceSelect($('#histSel'));applyMode();
 
 /* 평가 기준표 다운로드 */
 $('#dlRubric').onclick=async()=>{const msg=$('#dlMsg');const btn=$('#dlRubric');msg.hidden=true;
