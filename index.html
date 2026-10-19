@@ -663,9 +663,10 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
 
 .metabox .manual{flex:1 1 0;min-width:0}
 .metabox .manual input{width:100%;font-size:13px;padding:0 8px;letter-spacing:-.02em}
-.metabox .manual input::placeholder{font-size:12.5px}
-.metabox #mNo{font-family:var(--f-num)}.metabox .manual:has(#mNo){flex:.8 1 0}.metabox .manual:has(#mName){flex:1.2 1 0}
-@media (max-width:380px){.metabox .manual input{padding:0 5px!important;font-size:12px!important}.metabox .field input[type=date]{width:80px}.metabox .dlabel{font-size:12px;padding:0 6px}.metabox .daterow .btn{padding:0 6px;font-size:12px}.metabox .manual input{font-size:12px;padding:0 6px}}
+.metabox .manual input::placeholder{font-size:var(--phf,12.5px);letter-spacing:-.03em}
+.metabox .manual:has(#mNo:placeholder-shown){flex:1.5 1 0}.metabox .manual:has(#mNo:placeholder-shown)~.manual:has(#mName:placeholder-shown){flex:.7 1 0}
+.metabox #mNo{font-family:var(--f-num)}.metabox .manual:has(#mNo){flex:.8 1 0}.metabox .manual:has(#mName){flex:1.2 1 0;min-width:40px}
+@media (max-width:380px){.metabox .manual input{padding:0 5px!important;font-size:12px!important}.metabox .field input[type=date]{width:76px}.metabox .dlabel{font-size:12px;padding:0 6px}.metabox .daterow .btn{padding:0 6px;font-size:12px}.metabox .manual input{font-size:12px;padding:0 6px}}
 </style>
 
 </head>
@@ -699,7 +700,7 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
         <div class="metagrid">
           <div class="field mdate"><label for="mDate" class="sr">날짜</label><div class="daterow"><span class="dwrap"><input type="date" id="mDate" aria-label="날짜"><span class="dlabel" id="mDateLbl" aria-hidden="true"></span></span><button class="btn small" type="button" id="mToday">오늘</button></div></div>
           <div class="field stuwrap" id="stuRow" hidden><label for="mStu" class="sr">학생 선택</label><select id="mStu"></select></div>
-          <div class="field manual"><label for="mNo" class="sr">학번</label><input type="text" id="mNo" inputmode="numeric" autocomplete="off" placeholder="학번"></div>
+          <div class="field manual"><label for="mNo" class="sr">학번</label><input type="text" id="mNo" inputmode="numeric" autocomplete="off" placeholder="학번 (예: 10101)"></div>
           <div class="field manual"><label for="mName" class="sr">이름</label><input type="text" id="mName" autocomplete="off" placeholder="이름"></div>
         </div>
         <p class="fberr" id="metaErr" hidden>날짜, 학번, 이름을 먼저 입력해 주세요.</p>
@@ -2365,7 +2366,7 @@ function applyMode(){document.body.classList.toggle('mode-eval',MODE==='eval');
   $('#modeBadge').textContent=MODE==='eval'?'수행평가 모드':'체육수업 모드';
   $('#modeBtn .lbl').textContent=MODE==='eval'?'수업 모드':'평가 모드';
   $('#modeBtn').setAttribute('aria-label',(MODE==='eval'?'체육수업':'수행평가')+' 모드로 바꾸기');
-  $('#histBox').hidden=MODE==='eval';$('#evalBox').hidden=MODE!=='eval';$('#metaBox').hidden=MODE!=='eval';$('#reloadWarn').hidden=false;$('#warnKind').textContent=MODE==='eval'?'평가기록':'분석기록';syncNextBtn();requestAnimationFrame(()=>{typeof fitWarn==='function'&&fitWarn();typeof fitStu==='function'&&fitStu()});renderLists()}
+  $('#histBox').hidden=MODE==='eval';$('#evalBox').hidden=MODE!=='eval';$('#metaBox').hidden=MODE!=='eval';$('#reloadWarn').hidden=false;$('#warnKind').textContent=MODE==='eval'?'평가기록':'분석기록';syncNextBtn();requestAnimationFrame(()=>{typeof fitWarn==='function'&&fitWarn();typeof fitStu==='function'&&fitStu();window.fitPh&&window.fitPh()});renderLists()}
 $('#modeBtn').onclick=()=>{MODE=MODE==='eval'?'class':'eval';store.set('pe.mode',MODE);applyMode();hideResults()};
 
 /* 학생 정보 */
@@ -2569,7 +2570,9 @@ function renderStuSel(){const s=$('#mStu');const keep=s.value||store.get('pe.stu
   if(ROSTER.some(st=>stuKey(st)===keep))s.value=keep;s._refresh&&s._refresh();
   const on=ROSTER.length>0;$('#stuRow').hidden=!on;$('#metaBox').classList.toggle('roster',on);syncNextBtn();requestAnimationFrame(fitStu)}
 function fitStu(){const b=$('#mStuBtn');if(!b||b.offsetParent===null)return;const sp=b.querySelector('span')||b;let f=13.5;b.style.setProperty('--sf',f+'px');while(sp.scrollWidth>sp.clientWidth&&f>10){f-=0.5;b.style.setProperty('--sf',f+'px')}}
-window.fitStu=fitStu;addEventListener('resize',()=>fitStu());document.fonts&&document.fonts.ready.then(()=>fitStu());$('#mStu').addEventListener('change',()=>requestAnimationFrame(fitStu));
+window.fitStu=fitStu;
+function fitPh(){const el=$('#mNo');if(!el||el.offsetParent===null)return;const cs=getComputedStyle(el);const c=fitPh.c||(fitPh.c=document.createElement('canvas').getContext('2d'));c.font=`${cs.fontWeight} 12.5px ${cs.fontFamily}`;const tw=c.measureText(el.placeholder).width;const room=el.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight)-2;el.style.setProperty('--phf',Math.max(7,Math.min(12.5,12.5*room/tw)).toFixed(2)+'px')}
+addEventListener('resize',fitPh);['input','blur'].forEach(t=>$('#mNo').addEventListener(t,()=>requestAnimationFrame(fitPh)));window.fitPh=fitPh;addEventListener('resize',()=>fitStu());document.fonts&&document.fonts.ready.then(()=>fitStu());$('#mStu').addEventListener('change',()=>requestAnimationFrame(fitStu));
 $('#mStu').addEventListener('change',()=>{store.set('pe.stu',$('#mStu').value);$('#metaErr').hidden=true});
 function renderRoster(){$('#rCnt').textContent=ROSTER.length?ROSTER.length+'명':'';
   $('#rList').innerHTML=ROSTER.map((st,i)=>`<div class="rrow"><span><b>${st.g}학년 ${st.c}반 ${st.n}번</b> ${st.name.replace(/[<>&]/g,'')}</span><button type="button" data-i="${i}" aria-label="삭제">×</button></div>`).join('');
