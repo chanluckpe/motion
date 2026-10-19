@@ -504,7 +504,6 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
 @media (min-width:1024px){
   .prep{gap:14px;padding:18px 20px}
   .prep-grid{gap:12px}
-  #viewSeg .vimg{height:62px}
   .btn.primary{min-height:58px}
   .side .btn{min-height:46px}
   .field select,.field input,.csel-btn{min-height:48px}
@@ -521,8 +520,6 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
 .evalbtns .btn.dlpdf{min-height:46px;font-size:14.5px;padding:0 10px;gap:6px}
 .evalbtns .btn.ghost{min-height:46px;font-size:13px}
 @media (min-width:1024px){
-  #viewSeg .vimg{height:44px;margin-bottom:2px}
-  #viewSeg button{padding:6px 6px}
   body.mode-eval .side .rec{display:none}
   .side .tips summary{min-height:28px}
   .side details.tips{padding-top:10px}
@@ -533,11 +530,6 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
 }
 
 @media (min-width:1024px){
-  #viewSeg button{flex-direction:row;flex-wrap:wrap;justify-content:center;column-gap:8px;min-height:60px;text-align:left}
-  #viewSeg button .vimg{height:48px;margin:0}
-  #viewSeg button{display:grid;grid-template-columns:auto auto;grid-template-rows:auto auto;align-content:center;justify-content:center}
-  #viewSeg button .vimg{grid-row:1/3}
-  #viewSeg button small{grid-column:2}
   .side .capture{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:8px}
   .side .capture .btn.primary{min-height:50px;font-size:15px;gap:6px;padding:0 6px}
   .side .capture .btnrow{display:contents}
@@ -545,6 +537,26 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
   .side .capture .btn svg{width:18px;height:18px}
   .evalhead{display:none}
   .prep{gap:12px}
+}
+
+@media (min-width:1024px){
+  .side .prep{padding:14px 18px;gap:10px}
+  .side .prep-grid{gap:10px}
+  .side .field{gap:4px}
+  .side .field label,.side .flabel{font-size:12px}
+  .side .csel-btn,.side .field input{min-height:40px;font-size:15px;border-radius:12px}
+  .side .metabox{padding:8px 10px;gap:6px}
+  .side .metabox .field input,.side .metabox .daterow .btn{min-height:38px}
+  .side .metagrid{gap:6px}
+  .side .boxhead b{font-size:13.5px}
+  .side .capture .btn,.side .capture .btn.primary{min-height:44px}
+  .side .tips summary{min-height:24px;font-size:13.5px}
+  .side details.tips{padding-top:8px}
+  .side .hist,.side .evalbox{padding-top:8px;gap:6px}
+  .side .evalbtns .btn{min-height:40px}
+  .side .privacy{font-size:11.5px}
+  .side .rec{font-size:12px;line-height:1.45}
+  .modebadge{padding:2px 12px;font-size:12px}
 }
 </style>
 
