@@ -518,7 +518,7 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
 .metabox .daterow .btn{padding:0 14px}
 .evalbtns{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
 .evalbtns .btn.dlpdf{min-height:46px;font-size:14.5px;padding:0 10px;gap:6px}
-.evalbtns .btn.ghost{min-height:46px;font-size:13px}
+.evalbtns .btn.ghost{min-height:46px;font-size:13px}.evalbtns .btn{white-space:nowrap}@media (max-width:420px){.evalbtns .btn.dlpdf{font-size:13.5px;padding:0 8px;gap:4px}.evalbtns .btn.ghost{font-size:12.5px;padding:0 10px}}
 @media (min-width:1024px){
   body.mode-eval .side .rec{display:none}
   .side .tips summary{min-height:28px}
@@ -609,7 +609,7 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
 .gradestat b{display:flex;gap:5px;flex-wrap:nowrap;font-size:14px!important;margin-top:4px}
 .gradestat i{font-style:normal;padding:2px 8px;border-radius:8px;background:var(--surface);font-family:var(--f-num)}
 .sumtable{width:100%;border-collapse:collapse;font-size:13px;line-height:1.35;table-layout:fixed}
-.sumtable th:nth-child(1){width:5%}.sumtable th:nth-child(2){width:4.5%}.sumtable th:nth-child(3){width:5%}.sumtable th:nth-child(4){width:10%}.sumtable th:nth-child(5){width:13%}.sumtable th:nth-child(6){width:7%}.sumtable th:nth-child(7){width:5%}.sumtable th:nth-child(8){width:7%}.sumtable th:nth-child(9){width:6%}.sumtable th:nth-child(10){width:5.5%}.sumtable th:nth-child(11){width:16%}.sumtable th:nth-child(12){width:10%}.sumtable th:nth-child(13){width:6%}
+.sumtable.cls th:nth-child(1){width:8%}.sumtable.cls th:nth-child(2){width:18%}.sumtable.cls th:nth-child(3){width:24%}.sumtable.cls th:nth-child(4){width:10%}.sumtable.cls th:nth-child(5){width:7%}.sumtable.cls th:nth-child(6){width:9%}.sumtable.cls th:nth-child(7){width:8%}.sumtable.cls th:nth-child(8){width:10%}.sumtable.cls th:nth-child(9){width:6%}.sumtable:not(.cls) th:nth-child(1){width:5%}.sumtable:not(.cls) th:nth-child(2){width:4.5%}.sumtable:not(.cls) th:nth-child(3){width:5%}.sumtable:not(.cls) th:nth-child(4){width:10%}.sumtable:not(.cls) th:nth-child(5){width:13%}.sumtable:not(.cls) th:nth-child(6){width:7%}.sumtable:not(.cls) th:nth-child(7){width:5%}.sumtable:not(.cls) th:nth-child(8){width:7%}.sumtable:not(.cls) th:nth-child(9){width:6%}.sumtable:not(.cls) th:nth-child(10){width:5.5%}.sumtable:not(.cls) th:nth-child(11){width:16%}.sumtable:not(.cls) th:nth-child(12){width:10%}.sumtable:not(.cls) th:nth-child(13){width:6%}
 .sumtable th{font-size:11px;color:var(--muted);font-weight:800;text-align:left;padding:8px 4px;border-bottom:2px solid var(--line);white-space:nowrap}
 .sumtable td{padding:9px 4px;border-bottom:1px solid var(--line);vertical-align:middle}
 .sumtable tr:nth-child(even) td{background:var(--surface-2)}
@@ -700,8 +700,10 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
       <ul class="guide" id="guide"></ul>
     </details>
     <div class="hist" id="histBox">
-      <div class="boxhead"><b>분석 기록</b><span class="cnt" id="histCnt"></span><button class="btn small ghost" type="button" id="histClear" hidden>기록 지우기</button></div>
+      <div class="boxhead"><b>분석 기록</b><span class="cnt" id="histCnt"></span></div>
       <div class="field"><label for="histSel" class="sr">분석 기록 선택</label><select id="histSel"></select></div>
+      <div class="evalbtns"><button class="btn primary dlpdf" type="button" id="histPdf"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>전체 PDF 다운로드</button><button class="btn small ghost" type="button" id="histClear">목록 비우기</button></div>
+      <p class="note" id="histMsg" hidden></p>
     </div>
     <div class="evalbox" id="evalBox" hidden>
       <div class="boxhead evalhead"><b>평가 기록</b><span class="cnt" id="evalCnt"></span></div>
@@ -2373,14 +2375,14 @@ function entryLabel(e){const m=MOTION[e.sp+'.'+e.mo];return`${m?m.sport.name+' '
 function renderLists(){const cls=ENTRIES.filter(e=>e.mode==='class'),ev=ENTRIES.filter(e=>e.mode==='eval');
   const hs=$('#histSel');hs.innerHTML=`<option value="">${cls.length?'기록을 골라 결과 다시 보기':'분석한 영상이 여기에 순서대로 쌓여요'}</option>`+cls.map((e,i)=>`<option value="${e.id}">${i+1}. ${new Date(e.ts).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})} ${fmtTime(e.ts)} · ${entryLabel(e)} · ${e.total}%</option>`).join('');
   if(last&&last.entryId&&cls.some(e=>e.id===last.entryId))hs.value=last.entryId;hs._refresh&&hs._refresh();
-  $('#histCnt').textContent=cls.length?cls.length+'개':'';$('#histClear').hidden=!cls.length;
+  $('#histCnt').textContent=cls.length?cls.length+'개':'';$('#histPdf').disabled=!cls.length;$('#histClear').disabled=!cls.length;
   const sel=$('#evalSel');sel.innerHTML=`<option value="">${ev.length?`평가 기록 ${ev.length}명 · 골라서 결과 보기`:'평가 기록이 아직 없어요'}</option>`+ev.map((e,i)=>`<option value="${e.id}">${i+1}. ${e.meta?`${String(e.meta.date||'').slice(5)} · ${whoOf(e.meta)}`:''} · ${entryLabel(e)} · ${e.total}%</option>`).join('');
   if(last&&last.entryId&&ev.some(e=>e.id===last.entryId))sel.value=last.entryId;sel._refresh&&sel._refresh();
   $('#evalCnt').textContent=ev.length?ev.length+'명':'';$('#evalPdf').disabled=!ev.length}
 function markHist(id){['#evalSel','#histSel'].forEach(q=>{const s=$(q);if(id&&[...s.options].some(o=>o.value===id)){s.value=id;s._refresh&&s._refresh()}})}
 ['#evalSel','#histSel'].forEach(q=>$(q).addEventListener('change',e=>{if(e.target.value)showEntry(e.target.value)}));
 function twoTap(btn,label,fn){let armed=false,t=null;btn.onclick=()=>{if(!armed){armed=true;btn.textContent='한 번 더 누르면 지워져요';t=setTimeout(()=>{armed=false;btn.textContent=label},2500);return}clearTimeout(t);armed=false;btn.textContent=label;fn()}}
-twoTap($('#histClear'),'기록 지우기',async()=>{const ids=ENTRIES.filter(e=>e.mode==='class').map(e=>e.id);await DB.del(ids);ENTRIES=ENTRIES.filter(e=>!ids.includes(e.id));ids.forEach(id=>delete VIDS[id]);renderLists();if(last&&ids.includes(last.entryId))hideResults()});
+$('#histClear').onclick=()=>{const n=ENTRIES.filter(e=>e.mode==='class').length;if(!n)return;ask({title:'분석 기록을 모두 지울까요?',msg:`분석 기록 <b>${n}개</b>가 모두 지워져요.<br>지운 기록은 되돌릴 수 없어요.<br>필요하면 먼저 PDF로 저장하세요.`,btns:[{label:'취소'},{label:'모두 지우기',cls:'danger',fn:async()=>{const ids=ENTRIES.filter(e=>e.mode==='class').map(e=>e.id);await DB.del(ids);ENTRIES=ENTRIES.filter(e=>!ids.includes(e.id));ids.forEach(id=>delete VIDS[id]);renderLists();if(last&&ids.includes(last.entryId))hideResults()}}]})};
 $('#evalClear').onclick=()=>{const n=ENTRIES.filter(e=>e.mode==='eval').length;if(!n)return;ask({title:'평가 기록을 모두 지울까요?',msg:`평가 기록 <b>${n}명</b>의 결과가 모두 지워져요.<br>지운 기록은 되돌릴 수 없어요.<br>필요하면 먼저 PDF로 저장하세요.`,btns:[{label:'취소'},{label:'모두 지우기',cls:'danger',fn:async()=>{const ids=ENTRIES.filter(e=>e.mode==='eval').map(e=>e.id);await DB.del(ids);ENTRIES=ENTRIES.filter(e=>!ids.includes(e.id));ids.forEach(id=>delete VIDS[id]);renderLists();if(last&&ids.includes(last.entryId))hideResults()}}]})};
 
 /* 저장된 기록 다시 보기 (그때의 채점 기준으로 다시 채점) */
@@ -2450,7 +2452,7 @@ function paginate(cv,cuts,S,bg){const pageH=Math.floor(cv.width*(841.89-44)/(595
     end=Math.min(end,cv.height);const h=end-y;const pc=document.createElement('canvas');pc.width=cv.width;pc.height=h;const g=pc.getContext('2d');g.fillStyle=bg;g.fillRect(0,0,pc.width,h);g.drawImage(cv,0,y,cv.width,h,0,0,cv.width,h);
     out.push({w:pc.width,h,jpg:b64u8(pc.toDataURL('image/jpeg',0.88))});y=end}
   return out}
-async function captureSummary(h2c,list){
+async function captureSummary(h2c,list,cls){
   const esc=t=>String(t).replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
   const rows=[];for(const e of list){const m=MOTION[e.sp+'.'+e.mo];if(!m)continue;
     const r=await withCfg(e.cfg||{},async()=>{const ev=evaluate({...e.raw,v:null},m,e.view);const n={good:0,warn:0,bad:0};ev.rows.forEach(x=>{const st=statusOf(x.score);if(n[st]!=null)n[st]++});return{n,grade:grade(e.total),st:statusOf(e.total)}});
@@ -2462,18 +2464,25 @@ async function captureSummary(h2c,list){
   const motions=[...new Set(rows.map(r=>`${r.m.sport.name} ${r.m.name}(${VIEWNAME[r.e.view]})`))];
   const uq=k=>[...new Set(rows.map(r=>r.e.meta&&r.e.meta[k]).filter(Boolean))].sort((a,b)=>a-b);const gs=uq('g'),cs=uq('c');
   const gcLabel=((gs.length?gs.join('·')+'학년 ':'')+(cs.length?cs.join('·')+'반':'')).trim()||'수행평가';
+  const ymd=ts=>{const d=new Date(ts);return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`};const cd=[...new Set(rows.map(r=>ymd(r.e.ts)))].sort();
+  const dateTxt=a=>a.length?(a[0]===a[a.length-1]?a[0]:a[0]+' ~ '+a[a.length-1]):'';
   const box=document.createElement('section');box.className='card pdfsum';box.id='pdfSum';
-  box.innerHTML=`<div class="pdfhead"><div><h2>수행평가 동작분석 · 전체 학생 요약</h2><span class="note">급식대장의 동작분석 · ${esc(motions.join(', '))}</span></div><div class="who">${esc(gcLabel)}<small>${esc(dates.length?(dates[0]===dates[dates.length-1]?dates[0]:dates[0]+' ~ '+dates[dates.length-1]):'')}</small></div></div>
-  <div class="stats sumstats"><div class="stat"><span>평가 인원</span><b>${rows.length}명</b></div><div class="stat"><span>평균 일치도</span><b>${avg}%</b></div><div class="stat"><span>최고</span><b>${tot.length?Math.max(...tot):0}%</b></div><div class="stat"><span>최저</span><b>${tot.length?Math.min(...tot):0}%</b></div>
+  box.innerHTML=`<div class="pdfhead"><div><h2>${cls?'수업 동작분석 · 분석 기록 요약':'수행평가 동작분석 · 전체 학생 요약'}</h2><span class="note">급식대장의 동작분석 · ${esc(motions.join(', '))}</span></div><div class="who">${cls?`분석 ${rows.length}회`:esc(gcLabel)}<small>${esc(cls?dateTxt(cd):dateTxt(dates))}</small></div></div>
+  <div class="stats sumstats"><div class="stat"><span>${cls?'분석 횟수':'평가 인원'}</span><b>${rows.length}${cls?'회':'명'}</b></div><div class="stat"><span>평균 일치도</span><b>${avg}%</b></div><div class="stat"><span>최고</span><b>${tot.length?Math.max(...tot):0}%</b></div><div class="stat"><span>최저</span><b>${tot.length?Math.min(...tot):0}%</b></div>
     <div class="stat gradestat"><span>등급 분포</span><b>${['A','B','C','D','E'].map(g=>`<i>${g} ${gd[g]||0}</i>`).join('')}</b></div></div>
-  <table class="sumtable"><thead><tr><th class="c">학년</th><th class="c">반</th><th class="c">번호</th><th>이름</th><th>동작</th><th class="c">측정방향</th><th class="c">일치</th><th class="c">부분일치</th><th class="c">불일치</th><th class="c">시도</th><th>기록변화</th><th class="c">일치도</th><th class="c">등급</th></tr></thead><tbody>
+  ${cls?`<table class="sumtable cls"><thead><tr><th class="c">회차</th><th>분석 일시</th><th>동작</th><th class="c">측정방향</th><th class="c">일치</th><th class="c">부분일치</th><th class="c">불일치</th><th class="c">일치도</th><th class="c">등급</th></tr></thead><tbody>
+  ${rows.map((r,i)=>`<tr><td class="c num">${i+1}회차</td><td>${ymd(r.e.ts)} <small>${fmtTime(r.e.ts)}</small></td><td><b>${esc(r.m.sport.name+' '+r.m.name)}</b></td><td class="c">${VIEWNAME[r.e.view]}</td>
+    <td class="c num g">${r.n.good}</td><td class="c num w">${r.n.warn}</td><td class="c num b">${r.n.bad}</td>
+    <td class="c"><div class="sbar"><b>${r.e.total}%</b><i><em class="${r.st}" style="width:${r.e.total}%"></em></i></div></td>
+    <td class="c"><span class="pill gr ${r.st}">${r.grade}</span></td></tr>`).join('')}
+  </tbody></table>`:`<table class="sumtable"><thead><tr><th class="c">학년</th><th class="c">반</th><th class="c">번호</th><th>이름</th><th>동작</th><th class="c">측정방향</th><th class="c">일치</th><th class="c">부분일치</th><th class="c">불일치</th><th class="c">시도</th><th>기록변화</th><th class="c">일치도</th><th class="c">등급</th></tr></thead><tbody>
   ${rows.map((r,i)=>{const mt=r.e.meta||{};return`<tr><td class="c num">${mt.g||'-'}</td><td class="c num">${mt.c||'-'}</td><td class="c num">${mt.g?mt.n:esc(mt.no||'-')}</td><td><b>${esc(mt.name||'')}</b></td><td>${esc(r.m.sport.name+' '+r.m.name)}</td><td class="c">${VIEWNAME[r.e.view]}</td>
     <td class="c num g">${r.n.good}</td><td class="c num w">${r.n.warn}</td><td class="c num b">${r.n.bad}</td><td class="c num">${r.att.length}회</td>
     <td class="rhist">${r.att.map((a,k)=>`<span class="${a.total===r.e.total&&k===r.att.findIndex(x=>x.total===r.e.total)?'best':''}">${k+1}회차 ${a.total}</span>`).join('<i>→</i>')}</td>
     <td class="c"><div class="sbar"><b>${r.e.total}%</b><i><em class="${r.st}" style="width:${r.e.total}%"></em></i></div></td>
     <td class="c"><span class="pill gr ${r.st}">${r.grade}</span></td></tr>`}).join('')}
-  </tbody></table>
-  <p class="note">일치도는 학생별 최고 기록이에요. 기록 변화의 굵은 값이 평가에 반영된 기록이에요.<br>일치·부분 일치·불일치는 평가 항목 수예요. 자동 분석 결과는 교사의 최종 판단을 돕는 참고 자료예요.</p>`;
+  </tbody></table>`}
+  <p class="note">${cls?'회차는 분석한 순서예요. 두 번째 페이지부터 회차별 분석 결과가 이어져요.':'일치도는 학생별 최고 기록이에요. 기록 변화의 굵은 값이 평가에 반영된 기록이에요.'}<br>일치·부분 일치·불일치는 평가 항목 수예요. 자동 분석 결과는 교사의 최종 판단을 돕는 참고 자료예요.</p>`;
   $('#work').prepend(box);await new Promise(r=>setTimeout(r,80));inlineSvgPaint(box);
   const S=1.6;const bg=getComputedStyle(document.body).backgroundColor;
   const cv=await h2c(box,{scale:S,backgroundColor:bg,useCORS:true,logging:false,windowWidth:1180});
@@ -2488,20 +2497,21 @@ async function captureResults(h2c){const R=$('#results');const ta=$('#summary');
 async function savePdf(blob,name){let dl=null;try{dl=window.claude&&await window.claude.use('downloads')}catch(e){}
   if(dl){try{await dl.save({filename:name,data:blob});return 'saved'}catch(e){if(e&&e.code==='declined')return 'declined';throw e}}
   const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),30000);return 'saved'}
-$('#evalPdf').onclick=async()=>{const list=ENTRIES.filter(e=>e.mode==='eval');if(!list.length||busy)return;
-  const msg=$('#evalMsg');const ov=$('#pdfBusy');const keepTheme=document.documentElement.dataset.theme;const keepId=last&&last.entryId;
+async function exportPdf(cls){const list=ENTRIES.filter(e=>e.mode===(cls?'class':'eval'));if(!list.length||busy)return;
+  const msg=$(cls?'#histMsg':'#evalMsg');const ov=$('#pdfBusy');const keepTheme=document.documentElement.dataset.theme;const keepId=last&&last.entryId;
   ov.hidden=false;$('#pdfBusyT').textContent='PDF 도구 준비 중…';$('#pdfBar').style.width='0%';
   try{const h2c=await ensureH2C();document.documentElement.dataset.theme='light';document.body.classList.add('pdfmode');const pages=[];
-    $('#pdfBusyT').textContent='전체 학생 요약표 만드는 중…';pages.push(...await captureSummary(h2c,list));
-    for(let i=0;i<list.length;i++){const e=list[i];$('#pdfBusyT').textContent=`PDF 만드는 중… ${i+1}/${list.length}명`;$('#pdfBar').style.width=Math.round(i/list.length*100)+'%';
+    $('#pdfBusyT').textContent=cls?'분석 기록 요약표 만드는 중…':'전체 학생 요약표 만드는 중…';pages.push(...await captureSummary(h2c,list,cls));
+    for(let i=0;i<list.length;i++){const e=list[i];$('#pdfBusyT').textContent=`PDF 만드는 중… ${i+1}/${list.length}${cls?'회':'명'}`;$('#pdfBar').style.width=Math.round(i/list.length*100)+'%';
       await showEntry(e.id,{quiet:true});const ph=$('#pdfHead');const m=MOTION[e.sp+'.'+e.mo];
-      ph.innerHTML=`<div><h2>수행평가 동작분석 결과</h2><span class="note">급식대장의 동작분석 · ${m.sport.name} ${m.name} (${VIEWNAME[e.view]})</span></div><div class="who">${e.meta?`${whoOf(e.meta)}<small>${e.meta.date}</small>`:''}</div>`;ph.hidden=false;
+      ph.innerHTML=cls?`<div><h2>수업 동작분석 결과 · ${i+1}회차</h2><span class="note">급식대장의 동작분석 · ${m.sport.name} ${m.name} (${VIEWNAME[e.view]})</span></div><div class="who">${i+1}회차<small>${(d=>`${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`)(new Date(e.ts))} ${fmtTime(e.ts)}</small></div>`:`<div><h2>수행평가 동작분석 결과</h2><span class="note">급식대장의 동작분석 · ${m.sport.name} ${m.name} (${VIEWNAME[e.view]})</span></div><div class="who">${e.meta?`${whoOf(e.meta)}<small>${e.meta.date}</small>`:''}</div>`;ph.hidden=false;
       await new Promise(r=>setTimeout(r,120));pages.push(...await captureResults(h2c));ph.hidden=true}
-    $('#pdfBar').style.width='100%';const blob=pdfFromJpegs(pages);const d=list[0].meta&&list[0].meta.date||today();
-    const r=await savePdf(blob,`수행평가_동작분석_${d}_${list.length}명.pdf`);msg.hidden=false;msg.textContent=r==='saved'?`${list.length}명의 결과를 PDF로 저장했어요.`:'저장을 취소했어요.'}
+    $('#pdfBar').style.width='100%';const blob=pdfFromJpegs(pages);const d=!cls&&list[0].meta&&list[0].meta.date||today();
+    const r=await savePdf(blob,cls?`수업_동작분석_${d}_${list.length}회.pdf`:`수행평가_동작분석_${d}_${list.length}명.pdf`);msg.hidden=false;msg.textContent=r==='saved'?(cls?`분석 기록 ${list.length}개를 PDF로 저장했어요.`:`${list.length}명의 결과를 PDF로 저장했어요.`):'저장을 취소했어요.'}
   catch(err){console.error(err);msg.hidden=false;msg.textContent=err.message||'PDF를 만들지 못했어요.'}
   finally{document.body.classList.remove('pdfmode');$('#pdfHead').hidden=true;if(keepTheme)document.documentElement.dataset.theme=keepTheme;else delete document.documentElement.dataset.theme;
-    ov.hidden=true;if(keepId)await showEntry(keepId,{quiet:true});else hideResults();if(last)drawChart(last)}};
+    ov.hidden=true;if(keepId)await showEntry(keepId,{quiet:true});else hideResults();if(last)drawChart(last)}}
+$('#evalPdf').onclick=()=>exportPdf(false);$('#histPdf').onclick=()=>exportPdf(true);
 $('#evalSel').dataset.wide='1';$('#histSel').dataset.wide='1';enhanceSelect($('#evalSel'));enhanceSelect($('#histSel'));
 /* ================= 확인 창 ================= */
 function ask(o){const box=$('#askBox');const prevScrim=$('#scrim').onclick;$('#askTitle').textContent=o.title||'';$('#askMsg').innerHTML=o.msg||'';const bw=$('#askBtns');bw.innerHTML='';
