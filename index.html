@@ -639,6 +639,26 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
 }
 @media (max-width:340px){#results .resbtns .btn{font-size:11.5px;padding:0 2px}#results .resbtns .btn svg{display:none}
 }
+
+/* 학생 정보: 날짜-오늘-학생 한 줄 */
+.dwrap{position:relative;display:block;min-width:0}.dwrap input{width:100%}.dlabel{display:none}
+.metabox.roster .dwrap{flex:none}
+.metabox.roster .dlabel{display:flex;align-items:center;position:absolute;inset:0;padding:0 8px;pointer-events:none;font-family:var(--f-num);font-weight:700;font-size:13px;letter-spacing:-.02em;white-space:nowrap}
+.metabox.roster .field input[type=date]{color:transparent}
+.metabox.roster .field input[type=date]::-webkit-datetime-edit{opacity:0}
+.metabox.roster .metagrid{display:flex;align-items:center;gap:4px}
+.metabox.roster .mdate{flex:none;min-width:0}
+.metabox.roster .daterow{display:flex;gap:4px}
+.metabox.roster .field input[type=date]{width:88px;min-width:0;font-size:12.5px;padding:0 6px;letter-spacing:-.03em;cursor:pointer}
+.metabox.roster .field input[type=date]::-webkit-calendar-picker-indicator{display:none}
+.metabox.roster .field input[type=date]::-webkit-datetime-edit{padding:0}
+.metabox.roster .daterow .btn{padding:0 8px;font-size:12.5px;min-width:0}
+.metabox.roster{padding-left:9px;padding-right:9px}
+.metabox .boxhead b{white-space:nowrap}
+.metabox.roster .stuwrap{flex:1 1 0;min-width:0}
+.metabox.roster .stuwrap .csel-btn{font-size:var(--sf,13.5px);padding:0 19px 0 8px;letter-spacing:-.02em}
+.metabox.roster .stuwrap .csel-btn::after{right:8px;width:6px;height:6px}
+.metabox.roster .field input,.metabox.roster .daterow .btn,.metabox.roster .csel-btn{min-height:42px;border-radius:11px}
 </style>
 
 </head>
@@ -670,7 +690,7 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
       <div class="metabox full" id="metaBox" hidden>
         <div class="boxhead"><b>학생 정보</b><span class="note">입력 후 촬영</span><button class="linkchip" type="button" id="rosterBtn">학생명단관리</button></div>
         <div class="metagrid">
-          <div class="field mdate"><label for="mDate" class="sr">날짜</label><div class="daterow"><input type="date" id="mDate" aria-label="날짜"><button class="btn small" type="button" id="mToday">오늘</button></div></div>
+          <div class="field mdate"><label for="mDate" class="sr">날짜</label><div class="daterow"><span class="dwrap"><input type="date" id="mDate" aria-label="날짜"><span class="dlabel" id="mDateLbl" aria-hidden="true"></span></span><button class="btn small" type="button" id="mToday">오늘</button></div></div>
           <div class="field stuwrap" id="stuRow" hidden><label for="mStu" class="sr">학생 선택</label><select id="mStu"></select></div>
           <div class="field manual"><label for="mNo" class="sr">학번</label><input type="text" id="mNo" inputmode="numeric" autocomplete="off" placeholder="학번 (예: 10101)"></div>
           <div class="field manual"><label for="mName" class="sr">이름</label><input type="text" id="mName" autocomplete="off" placeholder="이름"></div>
@@ -1910,7 +1930,7 @@ function enhanceSelect(sel){const wrap=document.createElement('div');wrap.classN
   const btn=document.createElement('button');btn.type='button';btn.className='csel-btn';btn.id=sel.id+'Btn';btn.setAttribute('aria-haspopup','listbox');btn.setAttribute('aria-expanded','false');btn.innerHTML='<span></span>';
   const pop=document.createElement('ul');pop.className='csel-pop';pop.setAttribute('role','listbox');pop.hidden=true;wrap.append(btn,pop);
   const lab=document.querySelector(`label[for="${sel.id}"]`);if(lab){lab.htmlFor=btn.id;pop.setAttribute('aria-label',lab.textContent)}
-  let hi=-1;const refresh=()=>{const o=sel.options[sel.selectedIndex];btn.firstChild.textContent=o?o.text:''};
+  let hi=-1;const refresh=()=>{const o=sel.options[sel.selectedIndex];btn.firstChild.textContent=o?(o.dataset.short||o.text):'';if(sel.id==='mStu'&&window.fitStu)requestAnimationFrame(window.fitStu)};
   const mark=()=>pop.querySelectorAll('li').forEach((li,k)=>li.classList.toggle('hi',k===hi));
   function open(){document.querySelectorAll('.csel.open').forEach(w=>w!==wrap&&w._close());
     pop.innerHTML=[...sel.options].map((o,k)=>`<li role="option" data-i="${k}" aria-selected="${k===sel.selectedIndex}">${o.text}</li>`).join('');
@@ -2338,13 +2358,15 @@ function applyMode(){document.body.classList.toggle('mode-eval',MODE==='eval');
   $('#modeBadge').textContent=MODE==='eval'?'수행평가 모드':'체육수업 모드';
   $('#modeBtn .lbl').textContent=MODE==='eval'?'수업 모드':'평가 모드';
   $('#modeBtn').setAttribute('aria-label',(MODE==='eval'?'체육수업':'수행평가')+' 모드로 바꾸기');
-  $('#histBox').hidden=MODE==='eval';$('#evalBox').hidden=MODE!=='eval';$('#metaBox').hidden=MODE!=='eval';$('#reloadWarn').hidden=false;$('#warnKind').textContent=MODE==='eval'?'평가기록':'분석기록';syncNextBtn();requestAnimationFrame(()=>typeof fitWarn==='function'&&fitWarn());renderLists()}
+  $('#histBox').hidden=MODE==='eval';$('#evalBox').hidden=MODE!=='eval';$('#metaBox').hidden=MODE!=='eval';$('#reloadWarn').hidden=false;$('#warnKind').textContent=MODE==='eval'?'평가기록':'분석기록';syncNextBtn();requestAnimationFrame(()=>{typeof fitWarn==='function'&&fitWarn();typeof fitStu==='function'&&fitStu()});renderLists()}
 $('#modeBtn').onclick=()=>{MODE=MODE==='eval'?'class':'eval';store.set('pe.mode',MODE);applyMode();hideResults()};
 
 /* 학생 정보 */
 const today=()=>{const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
-$('#mToday').onclick=()=>{$('#mDate').value=today();metaErrOff()};
-if(!$('#mDate').value)$('#mDate').value=store.get('pe.mdate',today());
+$('#mDate').addEventListener('click',e=>{if($('#metaBox').classList.contains('roster')&&e.target.showPicker)try{e.target.showPicker()}catch(_){}});
+const syncDateLbl=()=>{const v=$('#mDate').value;$('#mDateLbl').textContent=v?v.replace(/-/g,'.'):'날짜 선택'};$('#mDate').addEventListener('input',syncDateLbl);$('#mDate').addEventListener('change',syncDateLbl);syncDateLbl();
+$('#mToday').onclick=()=>{$('#mDate').value=today();syncDateLbl();metaErrOff()};
+if(!$('#mDate').value)$('#mDate').value=store.get('pe.mdate',today());syncDateLbl();
 $('#mDate').addEventListener('change',()=>store.set('pe.mdate',$('#mDate').value));
 const pad2=n=>String(n).padStart(2,'0');
 function whoOf(m){if(!m)return'';return m.g?`${m.g}학년 ${m.c}반 ${m.n}번 ${m.name}`:`${m.no} ${m.name}`}
@@ -2536,9 +2558,11 @@ function sortRoster(){ROSTER.sort((a,b)=>a.g-b.g||a.c-b.c||a.n-b.n)}
 function saveRoster(){sortRoster();store.set('pe.roster',ROSTER);renderRoster();renderStuSel()}
 function curStu(){const k=$('#mStu').value;return ROSTER.find(st=>stuKey(st)===k)||null}
 function renderStuSel(){const s=$('#mStu');const keep=s.value||store.get('pe.stu','');
-  s.innerHTML='<option value="">학생 선택</option>'+ROSTER.map(st=>`<option value="${stuKey(st)}">${stuLabel(st).replace(/[<>&]/g,'')}</option>`).join('');
+  const one=new Set(ROSTER.map(st=>st.g+'-'+st.c)).size===1;s.innerHTML='<option value="">학생 선택</option>'+ROSTER.map(st=>`<option value="${stuKey(st)}" data-short="${(one?`${st.n}번 `:`${st.g}-${st.c}-${st.n} `)+String(st.name).replace(/[<>&"]/g,'')}">${stuLabel(st).replace(/[<>&]/g,'')}</option>`).join('');
   if(ROSTER.some(st=>stuKey(st)===keep))s.value=keep;s._refresh&&s._refresh();
-  const on=ROSTER.length>0;$('#stuRow').hidden=!on;$('#metaBox').classList.toggle('roster',on);syncNextBtn()}
+  const on=ROSTER.length>0;$('#stuRow').hidden=!on;$('#metaBox').classList.toggle('roster',on);syncNextBtn();requestAnimationFrame(fitStu)}
+function fitStu(){const b=$('#mStuBtn');if(!b||b.offsetParent===null)return;const sp=b.querySelector('span')||b;let f=13.5;b.style.setProperty('--sf',f+'px');while(sp.scrollWidth>sp.clientWidth&&f>10){f-=0.5;b.style.setProperty('--sf',f+'px')}}
+window.fitStu=fitStu;addEventListener('resize',()=>fitStu());document.fonts&&document.fonts.ready.then(()=>fitStu());$('#mStu').addEventListener('change',()=>requestAnimationFrame(fitStu));
 $('#mStu').addEventListener('change',()=>{store.set('pe.stu',$('#mStu').value);$('#metaErr').hidden=true});
 function renderRoster(){$('#rCnt').textContent=ROSTER.length?ROSTER.length+'명':'';
   $('#rList').innerHTML=ROSTER.map((st,i)=>`<div class="rrow"><span><b>${st.g}학년 ${st.c}반 ${st.n}번</b> ${st.name.replace(/[<>&]/g,'')}</span><button type="button" data-i="${i}" aria-label="삭제">×</button></div>`).join('');
