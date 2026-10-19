@@ -598,7 +598,9 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
 .rtools{display:flex;flex-wrap:wrap;gap:8px}
 .rtools .btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .rtools .ghost{margin-left:auto}
-@media (max-width:560px){.rform{grid-template-columns:1fr 1fr 1fr}.rform .rname{grid-column:1/3}.rform .radd{grid-column:3}
+@media (max-width:560px){.rform{grid-template-columns:minmax(0,.8fr) minmax(0,.8fr) minmax(0,.9fr) minmax(0,2fr) 40px;gap:5px}
+  .rform input{min-height:42px;font-size:15px;padding:0 6px;border-radius:10px}.rform label{font-size:11px;gap:3px}.rform .radd{min-height:42px;font-size:22px;border-radius:10px}
+  .rtools{flex-wrap:nowrap;gap:5px}.rtools .btn{flex:1 1 auto;min-width:0;padding:0 6px;gap:4px;font-size:var(--rtf,12.5px);white-space:nowrap;min-height:40px;justify-content:center}.rtools .ghost{margin-left:0;flex:0 1 auto}.rtools .btn svg{width:14px;height:14px}
   .modebadge{padding:1px 10px;font-size:11.5px;line-height:1.5;border-width:1px}
   .prep{gap:14px}}
 .metabox .stuwrap{grid-column:1/-1}
@@ -2571,6 +2573,8 @@ function renderStuSel(){const s=$('#mStu');const keep=s.value||store.get('pe.stu
   const on=ROSTER.length>0;$('#stuRow').hidden=!on;$('#metaBox').classList.toggle('roster',on);syncNextBtn();requestAnimationFrame(fitStu)}
 function fitStu(){const b=$('#mStuBtn');if(!b||b.offsetParent===null)return;const sp=b.querySelector('span')||b;let f=13.5;b.style.setProperty('--sf',f+'px');while(sp.scrollWidth>sp.clientWidth&&f>10){f-=0.5;b.style.setProperty('--sf',f+'px')}}
 window.fitStu=fitStu;
+function fitRtools(){const w=document.querySelector('.rtools');if(!w||w.offsetParent===null)return;let f=12.5;w.style.setProperty('--rtf',f+'px');const bad=()=>w.scrollWidth>w.clientWidth||[...w.querySelectorAll('.btn')].some(b=>b.scrollWidth>b.clientWidth);while(bad()&&f>9){f-=0.25;w.style.setProperty('--rtf',f+'px')}}
+addEventListener('resize',fitRtools);window.fitRtools2=fitRtools;
 function fitPdfBtns(){['#histPdf','#evalPdf'].forEach(q=>{const b=$(q);if(!b||b.offsetParent===null)return;const t=b.querySelector('.bt');let f=innerWidth>=1024?14:14.5;b.style.setProperty('--bf',f+'px');const cs=getComputedStyle(b);const room=()=>b.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight)-(b.querySelector('svg')?.getBoundingClientRect().width||0)-parseFloat(cs.columnGap||0)-1;while(t.getBoundingClientRect().width>room()&&f>9){f-=0.25;b.style.setProperty('--bf',f+'px')}})}
 window.fitPdfBtns=fitPdfBtns;addEventListener('resize',fitPdfBtns);document.fonts&&document.fonts.ready.then(fitPdfBtns);
 function fitPh(){const el=$('#mNo');if(!el||el.offsetParent===null)return;const cs=getComputedStyle(el);const c=fitPh.c||(fitPh.c=document.createElement('canvas').getContext('2d'));c.font=`${cs.fontWeight} 12.5px ${cs.fontFamily}`;const tw=c.measureText(el.placeholder).width;const room=el.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight)-2;el.style.setProperty('--phf',Math.max(7,Math.min(12.5,12.5*room/tw)).toFixed(2)+'px')}
@@ -2592,7 +2596,7 @@ $('#rName').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e
 ['#rG','#rC','#rN'].forEach(q=>$(q).addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();$('#rName').focus()}}));
 ['#rG','#rC'].forEach(q=>$(q).addEventListener('change',()=>{const g=parseInt($('#rG').value,10),c=parseInt($('#rC').value,10);if(g>0&&c>0)$('#rN').value=String(nextNo(g,c))}));
 function openRoster(){pushModal(closeRoster);const gc=store.get('pe.rgc',null);if(gc){$('#rG').value=gc.g;$('#rC').value=gc.c;$('#rN').value=String(nextNo(gc.g,gc.c))}else if(!$('#rN').value)$('#rN').value='1';
-  renderRoster();rErr('');$('#scrim').hidden=false;$('#rosterBox').hidden=false;const touch=matchMedia('(pointer:coarse)').matches;(touch?$('#rosterClose'):(gc?$('#rName'):$('#rG'))).focus({preventScroll:true})}
+  renderRoster();rErr('');$('#scrim').hidden=false;$('#rosterBox').hidden=false;requestAnimationFrame(()=>window.fitRtools2&&window.fitRtools2());const touch=matchMedia('(pointer:coarse)').matches;(touch?$('#rosterClose'):(gc?$('#rName'):$('#rG'))).focus({preventScroll:true})}
 function closeRoster(fromBack){if(fromBack!==true)popModal();$('#rosterBox').hidden=true;$('#scrim').hidden=true;renderStuSel()}
 $('#rosterBtn').onclick=openRoster;$('#rosterClose').onclick=closeRoster;
 $('#rClear').onclick=()=>{if(!ROSTER.length)return;$('#rosterBox').hidden=true;ask({title:'학생 명단을 모두 지울까요?',msg:`등록된 <b>${ROSTER.length}명</b>이 명단에서 지워져요.<br>평가 기록은 지워지지 않아요.`,btns:[{label:'취소',fn:()=>{$('#scrim').hidden=false;$('#rosterBox').hidden=false}},{label:'모두 지우기',cls:'danger',fn:()=>{ROSTER=[];saveRoster();$('#scrim').hidden=false;$('#rosterBox').hidden=false}}]})};
