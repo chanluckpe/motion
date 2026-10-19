@@ -436,6 +436,68 @@ textarea#summary{width:100%;min-height:150px;font-family:var(--f-ui);font-size:1
 .fbsteps .fbgo{margin:2px 0 0;font-size:13.5px;font-weight:700;color:var(--maroon)}
 .fbbox .sendrow .btn.armed{box-shadow:0 0 0 3px var(--surface),0 0 0 6px var(--maroon);animation:fbpulse 1.4s ease-in-out infinite}
 @keyframes fbpulse{50%{box-shadow:0 0 0 3px var(--surface),0 0 0 6px transparent}}
+
+/* ===== 모드 · 기록 · 자르기 · PDF ===== */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.tipstate{font-weight:600;color:var(--muted);font-size:13px}
+.modebadge{align-self:center;display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:99px;font-weight:800;font-size:13.5px;background:var(--accent-soft);color:var(--accent);border:1.5px solid var(--accent)}
+body.mode-eval .modebadge{background:var(--maroon-soft);color:var(--maroon);border-color:var(--maroon)}
+body.mode-eval #modeBtn{border-color:var(--maroon);color:var(--maroon)}
+.boxhead{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.boxhead b{font-size:14.5px}
+.boxhead .cnt{font-size:12px;font-weight:800;color:var(--accent);background:var(--accent-soft);padding:1px 8px;border-radius:99px}
+.boxhead .cnt:empty{display:none}
+.boxhead .btn{margin-left:auto}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--muted);min-height:34px}
+.hist,.evalbox{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:10px}
+.histlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto;counter-reset:h}
+.histlist:empty{display:none}
+.histlist button{width:100%;display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:8px;align-items:center;text-align:left;padding:8px 10px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface-2);cursor:pointer;font-size:13.5px}
+.histlist button.on{border-color:var(--accent);background:var(--accent-soft)}
+.histlist .n{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--surface);font-family:var(--f-num);font-weight:800;font-size:12px;color:var(--muted)}
+.histlist .t{min-width:0}
+.histlist .t b{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.histlist .t small{display:block;color:var(--muted);font-size:11.5px}
+.histlist .sc{font-family:var(--f-num);font-weight:800;font-size:15px}
+.metagrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.metagrid .mdate{grid-column:1/-1}
+.daterow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.daterow .btn{min-height:54px;padding:0 16px}
+.field input[type=date]{font-family:var(--f-num);padding-right:10px;background-image:none}
+.evalbtns{display:flex;flex-direction:column;gap:8px}
+.btn.dlpdf{min-height:52px;font-size:15.5px;background:var(--maroon);border-color:var(--maroon)}
+.btn.dlpdf svg{fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.restags{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.chip.meta{background:var(--accent-soft);color:var(--accent)}
+.novid{padding:10px 14px;border-radius:12px;background:var(--surface-2)}
+#trimSheet{--bk:var(--accent);border-color:var(--accent)}
+.trimguide{margin:0;font-size:14.5px;padding:10px 14px;border-radius:12px;background:var(--maroon-soft);color:var(--ink)}
+.trimguide b{color:var(--maroon)}
+.trimplayer{background:#000;border-radius:14px;overflow:hidden}
+.trimplayer video{display:block;width:100%;max-height:420px;background:#000}
+.trimbar{position:relative;height:44px;border-radius:12px;background:var(--track);touch-action:none;user-select:none;margin:4px 10px}
+.trimbar .tsel{position:absolute;top:0;bottom:0;background:var(--zone);border:2px solid var(--accent);border-radius:10px}
+.trimbar .tnow{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--maroon);pointer-events:none}
+.trimbar .th{position:absolute;top:50%;width:26px;height:52px;margin:-26px 0 0 -13px;border-radius:9px;border:0;background:var(--accent);box-shadow:0 2px 6px rgba(0,0,0,.25);cursor:ew-resize;touch-action:none;padding:0}
+.trimbar .th::after{content:"";position:absolute;inset:14px 11px;border-left:2px solid #fff;border-right:2px solid #fff}
+.trimtimes{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.trimtimes b{font-family:var(--f-num);color:var(--ink);font-size:15px}
+.trimtools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.trimtools .btn{white-space:normal;line-height:1.25;min-height:44px;padding:4px 8px}
+.trimact{display:grid;grid-template-columns:1.4fr 1fr auto;gap:10px;align-items:stretch}
+.trimact .btn.primary{min-height:56px;font-size:17px}
+.trimact .btn.primary svg,#trimSheet h2 svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+@media (max-width:560px){.trimact{grid-template-columns:1fr 1fr}.trimact .btn.primary{grid-column:1/-1}.trimtools .btn{font-size:12px}}
+.pdfbusy{position:fixed;inset:0;z-index:60;background:rgba(15,12,10,.55);display:grid;place-items:center;padding:20px}
+.pdfbusy>div{background:var(--surface);border-radius:20px;padding:22px 24px;width:min(380px,100%);display:flex;flex-direction:column;gap:12px;text-align:center}
+.pdfhead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:6px 4px 2px;border-bottom:3px solid var(--maroon)}
+.pdfhead h2{font-size:22px;font-weight:800}
+.pdfhead .who{font-size:17px;font-weight:800;text-align:right}
+.pdfhead .who small{display:block;font-size:12.5px;color:var(--muted);font-weight:600}
+body.pdfmode #results{width:880px;max-width:none}
+body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmpbtn,body.pdfmode #copyBtn,body.pdfmode .novid{display:none!important}
+@media (max-width:560px){.tools .iconbtn{width:46px!important;font-size:8.8px!important}}
+@media (min-width:1024px){.side{max-height:calc(100vh - 100px);overflow-y:auto;overscroll-behavior:contain;border-radius:var(--r)}}
 </style>
 
 </head>
@@ -449,6 +511,7 @@ textarea#summary{width:100%;min-height:150px;font-family:var(--f-ui);font-size:1
   <div class="tools">
   <button class="iconbtn" type="button" id="helpBtn" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.2-2.5 3.8"/><circle cx="12" cy="17.2" r=".6" fill="currentColor"/></svg><span class="lbl">사용 방법</span></button>
   <button class="iconbtn" type="button" id="themeBtn"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"></svg><span class="lbl"></span></button>
+  <button class="iconbtn" type="button" id="modeBtn"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M4 7h13l-3-3M20 17H7l3 3"/></svg><span class="lbl">수행평가 모드</span></button>
   <button class="iconbtn" type="button" id="openSettings" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.5 7.5 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.6 7.6 0 0 0-1.7-1L15 3.5h-4L10.7 6a7.6 7.6 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7.5 7.5 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7.6 7.6 0 0 0 1.7 1l.3 2.5h4l.3-2.5a7.6 7.6 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6ZM13 15.5A3.5 3.5 0 1 1 13 8.5a3.5 3.5 0 0 1 0 7Z" transform="translate(-1 0)"/></svg><span class="lbl">채점 기준</span></button>
   </div>
 </header>
@@ -457,6 +520,7 @@ textarea#summary{width:100%;min-height:150px;font-family:var(--f-ui);font-size:1
 <div class="layout">
 <aside class="side" id="drop" aria-label="분석 준비">
   <section class="card prep">
+    <div class="modebadge" id="modeBadge">체육수업 모드</div>
     <div class="prep-grid">
       <div class="selrow full">
         <div class="field"><label for="sport">종목</label><select id="sport"></select></div>
@@ -481,14 +545,43 @@ textarea#summary{width:100%;min-height:150px;font-family:var(--f-ui);font-size:1
       </div>
     </div>
     <details class="tips" id="tips">
-      <summary>촬영 요령</summary>
+      <summary><span>촬영 요령 <span class="tipstate" id="tipState">(펼치기)</span></span></summary>
       <ul class="guide" id="guide"></ul>
     </details>
+    <div class="hist" id="histBox">
+      <div class="boxhead"><b>분석 기록</b><span class="cnt" id="histCnt"></span><button class="btn small ghost" type="button" id="histClear" hidden>기록 지우기</button></div>
+      <ol class="histlist" id="histList"></ol>
+      <p class="note" id="histEmpty">분석한 영상이 여기에 순서대로 쌓여요.<br>누르면 그 결과를 다시 볼 수 있어요.</p>
+    </div>
+    <div class="evalbox" id="evalBox" hidden>
+      <div class="boxhead"><b>학생 정보</b><span class="note">입력 후 촬영하세요</span></div>
+      <div class="metagrid">
+        <div class="field mdate"><label for="mDate">날짜</label><div class="daterow"><input type="date" id="mDate"><button class="btn small" type="button" id="mToday">오늘</button></div></div>
+        <div class="field"><label for="mNo">학번</label><input type="text" id="mNo" inputmode="numeric" autocomplete="off" placeholder="예) 10101"></div>
+        <div class="field"><label for="mName">이름</label><input type="text" id="mName" autocomplete="off" placeholder="예) 김철수"></div>
+      </div>
+      <p class="fberr" id="metaErr" hidden>날짜, 학번, 이름을 먼저 입력해 주세요.</p>
+      <div class="boxhead" style="margin-top:6px"><b>평가 기록</b><span class="cnt" id="evalCnt"></span></div>
+      <div class="field"><label for="evalSel" class="sr">평가 기록 선택</label><select id="evalSel"></select></div>
+      <div class="evalbtns"><button class="btn primary dlpdf" type="button" id="evalPdf"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>전체 결과 PDF 다운로드</button><button class="btn small ghost" type="button" id="evalClear">목록 비우기</button></div>
+      <p class="note" id="evalMsg">평가 기록은 이 기기에만 저장되고 다른 곳으로 전송되지 않아요.</p>
+    </div>
     <div class="privacy"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10V8a5 5 0 0 1 10 0v2h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h1Zm2 0h6V8a3 3 0 0 0-6 0v2Z"/></svg>영상은 이 기기에서만 분석되고 저장·전송되지 않아요</div>
   </section>
 </aside>
 
 <main class="work" id="work">
+  <section class="card" id="trimSheet" hidden>
+    <h2><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg>분석할 구간 자르기</h2>
+    <p class="trimguide">분석하고 싶은 동작 부분만 남겨 주세요.<br>녹화 버튼을 누르러 오가는 장면이 들어가면 분석 정확도가 떨어져요. 자를 필요가 없으면 <b>건너뛰기</b>를 누르세요.</p>
+    <div class="trimplayer"><video id="trimVid" playsinline muted controls preload="auto"></video></div>
+    <div class="trimbar" id="trimBar"><div class="tsel" id="tSel"></div><div class="tnow" id="tNow"></div><button type="button" class="th" id="thA" aria-label="시작 지점"></button><button type="button" class="th" id="thB" aria-label="끝 지점"></button></div>
+    <div class="trimtimes"><span>시작 <b id="tA">0.0초</b></span><span>길이 <b id="tLen">0.0초</b></span><span>끝 <b id="tB">0.0초</b></span></div>
+    <div class="trimtools"><button class="btn small" type="button" id="setA">지금 위치를 시작으로</button><button class="btn small" type="button" id="playSel">선택 구간 재생</button><button class="btn small" type="button" id="setB">지금 위치를 끝으로</button></div>
+    <p class="note" id="trimNote">분석은 최대 15초까지 할 수 있어요.</p>
+    <div class="trimact"><button class="btn primary" type="button" id="trimGo"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg>자르고 분석하기</button><button class="btn" type="button" id="trimSkip">건너뛰기 (전체 분석)</button><button class="btn small ghost" type="button" id="trimCancel">취소</button></div>
+  </section>
+
   <section class="card" id="progSheet" hidden>
     <div class="progress"><div class="status" id="progText">준비 중…</div><div class="bar"><i id="progBar"></i></div></div>
   </section>
@@ -496,8 +589,9 @@ textarea#summary{width:100%;min-height:150px;font-family:var(--f-ui);font-size:1
   <div id="errBox" class="err" hidden></div>
 
   <div id="results" class="work" hidden>
+    <div class="pdfhead" id="pdfHead" hidden></div>
     <section class="card">
-      <div class="sec-head"><span class="chip" id="resTag"></span><div class="resbtns"><button class="btn small" type="button" id="againBtn">다시 촬영하기</button><button class="btn small otherbtn" type="button" id="otherBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg><span></span></button></div></div>
+      <div class="sec-head"><div class="restags"><span class="chip" id="resTag"></span><span class="chip meta" id="resMeta" hidden></span></div><div class="resbtns"><button class="btn small" type="button" id="againBtn">다시 촬영하기</button><button class="btn small otherbtn" type="button" id="otherBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg><span></span></button></div></div>
       <div class="hero">
         <div class="dial"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="43" fill="none" stroke="var(--track)" stroke-width="10"/><circle id="dialArc" cx="50" cy="50" r="43" fill="none" stroke="var(--accent)" stroke-width="10" stroke-linecap="round" stroke-dasharray="270.2" stroke-dashoffset="270.2"/></svg>
           <div class="num"><b id="scoreNum">0</b><small>% 일치</small></div></div>
@@ -520,6 +614,7 @@ textarea#summary{width:100%;min-height:150px;font-family:var(--f-ui);font-size:1
 
     <section class="card">
       <h2><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3Z"/></svg>내 동작 다시 보기</h2>
+      <p class="note novid" id="noVid" hidden>저장된 기록이라 영상 다시 보기는 할 수 없어요.<br>영상은 기기에 저장하지 않고, 분석한 그 화면에서만 다시 볼 수 있어요.</p>
       <div class="replay">
         <div class="player"><video id="vid" playsinline muted controls preload="auto"></video><canvas id="overlay"></canvas></div>
         <div class="phases" id="phaseBtns"></div>
@@ -568,16 +663,18 @@ textarea#summary{width:100%;min-height:150px;font-family:var(--f-ui);font-size:1
 </div>
 
 <div class="scrim" id="scrim" hidden></div>
+<div class="pdfbusy" id="pdfBusy" hidden><div><b id="pdfBusyT">PDF 만드는 중…</b><div class="bar"><i id="pdfBar"></i></div><p class="note">화면이 잠시 바뀌어도 기다려 주세요.</p></div></div>
 <div class="helpbox" id="helpBox" role="dialog" aria-modal="true" aria-labelledby="helpTitle" hidden>
   <div class="sec-head"><h2 id="helpTitle" style="font-size:20px">사용 방법</h2><button class="btn small" type="button" id="closeHelp">닫기</button></div>
   <ol>
     <li><div><b>종목·자세 고르기</b><span>왼쪽에서 종목과 자세를 골라요.<br>오른쪽에 기준 자세 그림과 채점 항목이 나와요.</span></div></li>
     <li class="sub"><div><b>채점 기준(수행평가) 설정하기</b><span>오른쪽 위 '채점 기준'에서 일치·부분 일치 기준 점수, 등급 구간, 기준 난이도(학생용·선수용)를 정해요.<br>설정은 이 기기에 저장되고, 맨 아래에서 평가 기준표(PDF)도 내려받을 수 있어요.<br>*채점 기준을 설정하지 않아도 동작분석을 사용할 수 있어요.</span></div></li>
     <li><div><b>촬영 방향 정하기</b><span>측면 또는 정면을 골라요.<br>추천 방향으로 찍으면 더 정확해요.</span></div></li>
-    <li><div><b>촬영하거나 영상 올리기</b><span>'촬영하기'는 뒤 카메라, '셀프 촬영'은 앞 카메라로 찍어요.<br>찍어 둔 영상은 '영상 불러오기'로 올려요.<br>전신이 나오게, 한 사람만, 3~8초로 찍어요.</span></div></li>
+    <li><div><b>촬영하거나 영상 올리기</b><span>'촬영하기'는 뒤 카메라, '셀프 촬영'은 앞 카메라로 찍어요.<br>찍어 둔 영상은 '영상 불러오기'로 올려요.<br>전신이 나오게, 한 사람만, 3~8초로 찍어요.<br>찍은 뒤에는 분석할 동작 구간만 남기도록 자르고, 필요 없으면 '건너뛰기'를 눌러요.</span></div></li>
     <li><div><b>결과 확인하기</b><span>기준 자세와의 일치율과 등급, 수정할 동작과 잘한 동작을 확인해요.</span></div></li>
     <li><div><b>영상으로 비교하기</b><span>'내 동작 다시 보기'의 '피드백' 탭과 항목별 '영상에서 확인하기'로 기준값(초록)과 내 값(노랑)을 비교해요.</span></div></li>
     <li><div><b>다른 방향·결과 저장</b><span>'다른 방향으로 분석하기'로 같은 영상을 다시 채점할 수 있어요.<br>'요약 복사'로 결과를 제출란에 붙여 넣어요.</span></div></li>
+    <li><div><b>수업 모드 · 수행평가 모드</b><span>오른쪽 위 버튼으로 바꿔요.<br>수업 모드: 분석한 영상이 왼쪽 '분석 기록'에 순서대로 쌓이고, 누르면 결과를 다시 볼 수 있어요.<br>수행평가 모드: 날짜·학번·이름을 입력하고 촬영하면 '평가 기록'에 쌓이고, 전체 결과를 PDF 한 파일로 내려받을 수 있어요.<br>기록은 이 기기에만 저장돼요.</span></div></li>
   </ol>
   <p class="note">영상은 이 기기에서만 분석되고 저장·전송되지 않아요.</p>
 </div>
@@ -1708,18 +1805,18 @@ function loadVideo(file){return new Promise((res,rej)=>{const v=document.createE
   v.onloadeddata=()=>res(v);v.onerror=()=>rej(new Error('이 영상 형식을 열 수 없어요. 휴대폰 기본 카메라로 찍은 MP4 또는 MOV 파일을 올려 주세요.'));
   v.src=URL.createObjectURL(file);v.load()})}
 function seek(v,t){return new Promise(res=>{let done=false;const fin=()=>{if(!done){done=true;v.removeEventListener('seeked',fin);res()}};v.addEventListener('seeked',fin);v.currentTime=t;setTimeout(fin,1500)})}
-async function analyzeVideo(file,label){
+async function analyzeVideo(file,label,range){
   const v=await loadVideo(file);await loadModel();
   const W=v.videoWidth,H=v.videoHeight;if(!W||!H)throw new Error('영상 크기를 읽지 못했어요. 다른 영상으로 시도해 주세요.');
-  const dur=Math.min(v.duration||0,15);if(!(dur>0.5))throw new Error('영상이 너무 짧아요. 동작 전체가 담긴 3~10초 영상을 올려 주세요.');
+  const t0=range?range.t0:0;const dur=range?Math.min(range.t1-range.t0,15):Math.min(v.duration||0,15);if(!(dur>0.5))throw new Error('영상이 너무 짧아요. 동작 전체가 담긴 3~10초 영상을 올려 주세요.');
   const fps=cfg.fast?12:20;const n=Math.floor(dur*fps);const F=[];let prev=null;
-  for(let i=0;i<n;i++){await seek(v,i/fps);
+  for(let i=0;i<n;i++){await seek(v,t0+i/fps);
     const crop=prev?cropFrom(prev,W,H):null;let k=await detect(v,W,H,crop||fullCrop(W,H));
     if(crop&&meanS(k)<0.3){const k2=await detect(v,W,H,fullCrop(W,H));if(meanS(k2)>meanS(k))k=k2}
-    if(meanS(k)>=0.25)prev=k;F.push({t:i/fps,k});
+    if(meanS(k)>=0.25)prev=k;F.push({t:t0+i/fps,k});
     setProg(`${label} 분석 중… ${i+1}/${n} 프레임`,0.1+0.85*(i+1)/n);
     if(i%6===0)await new Promise(r=>setTimeout(r,0))}
-  return{v,W,H,fps,F:smooth(F),truncated:(v.duration||0)>15}}
+  return{v,W,H,fps,t0,F:smooth(F),truncated:!range&&(v.duration||0)>15}}
 function smooth(F){return F.map((f,i)=>({t:f.t,k:f.k.map((p,j)=>{let sx=0,sy=0,sw=0;
   for(let d=-1;d<=1;d++){const q=F[i+d];if(!q)continue;const pp=q.k[j];if(pp.s<MINC)continue;const w=(d===0?2:1)*pp.s;sx+=pp.x*w;sy+=pp.y*w;sw+=w}
   return sw?{x:sx/sw,y:sy/sw,s:p.s}:{...p}})}))}
@@ -1830,11 +1927,11 @@ function hideResults(){setStep(1);$('#results').hidden=true;$('#errBox').hidden=
 
 /* ================= 학생 영상 분석 ================= */
 let last=null,busy=false;
-async function runStudent(file){if(busy)return;busy=true;$('#errBox').hidden=true;$('#results').hidden=true;
-  const m=curM(),view=sel.view;
-  try{const raw=await analyzeVideo(file,'내 동작');setProg('결과 정리 중…',0.97);
-    const ev=evaluate(raw,m,view);ev.raw=raw;
-    last=ev;await renderResults(ev);hideProg();$('#results').scrollIntoView({behavior:'smooth',block:'start'})}
+async function runStudent(file,range){if(busy)return;busy=true;$('#errBox').hidden=true;$('#results').hidden=true;
+  const m=curM(),view=sel.view;const meta=MODE==='eval'?readMeta():null;
+  try{const raw=await analyzeVideo(file,'내 동작',range);setProg('결과 정리 중…',0.97);
+    const ev=evaluate(raw,m,view);ev.raw=raw;ev.meta=meta;
+    last=ev;await renderResults(ev);await saveEntry(ev);hideProg();$('#results').scrollIntoView({behavior:'smooth',block:'start'})}
   catch(e){hideProg();showErr(e.message||'분석 중 문제가 생겼어요. 다른 영상으로 다시 시도해 주세요.');console.error(e)}
   finally{busy=false}}
 
@@ -1842,7 +1939,7 @@ async function runStudent(file){if(busy)return;busy=true;$('#errBox').hidden=tru
 function namedPhases(ev){return ev.m.phases.filter(p=>p.n&&ev.c.ph[p.k]>=0).map(p=>({k:p.k,n:p.n,i:ev.c.ph[p.k]})).sort((a,b)=>a.i-b.i)}
 function critPhase(cr){if(cr.at==='rep')return'B';if(cr.at==='repT')return'T';if(cr.at.includes(':')||cr.m==='dt')return null;return cr.at}
 async function renderResults(ev){const m=ev.m,c=ev.c;$('#results').hidden=false;setStep(4);
-  $('#resTag').textContent=`${m.sport.name} · ${m.name} · ${VIEWNAME[ev.view]} 기준 분석`;$('#otherBtn span').textContent=`${VIEWNAME[ev.view==='s'?'f':'s']}으로 분석하기`;
+  $('#resTag').textContent=`${m.sport.name} · ${m.name} · ${VIEWNAME[ev.view]} 기준 분석`;{const rm=$('#resMeta');if(ev.meta){rm.textContent=`${ev.meta.date} · ${ev.meta.no} ${ev.meta.name}`;rm.hidden=false}else rm.hidden=true}markHist(ev.entryId);$('#otherBtn span').textContent=`${VIEWNAME[ev.view==='s'?'f':'s']}으로 분석하기`;
   const st=statusOf(ev.total);$('#scoreNum').textContent=ev.total;
   $('#dialArc').style.stroke=`var(--${st==='good'?'good':st==='warn'?'warn':'bad'})`;$('#dialArc').setAttribute('stroke-dashoffset',(270.2*(1-ev.total/100)).toFixed(1));
   const pill=$('#verdictPill');pill.className='pill '+st;pill.textContent='기준 자세와 '+ST_TXT[st];
@@ -1867,7 +1964,8 @@ async function renderResults(ev){const m=ev.m,c=ev.c;$('#results').hidden=false;
   $('#fixes').innerHTML=li.length?li.join(''):`<li class="none"><span class="no">★</span><div><b>수정할 동작이 없어요</b>모든 항목이 기준에 맞아요.<br>같은 자세로 반복 연습해 몸에 익혀 보세요.</div></li>`;
   const gl=good.slice(0,3).map(r=>`<li class="ok"><span class="no">✓</span><div><b>${r.cr.label}</b>${sb(r.cr.good)}</div></li>`);
   $('#goods').innerHTML=gl.length?gl.join(''):`<li class="none"><span class="no">→</span><div><b>아직 잘한 동작이 없어요</b>왼쪽 항목부터 하나씩 고쳐 보세요.<br>하나씩 고치면 여기에 차례로 나타나요.</div></li>`;
-  const vid=$('#vid');if(vid.dataset.src!==ev.raw.v.src){vid.src=ev.raw.v.src;vid.dataset.src=ev.raw.v.src}
+  const vid=$('#vid');const hasV=!!ev.raw.v;$('.replay').hidden=!hasV;$('#noVid').hidden=hasV;if(!hasV){vid.pause();vid.removeAttribute('src');vid.dataset.src='';vid.load()}
+  else if(vid.dataset.src!==ev.raw.v.src){vid.src=ev.raw.v.src;vid.dataset.src=ev.raw.v.src;vid.addEventListener('loadedmetadata',()=>{if(ev.raw.t0)vid.currentTime=ev.raw.t0},{once:true})}
   const nps=namedPhases(ev);
   stopFb();
   const wf=worstSeg(ev);
@@ -1902,6 +2000,7 @@ function drawSkeleton(ctx,k,sx,sy,ox,oy,jst,lw){const col=s=>s==='bad'?css('--ba
     ctx.strokeStyle=st?col(st):'rgba(255,255,255,.75)';ctx.lineWidth=lw;ctx.beginPath();ctx.moveTo(ox+p.x*sx,oy+p.y*sy);ctx.lineTo(ox+q.x*sx,oy+q.y*sy);ctx.stroke()}
   for(let i=0;i<17;i++){const p=k[i];if(p.s<MINC||(i>0&&i<5))continue;ctx.fillStyle=jst&&jst[i]?col(jst[i]):'#fff';ctx.beginPath();ctx.arc(ox+p.x*sx,oy+p.y*sy,lw*0.9,0,7);ctx.fill()}}
 async function renderSnaps(ev){const c=ev.c,box=$('#snaps');box.innerHTML='';const v=ev.raw.v;
+  if(!v){(ev.snapsSaved||[]).forEach(sn=>{const w=document.createElement('div');w.className='snap';w.innerHTML=`<img src="${sn.img}" alt="" style="width:100%;border-radius:14px;display:block;background:#000">${sn.cap}`;box.appendChild(w)});return}
   for(const p of namedPhases(ev)){const f=c.F[p.i];await seek(v,f.t);
     const k0=f.k.filter(q=>q.s>=MINC);const k=k0.length>=3?k0:[{x:0,y:0},{x:ev.raw.W,y:ev.raw.H}];
     const x0=Math.min(...k.map(q=>q.x)),x1=Math.max(...k.map(q=>q.x)),y0=Math.min(...k.map(q=>q.y)),y1=Math.max(...k.map(q=>q.y));
@@ -1915,7 +2014,8 @@ async function renderSnaps(ev){const c=ev.c,box=$('#snaps');box.innerHTML='';con
       g.fillStyle='rgba(0,0,0,.65)';g.fillRect(X-4,Y-17,tw+8,23);const stt=statusOf(r.score);g.fillStyle=stt==='bad'?css('--bad'):stt==='warn'?css('--warn'):'#fff';g.fillText(t,X,Y)});
     const wrap=document.createElement('div');wrap.className='snap';const sc=ev.rows.filter(r=>critPhase(r.cr)===p.k&&r.score!=null);const avg=sc.length?Math.round(sc.reduce((a,r)=>a+r.score,0)/sc.length):null;
     wrap.innerHTML=`<b>${p.n} <span class="pill ${statusOf(avg)}">${avg==null?'채점 항목 없음':avg+'점'}</span></b>`;wrap.prepend(cv);box.appendChild(wrap)}
-  v.currentTime=0}
+  ev.snapsOut=[...box.querySelectorAll('.snap')].map(w=>({img:w.querySelector('canvas').toDataURL('image/jpeg',0.82),cap:w.querySelector('b').outerHTML}));
+  v.currentTime=ev.raw.t0||0}
 /* 항목별 '영상에서 확인하기': 기준(초록) vs 내 값(노랑), 앞뒤 0.6초 0.5배속 반복 */
 const GH={elbow:['el',['wr']],forearm:['el',['wr']],knee:['kn',['an']],kneeToe:['an',['kn']],
   shoulder:['sh',['el','wr']],uarm:['sh',['el','wr']],armSwing:['sh',['el','wr']],elUp:['sh',['el','wr']],elOut:['sh',['el','wr']],
@@ -1992,7 +2092,7 @@ $('#vid').addEventListener('timeupdate',()=>{if(!fb)return;const v=$('#vid');if(
 (function overlayLoop(){const vid=$('#vid'),cv=$('#overlay');function frame(){if(last&&!$('#results').hidden&&vid.videoWidth){
     const r=vid.getBoundingClientRect();const dpr=window.devicePixelRatio||1;if(cv.width!==Math.round(r.width*dpr)||cv.height!==Math.round(r.height*dpr)){cv.width=Math.round(r.width*dpr);cv.height=Math.round(r.height*dpr);cv.style.width=r.width+'px';cv.style.height=r.height+'px'}
     const g=cv.getContext('2d');g.clearRect(0,0,cv.width,cv.height);const s=Math.min(cv.width/vid.videoWidth,cv.height/vid.videoHeight);const ox=(cv.width-vid.videoWidth*s)/2,oy=(cv.height-vid.videoHeight*s)/2;
-    const F=last.c.F;const i=clamp(Math.round(vid.currentTime*last.c.fps),0,F.length-1);
+    const F=last.c.F;const i=clamp(Math.round((vid.currentTime-(last.raw.t0||0))*last.c.fps),0,F.length-1);
     let key=null,best=1e9;for(const p of namedPhases(last)){const d=Math.abs(p.i-i);if(d<best){best=d;key=p.k}}
     const cm=fb&&fb.mode==='cmp'&&i>=fb.i0-1&&i<=fb.i1+1;let jst=cm?null:best<=2?jointStatus(last,key,i):null;if(fb&&!cm&&i>=fb.i0&&i<=fb.i1){jst={};jointIdx(last.c,fb.r.cr,i).forEach(j=>jst[j]='bad')}
     drawSkeleton(g,F[i].k,s,s,ox,oy,jst,Math.max(3,4*dpr));if(cm)drawCmp(g,last,i,s,ox,oy,dpr)}
@@ -2007,8 +2107,8 @@ function drawChart(ev){const m=ev.m,c=ev.c,cv=$('#chart');const series=(m.chart|
   const cols=['--accent','--bad','--warn'];
   series.forEach((s,si)=>{g.strokeStyle=css(cols[si%3]);g.lineWidth=2.2;g.beginPath();let on=false;for(let i=0;i<n;i++){const v=val(c,s[1],s[2],i);if(v==null){on=false;continue}if(!on){g.moveTo(X(i),Y(v));on=true}else g.lineTo(X(i),Y(v))}g.stroke()});
   $('#chartLegend').innerHTML=series.map((s,si)=>`<span><i style="background:var(${cols[si%3]})"></i>${s[0]}</span>`).join('')+`<span><i style="background:var(--tape)"></i>${namedPhases(ev).map(p=>p.n).join(' · ')}</span>`}
-function buildSummary(ev){const m=ev.m;const d=new Date();const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  const L=[`[자세 평가] ${m.sport.name} · ${m.name} (${VIEWNAME[ev.view]} 촬영) · ${ds}`,
+function buildSummary(ev){const m=ev.m;const d=ev.when?new Date(ev.when):new Date();const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const L=[`[자세 평가] ${m.sport.name} · ${m.name} (${VIEWNAME[ev.view]} 촬영) · ${ev.meta?ev.meta.date:ds}`+(ev.meta?` · ${ev.meta.no} ${ev.meta.name}`:''),
     `기준 자세 일치율 ${ev.total}% (${ST_TXT[statusOf(ev.total)]}) · 등급 ${grade(ev.total)}`+(m.rep?` · 반복 ${ev.c.reps.count}회`:'')+(ev.refSim?` · 시범 영상 일치율 ${ev.refSim.sim}%`:''),'— 항목별 —'];
   ev.rows.forEach(r=>L.push(`· ${r.cr.label}: ${r.v==null?'측정 불가':FMT[MET[r.cr.m].u](r.v)+' → '+ST_TXT[statusOf(r.score)]+' ('+r.score+'점)'}`));
   const bad=ev.rows.filter(r=>r.score!=null&&r.score<cfg.match).sort((a,b)=>(100-b.score)*b.cr.w-(100-a.score)*a.cr.w).slice(0,3);
@@ -2019,10 +2119,10 @@ $('#copyBtn').onclick=async()=>{const t=$('#summary');try{await navigator.clipbo
 /* ================= 시범 영상 ================= */
 /* ================= 업로드 ================= */
 const drop=$('#drop');
-['#file','#camBack','#camSelf'].forEach(id=>$(id).addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(f){setProg('촬영한 영상을 불러오는 중…',0.01);runStudent(f)}}));
+['#file','#camBack','#camSelf'].forEach(id=>$(id).addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(f)openTrim(f)}));
 ['dragenter','dragover'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.add('over')}));
 ['dragleave','drop'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.remove('over')}));
-drop.addEventListener('drop',e=>{const f=[...e.dataTransfer.files].find(f=>f.type.startsWith('video'));if(f)runStudent(f);else showErr('영상 파일만 올릴 수 있어요.')});
+drop.addEventListener('drop',e=>{const f=[...e.dataTransfer.files].find(f=>f.type.startsWith('video'));if(f){if(metaOk())openTrim(f)}else showErr('영상 파일만 올릴 수 있어요.')});
 window.addEventListener('resize',()=>{if(last&&!$('#results').hidden)drawChart(last)});
 
 /* ================= 설정 서랍 · 다시 촬영 ================= */
@@ -2034,6 +2134,152 @@ $('#helpBtn').onclick=openHelp;$('#closeHelp').onclick=closeHelp;
 $('#openSettings').onclick=openDrawer;$('#closeSettings').onclick=closeDrawer;$('#scrim').onclick=()=>{if(!$('#fbBox').hidden)closeFb();else if(!$('#helpBox').hidden)closeHelp();else closeDrawer()};
 document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(document.querySelector('#fbBox .csel.open'))return;if(!$('#fbBox').hidden)closeFb();else if(!$('#helpBox').hidden)closeHelp();else if(!$('#drawer').hidden)closeDrawer()});
 $('#againBtn').onclick=()=>$('#camBack').click();
+/* ================= 촬영 요령 펼치기 ================= */
+$('#tips').addEventListener('toggle',()=>{$('#tipState').textContent=$('#tips').open?'(접기)':'(펼치기)'});
+
+/* ================= 기기 저장소(IndexedDB) ================= */
+const DB=(()=>{let dbp=null,mem=[];
+  function open(){if(dbp)return dbp;dbp=new Promise(res=>{try{const r=indexedDB.open('pe-motion',1);r.onupgradeneeded=()=>{r.result.createObjectStore('entries',{keyPath:'id'})};r.onsuccess=()=>res(r.result);r.onerror=()=>res(null)}catch(e){res(null)}});return dbp}
+  async function tx(mode,fn){const db=await open();if(!db)return null;return new Promise((res,rej)=>{try{const t=db.transaction('entries',mode);const st=t.objectStore('entries');const out=fn(st);t.oncomplete=()=>res(out&&out.result!==undefined?out.result:out);t.onerror=()=>rej(t.error)}catch(e){rej(e)}})}
+  return{async all(){try{const r=await tx('readonly',st=>st.getAll());if(r)return r.sort((a,b)=>a.ts-b.ts)}catch(e){}return mem.slice()},
+    async put(e){mem=mem.filter(x=>x.id!==e.id).concat([e]);try{await tx('readwrite',st=>st.put(e))}catch(err){console.warn(err)}},
+    async del(ids){mem=mem.filter(x=>!ids.includes(x.id));try{await tx('readwrite',st=>{ids.forEach(id=>st.delete(id))})}catch(err){}}}})();
+const VIDS={};let ENTRIES=[];
+
+/* ================= 수업 / 수행평가 모드 ================= */
+let MODE=store.get('pe.mode','class');if(MODE!=='eval')MODE='class';
+function applyMode(){document.body.classList.toggle('mode-eval',MODE==='eval');
+  $('#modeBadge').textContent=MODE==='eval'?'수행평가 모드':'체육수업 모드';
+  $('#modeBtn .lbl').textContent=MODE==='eval'?'수업 모드':'수행평가 모드';
+  $('#modeBtn').setAttribute('aria-label',(MODE==='eval'?'체육수업':'수행평가')+' 모드로 바꾸기');
+  $('#histBox').hidden=MODE==='eval';$('#evalBox').hidden=MODE!=='eval';renderLists()}
+$('#modeBtn').onclick=()=>{MODE=MODE==='eval'?'class':'eval';store.set('pe.mode',MODE);applyMode();hideResults()};
+
+/* 학생 정보 */
+const today=()=>{const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+$('#mToday').onclick=()=>{$('#mDate').value=today();metaErrOff()};
+if(!$('#mDate').value)$('#mDate').value=store.get('pe.mdate',today());
+$('#mDate').addEventListener('change',()=>store.set('pe.mdate',$('#mDate').value));
+function readMeta(){return{date:$('#mDate').value,no:$('#mNo').value.trim(),name:$('#mName').value.trim()}}
+function metaErrOff(){$('#metaErr').hidden=true}
+['#mNo','#mName','#mDate'].forEach(q=>$(q).addEventListener('input',metaErrOff));
+function metaOk(){if(MODE!=='eval')return true;const m=readMeta();if(m.date&&m.no&&m.name)return true;
+  $('#metaErr').hidden=false;const q=!m.date?'#mDate':!m.no?'#mNo':'#mName';$(q).focus();$('#evalBox').scrollIntoView({block:'center',behavior:'smooth'});return false}
+document.querySelectorAll('label[for="camBack"],label[for="camSelf"],label[for="file"]').forEach(l=>l.addEventListener('click',e=>{if(!metaOk()){e.preventDefault();e.stopPropagation()}},true));
+
+/* 기록 저장 · 목록 */
+const fmtTime=ts=>{const d=new Date(ts);return`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`};
+async function saveEntry(ev){const id='e'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  const {v,...raw}=ev.raw;const m=ev.m;
+  const e={id,mode:MODE,ts:Date.now(),meta:ev.meta||null,sp:m.sport.id,mo:m.id,view:ev.view,shotView:ev.shotView||ev.view,
+    cfg:{match:cfg.match,part:cfg.part,bands:cfg.bands,level:cfg.level},raw,snaps:ev.snapsOut||[],total:ev.total};
+  VIDS[id]=ev.raw.v;ev.entryId=id;ev.when=e.ts;ENTRIES.push(e);await DB.put(e);
+  if(MODE==='eval'){$('#mNo').value='';$('#mName').value=''}
+  renderLists();markHist(id)}
+function entryLabel(e){const m=MOTION[e.sp+'.'+e.mo];return`${m?m.sport.name+' '+m.name:'동작'} · ${VIEWNAME[e.view]}`}
+function renderLists(){const cls=ENTRIES.filter(e=>e.mode==='class'),ev=ENTRIES.filter(e=>e.mode==='eval');
+  $('#histList').innerHTML=cls.map((e,i)=>`<li><button type="button" data-id="${e.id}"><span class="n">${i+1}</span><span class="t"><b>${entryLabel(e)}</b><small>${new Date(e.ts).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})} ${fmtTime(e.ts)}</small></span><span class="sc">${e.total}%</span></button></li>`).join('');
+  $('#histCnt').textContent=cls.length?cls.length+'개':'';$('#histEmpty').hidden=!!cls.length;$('#histClear').hidden=!cls.length;
+  $('#histList').querySelectorAll('button').forEach(b=>b.onclick=()=>showEntry(b.dataset.id));
+  const sel=$('#evalSel');sel.innerHTML=`<option value="">${ev.length?'기록을 골라 결과 보기':'아직 평가 기록이 없어요'}</option>`+ev.map((e,i)=>`<option value="${e.id}">${i+1}. ${e.meta?`${e.meta.date} · ${e.meta.no} ${e.meta.name}`:''} · ${entryLabel(e)} · ${e.total}%</option>`).join('');
+  if(last&&last.entryId&&ev.some(e=>e.id===last.entryId))sel.value=last.entryId;sel._refresh&&sel._refresh();
+  $('#evalCnt').textContent=ev.length?ev.length+'명':'';$('#evalPdf').disabled=!ev.length}
+function markHist(id){$('#histList').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));const s=$('#evalSel');if(id&&[...s.options].some(o=>o.value===id)){s.value=id;s._refresh&&s._refresh()}}
+$('#evalSel').addEventListener('change',e=>{if(e.target.value)showEntry(e.target.value)});
+function twoTap(btn,label,fn){let armed=false,t=null;btn.onclick=()=>{if(!armed){armed=true;btn.textContent='한 번 더 누르면 지워져요';t=setTimeout(()=>{armed=false;btn.textContent=label},2500);return}clearTimeout(t);armed=false;btn.textContent=label;fn()}}
+twoTap($('#histClear'),'기록 지우기',async()=>{const ids=ENTRIES.filter(e=>e.mode==='class').map(e=>e.id);await DB.del(ids);ENTRIES=ENTRIES.filter(e=>!ids.includes(e.id));ids.forEach(id=>delete VIDS[id]);renderLists();if(last&&ids.includes(last.entryId))hideResults()});
+twoTap($('#evalClear'),'목록 비우기',async()=>{const ids=ENTRIES.filter(e=>e.mode==='eval').map(e=>e.id);await DB.del(ids);ENTRIES=ENTRIES.filter(e=>!ids.includes(e.id));ids.forEach(id=>delete VIDS[id]);renderLists();if(last&&ids.includes(last.entryId))hideResults()});
+
+/* 저장된 기록 다시 보기 (그때의 채점 기준으로 다시 채점) */
+async function withCfg(snap,fn){const keep={match:cfg.match,part:cfg.part,bands:cfg.bands,level:cfg.level};Object.assign(cfg,snap);applyLevel();try{return await fn()}finally{Object.assign(cfg,keep);applyLevel()}}
+async function showEntry(id,opt){const e=ENTRIES.find(x=>x.id===id);if(!e||busy)return;const m=MOTION[e.sp+'.'+e.mo];if(!m)return;
+  busy=true;try{sel.sport=e.sp;sel.motion=e.mo;sel.view=e.view;fillSports();fillMotions();onSel();
+    await withCfg(e.cfg||{},async()=>{const raw={...e.raw,v:VIDS[id]||null};const ev=evaluate(raw,m,e.view);ev.raw=raw;ev.meta=e.meta;ev.entryId=id;ev.when=e.ts;ev.shotView=e.shotView;
+      if(!raw.v)ev.snapsSaved=e.snaps;last=ev;await renderResults(ev)});
+    if(!(opt&&opt.quiet))$('#results').scrollIntoView({behavior:'smooth',block:'start'})}
+  catch(err){console.error(err);showErr('기록을 다시 여는 중 문제가 생겼어요.')}finally{busy=false}}
+(async()=>{ENTRIES=await DB.all();renderLists()})();
+
+/* ================= 영상 자르기 ================= */
+const TRIM={file:null,url:null,dur:0,a:0,b:0,loop:false};
+const fmtS=t=>t.toFixed(1)+'초';
+function trimDraw(){const D=TRIM.dur||1,pa=TRIM.a/D*100,pb=TRIM.b/D*100;
+  $('#thA').style.left=pa+'%';$('#thB').style.left=pb+'%';$('#tSel').style.left=pa+'%';$('#tSel').style.width=(pb-pa)+'%';
+  $('#tA').textContent=fmtS(TRIM.a);$('#tB').textContent=fmtS(TRIM.b);$('#tLen').textContent=fmtS(TRIM.b-TRIM.a);
+  const len=TRIM.b-TRIM.a;$('#trimNote').textContent=len<0.6?'구간이 너무 짧아요. 0.6초 이상 남겨 주세요.':TRIM.dur>15?'영상이 15초보다 길어요. 분석은 최대 15초까지 할 수 있어요.':'분석은 최대 15초까지 할 수 있어요.';
+  $('#trimGo').disabled=len<0.6}
+function setA(t){TRIM.a=clamp(t,0,TRIM.b-0.3);if(TRIM.b-TRIM.a>15)TRIM.b=TRIM.a+15;trimDraw()}
+function setB(t){TRIM.b=clamp(t,TRIM.a+0.3,TRIM.dur);if(TRIM.b-TRIM.a>15)TRIM.a=TRIM.b-15;trimDraw()}
+function openTrim(file){if(busy)return;if(!metaOk())return;hideResults();$('#errBox').hidden=true;
+  if(TRIM.url)URL.revokeObjectURL(TRIM.url);TRIM.file=file;TRIM.url=URL.createObjectURL(file);TRIM.loop=false;
+  const v=$('#trimVid');v.src=TRIM.url;setStep(2);$('#trimSheet').hidden=false;$('#trimSheet').scrollIntoView({block:'start',behavior:'smooth'});
+  v.onloadedmetadata=()=>{const d=v.duration;if(!isFinite(d)||!(d>0)){TRIM.dur=0;return}TRIM.dur=d;TRIM.a=0;TRIM.b=Math.min(d,15);trimDraw()};
+  TRIM.dur=0;trimDraw()}
+function closeTrim(){$('#trimSheet').hidden=true;const v=$('#trimVid');v.pause()}
+(function(){const bar=$('#trimBar'),v=$('#trimVid');let drag=null;
+  const tAt=x=>{const r=bar.getBoundingClientRect();return clamp((x-r.left)/r.width,0,1)*(TRIM.dur||0)};
+  function down(which,e){e.preventDefault();drag=which;TRIM.loop=false;v.pause();try{e.target.setPointerCapture(e.pointerId)}catch(_){}}
+  $('#thA').addEventListener('pointerdown',e=>down('a',e));$('#thB').addEventListener('pointerdown',e=>down('b',e));
+  bar.addEventListener('pointerdown',e=>{if(e.target.classList.contains('th')||!TRIM.dur)return;const t=tAt(e.clientX);drag=Math.abs(t-TRIM.a)<Math.abs(t-TRIM.b)?'a':'b';TRIM.loop=false;v.pause();(drag==='a'?setA:setB)(t);v.currentTime=drag==='a'?TRIM.a:TRIM.b});
+  window.addEventListener('pointermove',e=>{if(!drag||!TRIM.dur)return;const t=tAt(e.clientX);(drag==='a'?setA:setB)(t);v.currentTime=drag==='a'?TRIM.a:TRIM.b});
+  window.addEventListener('pointerup',()=>{drag=null});
+  [['#thA','a'],['#thB','b']].forEach(([q,w])=>$(q).addEventListener('keydown',e=>{const d=e.key==='ArrowLeft'?-0.1:e.key==='ArrowRight'?0.1:0;if(!d)return;e.preventDefault();if(w==='a'){setA(TRIM.a+d);v.currentTime=TRIM.a}else{setB(TRIM.b+d);v.currentTime=TRIM.b}}));
+  v.addEventListener('timeupdate',()=>{if(TRIM.dur)$('#tNow').style.left=(v.currentTime/TRIM.dur*100)+'%';if(TRIM.loop&&v.currentTime>=TRIM.b){v.currentTime=TRIM.a}});
+  $('#setA').onclick=()=>setA(v.currentTime);$('#setB').onclick=()=>setB(v.currentTime);
+  $('#playSel').onclick=()=>{TRIM.loop=true;v.currentTime=TRIM.a;v.play().catch(()=>{})};
+  $('#trimGo').onclick=()=>{if(!metaOk())return;const f=TRIM.file;const r={t0:TRIM.a,t1:TRIM.b};closeTrim();setProg('자른 구간을 불러오는 중…',0.01);runStudent(f,TRIM.dur?r:null)};
+  $('#trimSkip').onclick=()=>{if(!metaOk())return;const f=TRIM.file;closeTrim();setProg('촬영한 영상을 불러오는 중…',0.01);runStudent(f,null)};
+  $('#trimCancel').onclick=()=>{closeTrim();setStep(1)};})();
+
+/* ================= 수행평가 전체 PDF ================= */
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('PDF 도구를 불러오지 못했어요. 인터넷 연결을 확인해 주세요.'));document.head.appendChild(s)})}
+async function ensureH2C(){if(!window.html2canvas)await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');return window.html2canvas}
+function pdfFromJpegs(pages){const enc=new TextEncoder();const parts=[];let len=0;const offs=[];
+  const push=x=>{const b=typeof x==='string'?enc.encode(x):x;parts.push(b);len+=b.length};
+  const obj=(n,body)=>{offs[n]=len;push(`${n} 0 obj\n`);body();push('\nendobj\n')};
+  const PW=595.28,PH=841.89,M=22;const N=pages.length;
+  push('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n'.replace(/[\x80-\xFF]/g,'*'));
+  obj(1,()=>push('<< /Type /Catalog /Pages 2 0 R >>'));
+  obj(2,()=>push(`<< /Type /Pages /Count ${N} /Kids [${pages.map((_,i)=>`${3+i*3} 0 R`).join(' ')}] >>`));
+  pages.forEach((pg,i)=>{const po=3+i*3,co=po+1,io=po+2;
+    let dw=PW-2*M,dh=dw*pg.h/pg.w;if(dh>PH-2*M){dh=PH-2*M;dw=dh*pg.w/pg.h}
+    const x=(PW-dw)/2,y=PH-M-dh;const cs=`q ${dw.toFixed(2)} 0 0 ${dh.toFixed(2)} ${x.toFixed(2)} ${y.toFixed(2)} cm /Im0 Do Q`;
+    obj(po,()=>push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW} ${PH}] /Resources << /XObject << /Im0 ${io} 0 R >> >> /Contents ${co} 0 R >>`));
+    obj(co,()=>{push(`<< /Length ${cs.length} >>\nstream\n`);push(cs);push('\nendstream')});
+    obj(io,()=>{push(`<< /Type /XObject /Subtype /Image /Width ${pg.w} /Height ${pg.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${pg.jpg.length} >>\nstream\n`);push(pg.jpg);push('\nendstream')})});
+  const total=3+N*3;const xref=len;let xs=`xref\n0 ${total}\n0000000000 65535 f \n`;for(let n=1;n<total;n++)xs+=String(offs[n]).padStart(10,'0')+' 00000 n \n';
+  push(xs);push(`trailer\n<< /Size ${total} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);
+  return new Blob(parts,{type:'application/pdf'})}
+const b64u8=d=>{const b=atob(d.split(',')[1]);const u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u};
+function inlineSvgPaint(root){root.querySelectorAll('svg *').forEach(el=>{const cs=getComputedStyle(el);['stroke','fill'].forEach(k=>{const v=cs[k];if(v&&v!=='none'&&!/url\(/.test(v))el.style[k]=v})})}
+async function captureResults(h2c){const R=$('#results');const ta=$('#summary');ta.style.height=ta.scrollHeight+4+'px';inlineSvgPaint(R);
+  const S=1.6;const bg=getComputedStyle(document.body).backgroundColor;
+  const cv=await h2c(R,{scale:S,backgroundColor:bg,useCORS:true,logging:false,windowWidth:1180,ignoreElements:el=>el.classList&&(el.classList.contains('replay')||el.classList.contains('cmpbtn')||el.classList.contains('resbtns')||el.id==='fbBar'||el.id==='copyBtn'||el.id==='noVid')});
+  ta.style.height='';
+  const top=R.getBoundingClientRect().top;const cuts=[...R.children].filter(c=>!c.hidden&&c.offsetHeight).map(c=>(c.getBoundingClientRect().bottom-top)*S);
+  const pageH=Math.floor(cv.width*(841.89-44)/(595.28-44));const out=[];let y=0;
+  while(y<cv.height-2){let end=Math.min(cv.height,y+pageH);if(end<cv.height){const ok=cuts.filter(c=>c>y+pageH*0.35&&c<=y+pageH);if(ok.length)end=Math.ceil(Math.max(...ok))+Math.round(10*S)}
+    end=Math.min(end,cv.height);const h=end-y;const pc=document.createElement('canvas');pc.width=cv.width;pc.height=h;const g=pc.getContext('2d');g.fillStyle=bg;g.fillRect(0,0,pc.width,h);g.drawImage(cv,0,y,cv.width,h,0,0,cv.width,h);
+    out.push({w:pc.width,h,jpg:b64u8(pc.toDataURL('image/jpeg',0.86))});y=end}
+  return out}
+async function savePdf(blob,name){let dl=null;try{dl=window.claude&&await window.claude.use('downloads')}catch(e){}
+  if(dl){try{await dl.save({filename:name,data:blob});return 'saved'}catch(e){if(e&&e.code==='declined')return 'declined';throw e}}
+  const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),30000);return 'saved'}
+$('#evalPdf').onclick=async()=>{const list=ENTRIES.filter(e=>e.mode==='eval');if(!list.length||busy)return;
+  const msg=$('#evalMsg');const ov=$('#pdfBusy');const keepTheme=document.documentElement.dataset.theme;const keepId=last&&last.entryId;
+  ov.hidden=false;$('#pdfBusyT').textContent='PDF 도구 준비 중…';$('#pdfBar').style.width='0%';
+  try{const h2c=await ensureH2C();document.documentElement.dataset.theme='light';document.body.classList.add('pdfmode');const pages=[];
+    for(let i=0;i<list.length;i++){const e=list[i];$('#pdfBusyT').textContent=`PDF 만드는 중… ${i+1}/${list.length}명`;$('#pdfBar').style.width=Math.round(i/list.length*100)+'%';
+      await showEntry(e.id,{quiet:true});const ph=$('#pdfHead');const m=MOTION[e.sp+'.'+e.mo];
+      ph.innerHTML=`<div><h2>수행평가 동작분석 결과</h2><span class="note">급식대장의 동작분석 · ${m.sport.name} ${m.name} (${VIEWNAME[e.view]})</span></div><div class="who">${e.meta?`${e.meta.no} ${e.meta.name}<small>${e.meta.date}</small>`:''}</div>`;ph.hidden=false;
+      await new Promise(r=>setTimeout(r,120));pages.push(...await captureResults(h2c));ph.hidden=true}
+    $('#pdfBar').style.width='100%';const blob=pdfFromJpegs(pages);const d=list[0].meta&&list[0].meta.date||today();
+    const r=await savePdf(blob,`수행평가_동작분석_${d}_${list.length}명.pdf`);msg.textContent=r==='saved'?`${list.length}명의 결과를 PDF로 저장했어요.`:'저장을 취소했어요.'}
+  catch(err){console.error(err);msg.textContent=err.message||'PDF를 만들지 못했어요.'}
+  finally{document.body.classList.remove('pdfmode');$('#pdfHead').hidden=true;if(keepTheme)document.documentElement.dataset.theme=keepTheme;else delete document.documentElement.dataset.theme;
+    ov.hidden=true;if(keepId)await showEntry(keepId,{quiet:true});else hideResults();if(last)drawChart(last)}};
+enhanceSelect($('#evalSel'));applyMode();
+
 /* 평가 기준표 다운로드 */
 $('#dlRubric').onclick=async()=>{const msg=$('#dlMsg');const btn=$('#dlRubric');msg.hidden=true;
   if(!window.claude){const a=document.createElement('a');a.href='rubric.pdf';a.download='급식대장의 동작분석 평가 기준표.pdf';document.body.appendChild(a);a.click();a.remove();return}btn.disabled=true;
@@ -2047,7 +2293,7 @@ $('#dlRubric').onclick=async()=>{const msg=$('#dlMsg');const btn=$('#dlRubric');
 /* 같은 영상(이미 인식한 관절)으로 다른 촬영 방향 기준 재채점 */
 async function analyzeOther(){if(!last||busy||!last.raw)return;const raw=last.raw,m=last.m,v=last.view==='s'?'f':'s';busy=true;
   let ev;try{ev=evaluate(raw,m,v)}catch(e){showErr(`${VIEWNAME[v]} 기준으로는 분석하지 못했어요. `+(e.message||''));setStep(4);console.error(e);busy=false;return}
-  try{stopFb();ev.raw=raw;ev.shotView=last.shotView||last.view;sel.view=v;onSel();last=ev;await renderResults(ev);$('#results').scrollIntoView({behavior:'smooth',block:'start'})}
+  try{stopFb();ev.raw=raw;ev.meta=last.meta;ev.when=last.when;ev.entryId=last.entryId;ev.shotView=last.shotView||last.view;sel.view=v;onSel();last=ev;await renderResults(ev);$('#results').scrollIntoView({behavior:'smooth',block:'start'})}
   catch(e){showErr(e.message||'다른 방향으로 분석하지 못했어요.');console.error(e)}finally{busy=false}}
 $('#otherBtn').onclick=analyzeOther;
 ['#camBack','#camSelf','#file'].forEach(q=>document.querySelector('label[for="'+q.slice(1)+'"]')?.addEventListener('click',()=>{if(!busy)setStep(2)}));
@@ -2062,7 +2308,7 @@ document.querySelectorAll('#steps .step').forEach(el=>el.addEventListener('click
   const saved=store.get('pe.theme',null);if(saved==='light'||saved==='dark')document.documentElement.dataset.theme=saved;
   paint();mq.addEventListener?.('change',()=>{paint();if(last&&!$('#results').hidden)drawChart(last)});
   $('#themeBtn').onclick=()=>apply(cur()==='dark'?'light':'dark');})();
-window.__PE={worst:e=>worstSeg(e),SPORTS,MOTION,MET,EV,critsFor,evaluate,fk,motionSeq,dtwSim,T:{get last(){return last},segFor,cmpSides,ghostOf,drawCmp,drawSkeleton,GH,startCmp,setFb:x=>{fb=x},getFb:()=>fb},show:async(ev)=>{last=ev;await renderResults(ev);$('#idealSheet').hidden=false}};
+window.__PE={worst:e=>worstSeg(e),SPORTS,MOTION,MET,EV,critsFor,evaluate,fk,motionSeq,dtwSim,T:{get last(){return last},saveEntry:(ev)=>saveEntry(ev),showEntry:(id,o)=>showEntry(id,o),get ENTRIES(){return ENTRIES},openTrim:f=>openTrim(f),segFor,cmpSides,ghostOf,drawCmp,drawSkeleton,GH,startCmp,setFb:x=>{fb=x},getFb:()=>fb},show:async(ev)=>{last=ev;await renderResults(ev);$('#idealSheet').hidden=false}};
 enhanceSelect($("#sport"));enhanceSelect($("#motion"));fillSports();fillMotions();onSel();
 /* 의견 보내기 */
 const FB_ID='chan_ddol';
