@@ -558,6 +558,50 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
   .side .rec{font-size:12px;line-height:1.45}
   .modebadge{padding:2px 12px;font-size:12px}
 }
+
+/* ===== 명단 · 다음 학생 · 맨 위로 ===== */
+.linkchip{margin-left:auto;border:1.5px solid var(--maroon);background:var(--surface);color:var(--maroon);font-family:inherit;font-size:12px;line-height:1.5;font-weight:800;padding:1px 9px;border-radius:99px;cursor:pointer;white-space:nowrap}
+.metabox .boxhead{flex-wrap:nowrap}.metabox .boxhead .note{font-size:12px;white-space:nowrap}
+.warnline{margin:0;display:flex;gap:6px;align-items:flex-start;font-size:12.5px;color:var(--bad);font-weight:600;letter-spacing:-.02em}
+.warnline svg{width:15px;height:15px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}
+@media (min-width:1024px){.side .warnline{font-size:11.5px}}
+.btn.nextbtn{background:var(--maroon);border-color:var(--maroon);color:#fff;font-weight:800;gap:6px}
+.btn.nextbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.bestnote{padding:10px 14px;border-radius:12px;font-size:14.5px;font-weight:700;background:var(--accent-soft);color:var(--accent)}
+.bestnote.low{background:var(--warn-soft);color:var(--warn)}
+.totop{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 18px);z-index:35;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;width:56px;height:56px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--accent);box-shadow:0 10px 24px -10px rgba(0,0,0,.35);cursor:pointer;font-size:10px;font-weight:800}
+.totop svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.askbox{width:min(440px,calc(100% - 32px));gap:14px;text-align:center}
+.askbox h2{font-size:19px}
+.askmsg{margin:0;font-size:15.5px;line-height:1.6}
+.askmsg b{color:var(--maroon)}
+.askbtns{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:10px}
+.askbtns .btn{min-height:50px;font-size:15.5px;font-weight:800}
+.askbtns .btn.danger{background:var(--bad);border-color:var(--bad);color:#fff}
+.rosterbox{width:min(600px,calc(100% - 32px))}
+.rform{display:grid;grid-template-columns:64px 64px 68px minmax(0,1fr) 52px;gap:8px;align-items:end}
+.rform label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;color:var(--muted)}
+.rform input{min-height:46px;border:2px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink);font:inherit;font-size:16px;font-weight:700;padding:0 10px;width:100%;min-width:0}
+.rform input:focus{outline:none;border-color:var(--accent);background:var(--surface)}
+.rform .radd{min-height:46px;font-size:24px;padding:0;border-radius:12px}
+.rlisthead{display:flex;gap:8px;align-items:center}
+.rlisthead .cnt{font-size:12px;font-weight:800;color:var(--accent);background:var(--accent-soft);padding:1px 8px;border-radius:99px}
+.rlisthead .cnt:empty{display:none}
+.rlist{max-height:min(38vh,320px);overflow-y:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+.rlist:empty::before{content:"아직 등록된 학생이 없어요.";display:block;padding:14px;color:var(--muted);font-size:14px;text-align:center}
+.rrow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:7px 8px 7px 14px;border-bottom:1px solid var(--line);font-size:14.5px}
+.rrow:last-child{border-bottom:0}
+.rrow b{font-family:var(--f-num)}
+.rrow button{border:0;background:transparent;color:var(--muted);font-size:18px;width:34px;height:34px;border-radius:8px;cursor:pointer}
+.rrow button:hover{background:var(--bad-soft);color:var(--bad)}
+.rtools{display:flex;flex-wrap:wrap;gap:8px}
+.rtools .btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.rtools .ghost{margin-left:auto}
+@media (max-width:560px){.rform{grid-template-columns:1fr 1fr 1fr}.rform .rname{grid-column:1/3}.rform .radd{grid-column:3}
+  .modebadge{padding:1px 10px;font-size:11.5px;line-height:1.5;border-width:1px}
+  .prep{gap:14px}}
+.metabox .stuwrap{grid-column:1/-1}
+.metabox.roster .manual{display:none}
 </style>
 
 </head>
@@ -587,11 +631,12 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
         <div class="field"><label for="motion">자세</label><select id="motion"></select></div>
       </div>
       <div class="metabox full" id="metaBox" hidden>
-        <div class="boxhead"><b>학생 정보</b><span class="note">날짜·학번·이름 입력 후 촬영</span></div>
+        <div class="boxhead"><b>학생 정보</b><span class="note">입력 후 촬영</span><button class="linkchip" type="button" id="rosterBtn">학생명단관리</button></div>
         <div class="metagrid">
           <div class="field mdate"><label for="mDate" class="sr">날짜</label><div class="daterow"><input type="date" id="mDate" aria-label="날짜"><button class="btn small" type="button" id="mToday">오늘</button></div></div>
-          <div class="field"><label for="mNo" class="sr">학번</label><input type="text" id="mNo" inputmode="numeric" autocomplete="off" placeholder="학번 (예: 10101)"></div>
-          <div class="field"><label for="mName" class="sr">이름</label><input type="text" id="mName" autocomplete="off" placeholder="이름"></div>
+          <div class="field stuwrap" id="stuRow" hidden><label for="mStu" class="sr">학생 선택</label><select id="mStu"></select></div>
+          <div class="field manual"><label for="mNo" class="sr">학번</label><input type="text" id="mNo" inputmode="numeric" autocomplete="off" placeholder="학번 (예: 10101)"></div>
+          <div class="field manual"><label for="mName" class="sr">이름</label><input type="text" id="mName" autocomplete="off" placeholder="이름"></div>
         </div>
         <p class="fberr" id="metaErr" hidden>날짜, 학번, 이름을 먼저 입력해 주세요.</p>
       </div>
@@ -627,6 +672,7 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
       <div class="evalbtns"><button class="btn primary dlpdf" type="button" id="evalPdf"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>전체 PDF 다운로드</button><button class="btn small ghost" type="button" id="evalClear">목록 비우기</button></div>
       <p class="note" id="evalMsg" hidden></p>
     </div>
+    <p class="warnline" id="reloadWarn" hidden><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 4 2.5 20h19Z"/><path d="M12 10v4.5M12 17.2v.1"/></svg>앱을 재 실행하거나 새로고침 하면 평가기록 목록이 삭제될 수 있어요.</p>
     <div class="privacy"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10V8a5 5 0 0 1 10 0v2h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h1Zm2 0h6V8a3 3 0 0 0-6 0v2Z"/></svg>영상은 이 기기에서만 분석되고 저장·전송되지 않아요</div>
   </section>
 </aside>
@@ -652,7 +698,7 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
   <div id="results" class="work" hidden>
     <div class="pdfhead" id="pdfHead" hidden></div>
     <section class="card">
-      <div class="sec-head"><div class="restags"><span class="chip" id="resTag"></span><span class="chip meta" id="resMeta" hidden></span></div><div class="resbtns"><button class="btn small" type="button" id="againBtn">다시 촬영하기</button><button class="btn small otherbtn" type="button" id="otherBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg><span></span></button></div></div>
+      <div class="sec-head"><div class="restags"><span class="chip" id="resTag"></span><span class="chip meta" id="resMeta" hidden></span></div><div class="resbtns"><button class="btn small" type="button" id="againBtn">다시 촬영하기</button><button class="btn small nextbtn" type="button" id="nextBtn" hidden><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M5 12h13M13 6l6 6-6 6"/></svg>다음 학생 촬영하기</button><button class="btn small otherbtn" type="button" id="otherBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg><span></span></button></div></div>
       <div class="hero">
         <div class="dial"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="43" fill="none" stroke="var(--track)" stroke-width="10"/><circle id="dialArc" cx="50" cy="50" r="43" fill="none" stroke="var(--accent)" stroke-width="10" stroke-linecap="round" stroke-dasharray="270.2" stroke-dashoffset="270.2"/></svg>
           <div class="num"><b id="scoreNum">0</b><small>% 일치</small></div></div>
@@ -662,6 +708,7 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
           <div class="stats" id="kv"></div>
         </div>
       </div>
+      <div class="bestnote" id="bestNote" hidden></div>
       <div id="warns" style="display:flex;flex-direction:column;gap:8px"></div>
     </section>
 
@@ -725,6 +772,31 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
 
 <div class="scrim" id="scrim" hidden></div>
 <div class="pdfbusy" id="pdfBusy" hidden><div><b id="pdfBusyT">PDF 만드는 중…</b><div class="bar"><i id="pdfBar"></i></div><p class="note">화면이 잠시 바뀌어도 기다려 주세요.</p></div></div>
+<button class="totop" type="button" id="toTop" aria-label="맨 위로" hidden><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 19V6M6 11l6-6 6 6"/></svg><span>맨 위로</span></button>
+<div class="helpbox askbox" id="askBox" role="alertdialog" aria-modal="true" aria-labelledby="askTitle" hidden>
+  <h2 id="askTitle"></h2><p class="askmsg" id="askMsg"></p><div class="askbtns" id="askBtns"></div>
+</div>
+<div class="helpbox rosterbox" id="rosterBox" role="dialog" aria-modal="true" aria-labelledby="rosterTitle" hidden>
+  <div class="sec-head"><h2 id="rosterTitle" style="font-size:20px">학생명단관리</h2><button class="btn small" type="button" id="rosterClose">닫기</button></div>
+  <p class="note">학년·반은 한 번 입력하면 그대로 유지돼요.<br>이름을 쓰고 <b>엔터</b>나 <b>+</b>를 누르면 다음 번호로 넘어가요.</p>
+  <div class="rform">
+    <label><span>학년</span><input type="text" id="rG" inputmode="numeric" maxlength="2"></label>
+    <label><span>반</span><input type="text" id="rC" inputmode="numeric" maxlength="3"></label>
+    <label><span>번호</span><input type="text" id="rN" inputmode="numeric" maxlength="3"></label>
+    <label class="rname"><span>이름</span><input type="text" id="rName" autocomplete="off" enterkeyhint="next"></label>
+    <button class="btn primary radd" type="button" id="rAdd" aria-label="명단에 추가">+</button>
+  </div>
+  <p class="fberr" id="rErr" hidden></p>
+  <div class="rlisthead"><b>명단</b><span class="cnt" id="rCnt"></span></div>
+  <div class="rlist" id="rList"></div>
+  <div class="rtools">
+    <button class="btn small" type="button" id="rTpl"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>엑셀 양식 다운받기</button>
+    <label class="btn small" for="rFile"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 19V8M7 13l5-5 5 5M5 4h14"/></svg>엑셀 업로드</label>
+    <input type="file" id="rFile" accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" hidden>
+    <button class="btn small ghost" type="button" id="rClear">명단 비우기</button>
+  </div>
+  <p class="note">엑셀 양식: A열 학년, B열 반, C열 번호, D열 이름 (첫 줄은 제목)</p>
+</div>
 <div class="helpbox" id="helpBox" role="dialog" aria-modal="true" aria-labelledby="helpTitle" hidden>
   <div class="sec-head"><h2 id="helpTitle" style="font-size:20px">사용 방법</h2><button class="btn small" type="button" id="closeHelp">닫기</button></div>
   <ol>
@@ -735,7 +807,7 @@ body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .resbtns,body.pdfmode .cmp
     <li><div><b>결과 확인하기</b><span>기준 자세와의 일치율과 등급, 수정할 동작과 잘한 동작을 확인해요.</span></div></li>
     <li><div><b>영상으로 비교하기</b><span>'내 동작 다시 보기'의 '피드백' 탭과 항목별 '영상에서 확인하기'로 기준값(초록)과 내 값(노랑)을 비교해요.</span></div></li>
     <li><div><b>다른 방향·결과 저장</b><span>'다른 방향으로 분석하기'로 같은 영상을 다시 채점할 수 있어요.<br>'요약 복사'로 결과를 제출란에 붙여 넣어요.</span></div></li>
-    <li><div><b>수업 모드 · 수행평가 모드</b><span>오른쪽 위 버튼으로 바꿔요.<br>수업 모드: 분석한 영상이 왼쪽 '분석 기록'에 순서대로 쌓이고, 누르면 결과를 다시 볼 수 있어요.<br>수행평가 모드: 날짜·학번·이름을 입력하고 촬영하면 '평가 기록'에 쌓이고, 전체 결과를 PDF 한 파일로 내려받을 수 있어요.<br>기록은 이 기기에만 저장돼요.</span></div></li>
+    <li><div><b>수업 모드 · 수행평가 모드</b><span>오른쪽 위 버튼으로 바꿔요.<br>수업 모드: 분석한 영상이 왼쪽 '분석 기록'에 순서대로 쌓이고, 누르면 결과를 다시 볼 수 있어요.<br>수행평가 모드: 날짜·학번·이름을 입력하고 촬영하면 '평가 기록'에 쌓이고, 전체 결과를 PDF 한 파일로 내려받을 수 있어요.<br>'학생명단관리'에 명단을 넣어 두면 학생을 골라 촬영하고, '다음 학생 촬영하기'로 차례대로 평가할 수 있어요. 같은 학생을 다시 찍으면 더 높은 점수만 남아요.<br>기록은 이 기기에만 저장돼요.</span></div></li>
   </ol>
   <p class="note">영상은 이 기기에서만 분석되고 저장·전송되지 않아요.</p>
 </div>
@@ -1988,7 +2060,7 @@ function hideResults(){setStep(1);$('#results').hidden=true;$('#errBox').hidden=
 
 /* ================= 학생 영상 분석 ================= */
 let last=null,busy=false;
-async function runStudent(file,range){if(busy)return;busy=true;$('#errBox').hidden=true;$('#results').hidden=true;
+async function runStudent(file,range){if(busy)return;busy=true;$('#bestNote').hidden=true;$('#errBox').hidden=true;$('#results').hidden=true;
   const m=curM(),view=sel.view;const meta=MODE==='eval'?readMeta():null;
   try{const raw=await analyzeVideo(file,'내 동작',range);setProg('결과 정리 중…',0.97);
     const ev=evaluate(raw,m,view);ev.raw=raw;ev.meta=meta;
@@ -2000,7 +2072,7 @@ async function runStudent(file,range){if(busy)return;busy=true;$('#errBox').hidd
 function namedPhases(ev){return ev.m.phases.filter(p=>p.n&&ev.c.ph[p.k]>=0).map(p=>({k:p.k,n:p.n,i:ev.c.ph[p.k]})).sort((a,b)=>a.i-b.i)}
 function critPhase(cr){if(cr.at==='rep')return'B';if(cr.at==='repT')return'T';if(cr.at.includes(':')||cr.m==='dt')return null;return cr.at}
 async function renderResults(ev){const m=ev.m,c=ev.c;$('#results').hidden=false;setStep(4);
-  $('#resTag').textContent=`${m.sport.name} · ${m.name} · ${VIEWNAME[ev.view]} 기준 분석`;{const rm=$('#resMeta');if(ev.meta){rm.textContent=`${ev.meta.date} · ${ev.meta.no} ${ev.meta.name}`;rm.hidden=false}else rm.hidden=true}markHist(ev.entryId);$('#otherBtn span').textContent=`${VIEWNAME[ev.view==='s'?'f':'s']}으로 분석하기`;
+  $('#resTag').textContent=`${m.sport.name} · ${m.name} · ${VIEWNAME[ev.view]} 기준 분석`;{const rm=$('#resMeta');if(ev.meta){rm.textContent=`${ev.meta.date} · ${whoOf(ev.meta)}`;rm.hidden=false}else rm.hidden=true}markHist(ev.entryId);$('#otherBtn span').textContent=`${VIEWNAME[ev.view==='s'?'f':'s']}으로 분석하기`;
   const st=statusOf(ev.total);$('#scoreNum').textContent=ev.total;
   $('#dialArc').style.stroke=`var(--${st==='good'?'good':st==='warn'?'warn':'bad'})`;$('#dialArc').setAttribute('stroke-dashoffset',(270.2*(1-ev.total/100)).toFixed(1));
   const pill=$('#verdictPill');pill.className='pill '+st;pill.textContent='기준 자세와 '+ST_TXT[st];
@@ -2169,7 +2241,7 @@ function drawChart(ev){const m=ev.m,c=ev.c,cv=$('#chart');const series=(m.chart|
   series.forEach((s,si)=>{g.strokeStyle=css(cols[si%3]);g.lineWidth=2.2;g.beginPath();let on=false;for(let i=0;i<n;i++){const v=val(c,s[1],s[2],i);if(v==null){on=false;continue}if(!on){g.moveTo(X(i),Y(v));on=true}else g.lineTo(X(i),Y(v))}g.stroke()});
   $('#chartLegend').innerHTML=series.map((s,si)=>`<span><i style="background:var(${cols[si%3]})"></i>${s[0]}</span>`).join('')+`<span><i style="background:var(--tape)"></i>${namedPhases(ev).map(p=>p.n).join(' · ')}</span>`}
 function buildSummary(ev){const m=ev.m;const d=ev.when?new Date(ev.when):new Date();const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  const L=[`[자세 평가] ${m.sport.name} · ${m.name} (${VIEWNAME[ev.view]} 촬영) · ${ev.meta?ev.meta.date:ds}`+(ev.meta?` · ${ev.meta.no} ${ev.meta.name}`:''),
+  const L=[`[자세 평가] ${m.sport.name} · ${m.name} (${VIEWNAME[ev.view]} 촬영) · ${ev.meta?ev.meta.date:ds}`+(ev.meta?` · ${whoOf(ev.meta)}`:''),
     `기준 자세 일치율 ${ev.total}% (${ST_TXT[statusOf(ev.total)]}) · 등급 ${grade(ev.total)}`+(m.rep?` · 반복 ${ev.c.reps.count}회`:'')+(ev.refSim?` · 시범 영상 일치율 ${ev.refSim.sim}%`:''),'— 항목별 —'];
   ev.rows.forEach(r=>L.push(`· ${r.cr.label}: ${r.v==null?'측정 불가':FMT[MET[r.cr.m].u](r.v)+' → '+ST_TXT[statusOf(r.score)]+' ('+r.score+'점)'}`));
   const bad=ev.rows.filter(r=>r.score!=null&&r.score<cfg.match).sort((a,b)=>(100-b.score)*b.cr.w-(100-a.score)*a.cr.w).slice(0,3);
@@ -2194,7 +2266,8 @@ function closeHelp(){$('#helpBox').hidden=true;$('#scrim').hidden=true;$('#helpB
 $('#helpBtn').onclick=openHelp;$('#closeHelp').onclick=closeHelp;
 $('#openSettings').onclick=openDrawer;$('#closeSettings').onclick=closeDrawer;$('#scrim').onclick=()=>{if(!$('#fbBox').hidden)closeFb();else if(!$('#helpBox').hidden)closeHelp();else closeDrawer()};
 document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(document.querySelector('#fbBox .csel.open'))return;if(!$('#fbBox').hidden)closeFb();else if(!$('#helpBox').hidden)closeHelp();else if(!$('#drawer').hidden)closeDrawer()});
-$('#againBtn').onclick=()=>$('#camBack').click();
+let lastCap='camBack';document.querySelectorAll('label[for="camBack"],label[for="camSelf"],label[for="file"]').forEach(l=>l.addEventListener('click',()=>{lastCap=l.htmlFor}));
+$('#againBtn').onclick=()=>{if(metaOk())$('#'+lastCap).click()};
 /* 왼쪽 패널 고정: 화면보다 길면 아래 끝이 보이는 위치에서 멈춤 */
 (function(){const side=$('#drop');const fit=()=>{if(innerWidth<1024){side.style.top='';return}const h=side.offsetHeight;const top=84;side.style.top=Math.min(top,innerHeight-h-12)+'px'};
   try{new ResizeObserver(fit).observe(side)}catch(e){}addEventListener('resize',fit);fit()})();
@@ -2216,7 +2289,7 @@ function applyMode(){document.body.classList.toggle('mode-eval',MODE==='eval');
   $('#modeBadge').textContent=MODE==='eval'?'수행평가 모드':'체육수업 모드';
   $('#modeBtn .lbl').textContent=MODE==='eval'?'수업 모드':'평가 모드';
   $('#modeBtn').setAttribute('aria-label',(MODE==='eval'?'체육수업':'수행평가')+' 모드로 바꾸기');
-  $('#histBox').hidden=MODE==='eval';$('#evalBox').hidden=MODE!=='eval';$('#metaBox').hidden=MODE!=='eval';renderLists()}
+  $('#histBox').hidden=MODE==='eval';$('#evalBox').hidden=MODE!=='eval';$('#metaBox').hidden=MODE!=='eval';$('#reloadWarn').hidden=MODE!=='eval';syncNextBtn();renderLists()}
 $('#modeBtn').onclick=()=>{MODE=MODE==='eval'?'class':'eval';store.set('pe.mode',MODE);applyMode();hideResults()};
 
 /* 학생 정보 */
@@ -2224,11 +2297,14 @@ const today=()=>{const d=new Date();return`${d.getFullYear()}-${String(d.getMont
 $('#mToday').onclick=()=>{$('#mDate').value=today();metaErrOff()};
 if(!$('#mDate').value)$('#mDate').value=store.get('pe.mdate',today());
 $('#mDate').addEventListener('change',()=>store.set('pe.mdate',$('#mDate').value));
-function readMeta(){return{date:$('#mDate').value,no:$('#mNo').value.trim(),name:$('#mName').value.trim()}}
+const pad2=n=>String(n).padStart(2,'0');
+function whoOf(m){if(!m)return'';return m.g?`${m.g}학년 ${m.c}반 ${m.n}번 ${m.name}`:`${m.no} ${m.name}`}
+function readMeta(){const date=$('#mDate').value;if(ROSTER.length){const st=curStu();return st?{date,g:st.g,c:st.c,n:st.n,no:`${st.g}${pad2(st.c)}${pad2(st.n)}`,name:st.name}:{date,no:'',name:''}}
+  return{date,no:$('#mNo').value.trim(),name:$('#mName').value.trim()}}
 function metaErrOff(){$('#metaErr').hidden=true}
 ['#mNo','#mName','#mDate'].forEach(q=>$(q).addEventListener('input',metaErrOff));
 function metaOk(){if(MODE!=='eval')return true;const m=readMeta();if(m.date&&m.no&&m.name)return true;
-  $('#metaErr').hidden=false;const q=!m.date?'#mDate':!m.no?'#mNo':'#mName';$(q).focus();$('#metaBox').scrollIntoView({block:'center',behavior:'smooth'});return false}
+  $('#metaErr').textContent=ROSTER.length?'날짜와 학생을 먼저 선택해 주세요.':'날짜, 학번, 이름을 먼저 입력해 주세요.';$('#metaErr').hidden=false;const q=!m.date?'#mDate':ROSTER.length?'#mStuBtn':!m.no?'#mNo':'#mName';const qe=$(q);if(qe)qe.focus();$('#metaBox').scrollIntoView({block:'center',behavior:'smooth'});return false}
 document.querySelectorAll('label[for="camBack"],label[for="camSelf"],label[for="file"]').forEach(l=>l.addEventListener('click',e=>{if(!metaOk()){e.preventDefault();e.stopPropagation()}},true));
 
 /* 기록 저장 · 목록 */
@@ -2237,26 +2313,31 @@ async function saveEntry(ev){const id='e'+Date.now().toString(36)+Math.random().
   const {v,...raw}=ev.raw;const m=ev.m;
   const e={id,mode:MODE,ts:Date.now(),meta:ev.meta||null,sp:m.sport.id,mo:m.id,view:ev.view,shotView:ev.shotView||ev.view,
     cfg:{match:cfg.match,part:cfg.part,bands:cfg.bands,level:cfg.level},raw,snaps:ev.snapsOut||[],total:ev.total};
-  VIDS[id]=ev.raw.v;ev.entryId=id;ev.when=e.ts;ENTRIES.push(e);await DB.put(e);
-  if(MODE==='eval'){$('#mNo').value='';$('#mName').value=''}
-  renderLists();markHist(id)}
+  const bn=$('#bestNote');bn.hidden=true;bn.className='bestnote';
+  if(MODE==='eval'&&e.meta){const key=x=>`${x.meta.date}|${x.meta.no}|${x.meta.name}|${x.sp}.${x.mo}`;const old=ENTRIES.find(x=>x.mode==='eval'&&x.meta&&key(x)===key(e));
+    if(old){if(e.total<=old.total){bn.textContent=`이전 최고 기록 ${old.total}%보다 낮아서 저장하지 않았어요. (이번 ${e.total}%) 평가 기록에는 ${old.total}%가 그대로 남아 있어요.`;bn.classList.add('low');bn.hidden=false;ev.entryId=null;ev.when=e.ts;return}
+      e.ts=old.ts;e.shotTs=Date.now();await DB.del([old.id]);ENTRIES=ENTRIES.filter(x=>x.id!==old.id);delete VIDS[old.id];
+      bn.textContent=`최고 기록이 ${old.total}% → ${e.total}%로 바뀌었어요. 평가 기록을 이번 결과로 바꿨어요.`;bn.hidden=false}
+    else{bn.textContent=`${whoOf(e.meta)} 학생의 결과를 평가 기록에 저장했어요.`;bn.hidden=false}}
+  VIDS[id]=ev.raw.v;ev.entryId=id;ev.when=e.ts;ENTRIES.push(e);ENTRIES.sort((a,b)=>a.ts-b.ts);await DB.put(e);
+  renderLists();markHist(id);syncNextBtn()}
 function entryLabel(e){const m=MOTION[e.sp+'.'+e.mo];return`${m?m.sport.name+' '+m.name:'동작'} · ${VIEWNAME[e.view]}`}
 function renderLists(){const cls=ENTRIES.filter(e=>e.mode==='class'),ev=ENTRIES.filter(e=>e.mode==='eval');
   const hs=$('#histSel');hs.innerHTML=`<option value="">${cls.length?'기록을 골라 결과 다시 보기':'분석한 영상이 여기에 순서대로 쌓여요'}</option>`+cls.map((e,i)=>`<option value="${e.id}">${i+1}. ${new Date(e.ts).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})} ${fmtTime(e.ts)} · ${entryLabel(e)} · ${e.total}%</option>`).join('');
   if(last&&last.entryId&&cls.some(e=>e.id===last.entryId))hs.value=last.entryId;hs._refresh&&hs._refresh();
   $('#histCnt').textContent=cls.length?cls.length+'개':'';$('#histClear').hidden=!cls.length;
-  const sel=$('#evalSel');sel.innerHTML=`<option value="">${ev.length?`평가 기록 ${ev.length}명 · 골라서 결과 보기`:'평가 기록이 아직 없어요'}</option>`+ev.map((e,i)=>`<option value="${e.id}">${i+1}. ${e.meta?`${e.meta.date} · ${e.meta.no} ${e.meta.name}`:''} · ${entryLabel(e)} · ${e.total}%</option>`).join('');
+  const sel=$('#evalSel');sel.innerHTML=`<option value="">${ev.length?`평가 기록 ${ev.length}명 · 골라서 결과 보기`:'평가 기록이 아직 없어요'}</option>`+ev.map((e,i)=>`<option value="${e.id}">${i+1}. ${e.meta?`${e.meta.date} · ${whoOf(e.meta)}`:''} · ${entryLabel(e)} · ${e.total}%</option>`).join('');
   if(last&&last.entryId&&ev.some(e=>e.id===last.entryId))sel.value=last.entryId;sel._refresh&&sel._refresh();
   $('#evalCnt').textContent=ev.length?ev.length+'명':'';$('#evalPdf').disabled=!ev.length}
 function markHist(id){['#evalSel','#histSel'].forEach(q=>{const s=$(q);if(id&&[...s.options].some(o=>o.value===id)){s.value=id;s._refresh&&s._refresh()}})}
 ['#evalSel','#histSel'].forEach(q=>$(q).addEventListener('change',e=>{if(e.target.value)showEntry(e.target.value)}));
 function twoTap(btn,label,fn){let armed=false,t=null;btn.onclick=()=>{if(!armed){armed=true;btn.textContent='한 번 더 누르면 지워져요';t=setTimeout(()=>{armed=false;btn.textContent=label},2500);return}clearTimeout(t);armed=false;btn.textContent=label;fn()}}
 twoTap($('#histClear'),'기록 지우기',async()=>{const ids=ENTRIES.filter(e=>e.mode==='class').map(e=>e.id);await DB.del(ids);ENTRIES=ENTRIES.filter(e=>!ids.includes(e.id));ids.forEach(id=>delete VIDS[id]);renderLists();if(last&&ids.includes(last.entryId))hideResults()});
-twoTap($('#evalClear'),'목록 비우기',async()=>{const ids=ENTRIES.filter(e=>e.mode==='eval').map(e=>e.id);await DB.del(ids);ENTRIES=ENTRIES.filter(e=>!ids.includes(e.id));ids.forEach(id=>delete VIDS[id]);renderLists();if(last&&ids.includes(last.entryId))hideResults()});
+$('#evalClear').onclick=()=>{const n=ENTRIES.filter(e=>e.mode==='eval').length;if(!n)return;ask({title:'평가 기록을 모두 지울까요?',msg:`평가 기록 <b>${n}명</b>의 결과가 모두 지워져요.<br>지운 기록은 되돌릴 수 없어요. 필요하면 먼저 PDF로 저장해 두세요.`,btns:[{label:'취소'},{label:'모두 지우기',cls:'danger',fn:async()=>{const ids=ENTRIES.filter(e=>e.mode==='eval').map(e=>e.id);await DB.del(ids);ENTRIES=ENTRIES.filter(e=>!ids.includes(e.id));ids.forEach(id=>delete VIDS[id]);renderLists();if(last&&ids.includes(last.entryId))hideResults()}}]})};
 
 /* 저장된 기록 다시 보기 (그때의 채점 기준으로 다시 채점) */
 async function withCfg(snap,fn){const keep={match:cfg.match,part:cfg.part,bands:cfg.bands,level:cfg.level};Object.assign(cfg,snap);applyLevel();try{return await fn()}finally{Object.assign(cfg,keep);applyLevel()}}
-async function showEntry(id,opt){const e=ENTRIES.find(x=>x.id===id);if(!e||busy)return;const m=MOTION[e.sp+'.'+e.mo];if(!m)return;
+async function showEntry(id,opt){const e=ENTRIES.find(x=>x.id===id);if(!e||busy)return;$('#bestNote').hidden=true;const m=MOTION[e.sp+'.'+e.mo];if(!m)return;
   busy=true;try{sel.sport=e.sp;sel.motion=e.mo;sel.view=e.view;fillSports();fillMotions();onSel();
     await withCfg(e.cfg||{},async()=>{const raw={...e.raw,v:VIDS[id]||null};const ev=evaluate(raw,m,e.view);ev.raw=raw;ev.meta=e.meta;ev.entryId=id;ev.when=e.ts;ev.shotView=e.shotView;
       if(!raw.v)ev.snapsSaved=e.snaps;last=ev;await renderResults(ev)});
@@ -2335,14 +2416,122 @@ $('#evalPdf').onclick=async()=>{const list=ENTRIES.filter(e=>e.mode==='eval');if
   try{const h2c=await ensureH2C();document.documentElement.dataset.theme='light';document.body.classList.add('pdfmode');const pages=[];
     for(let i=0;i<list.length;i++){const e=list[i];$('#pdfBusyT').textContent=`PDF 만드는 중… ${i+1}/${list.length}명`;$('#pdfBar').style.width=Math.round(i/list.length*100)+'%';
       await showEntry(e.id,{quiet:true});const ph=$('#pdfHead');const m=MOTION[e.sp+'.'+e.mo];
-      ph.innerHTML=`<div><h2>수행평가 동작분석 결과</h2><span class="note">급식대장의 동작분석 · ${m.sport.name} ${m.name} (${VIEWNAME[e.view]})</span></div><div class="who">${e.meta?`${e.meta.no} ${e.meta.name}<small>${e.meta.date}</small>`:''}</div>`;ph.hidden=false;
+      ph.innerHTML=`<div><h2>수행평가 동작분석 결과</h2><span class="note">급식대장의 동작분석 · ${m.sport.name} ${m.name} (${VIEWNAME[e.view]})</span></div><div class="who">${e.meta?`${whoOf(e.meta)}<small>${e.meta.date}</small>`:''}</div>`;ph.hidden=false;
       await new Promise(r=>setTimeout(r,120));pages.push(...await captureResults(h2c));ph.hidden=true}
     $('#pdfBar').style.width='100%';const blob=pdfFromJpegs(pages);const d=list[0].meta&&list[0].meta.date||today();
     const r=await savePdf(blob,`수행평가_동작분석_${d}_${list.length}명.pdf`);msg.hidden=false;msg.textContent=r==='saved'?`${list.length}명의 결과를 PDF로 저장했어요.`:'저장을 취소했어요.'}
   catch(err){console.error(err);msg.hidden=false;msg.textContent=err.message||'PDF를 만들지 못했어요.'}
   finally{document.body.classList.remove('pdfmode');$('#pdfHead').hidden=true;if(keepTheme)document.documentElement.dataset.theme=keepTheme;else delete document.documentElement.dataset.theme;
     ov.hidden=true;if(keepId)await showEntry(keepId,{quiet:true});else hideResults();if(last)drawChart(last)}};
-enhanceSelect($('#evalSel'));enhanceSelect($('#histSel'));applyMode();
+enhanceSelect($('#evalSel'));enhanceSelect($('#histSel'));
+/* ================= 확인 창 ================= */
+function ask(o){const box=$('#askBox');const prevScrim=$('#scrim').onclick;$('#askTitle').textContent=o.title||'';$('#askMsg').innerHTML=o.msg||'';const bw=$('#askBtns');bw.innerHTML='';
+  const close=()=>{box.hidden=true;$('#scrim').hidden=true;$('#scrim').onclick=prevScrim;askClose=null};askClose=close;
+  (o.btns||[{label:'확인'}]).forEach(b=>{const el=document.createElement('button');el.type='button';el.className='btn '+(b.cls||'');el.textContent=b.label;
+    el.onclick=()=>{close();b.fn&&b.fn()};bw.appendChild(el)});
+  $('#scrim').hidden=false;$('#scrim').onclick=close;box.hidden=false;const f=bw.lastElementChild;f&&f.focus({preventScroll:true})}
+let askClose=null;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#askBox').hidden&&askClose)askClose()});
+
+/* ================= 맨 위로 ================= */
+(function(){const b=$('#toTop');const f=()=>{b.hidden=scrollY<500};addEventListener('scroll',f,{passive:true});f();b.onclick=()=>scrollTo({top:0,behavior:'smooth'})})();
+
+/* ================= 학생 명단 ================= */
+let ROSTER=store.get('pe.roster',[]);if(!Array.isArray(ROSTER))ROSTER=[];
+const stuKey=st=>`${st.g}-${st.c}-${st.n}`;
+const stuLabel=st=>`${st.g}학년 ${st.c}반 ${st.n}번 ${st.name}`;
+function sortRoster(){ROSTER.sort((a,b)=>a.g-b.g||a.c-b.c||a.n-b.n)}
+function saveRoster(){sortRoster();store.set('pe.roster',ROSTER);renderRoster();renderStuSel()}
+function curStu(){const k=$('#mStu').value;return ROSTER.find(st=>stuKey(st)===k)||null}
+function renderStuSel(){const s=$('#mStu');const keep=s.value||store.get('pe.stu','');
+  s.innerHTML='<option value="">학생 선택</option>'+ROSTER.map(st=>`<option value="${stuKey(st)}">${stuLabel(st).replace(/[<>&]/g,'')}</option>`).join('');
+  if(ROSTER.some(st=>stuKey(st)===keep))s.value=keep;s._refresh&&s._refresh();
+  const on=ROSTER.length>0;$('#stuRow').hidden=!on;$('#metaBox').classList.toggle('roster',on);syncNextBtn()}
+$('#mStu').addEventListener('change',()=>{store.set('pe.stu',$('#mStu').value);$('#metaErr').hidden=true});
+function renderRoster(){$('#rCnt').textContent=ROSTER.length?ROSTER.length+'명':'';
+  $('#rList').innerHTML=ROSTER.map((st,i)=>`<div class="rrow"><span><b>${st.g}학년 ${st.c}반 ${st.n}번</b> ${st.name.replace(/[<>&]/g,'')}</span><button type="button" data-i="${i}" aria-label="삭제">×</button></div>`).join('');
+  $('#rList').querySelectorAll('button').forEach(b=>b.onclick=()=>{ROSTER.splice(+b.dataset.i,1);saveRoster()})}
+function nextNo(g,c){const ns=ROSTER.filter(st=>st.g===g&&st.c===c).map(st=>st.n);return ns.length?Math.max(...ns)+1:1}
+function rErr(t){const e=$('#rErr');e.textContent=t||'';e.hidden=!t}
+function addStu(){const g=parseInt($('#rG').value,10),c=parseInt($('#rC').value,10),n=parseInt($('#rN').value,10),name=$('#rName').value.trim();
+  if(!(g>0)){rErr('학년을 입력해 주세요.');$('#rG').focus();return}if(!(c>0)){rErr('반을 입력해 주세요.');$('#rC').focus();return}
+  if(!(n>0)){rErr('번호를 입력해 주세요.');$('#rN').focus();return}if(!name){rErr('이름을 입력해 주세요.');$('#rName').focus();return}
+  rErr('');const i=ROSTER.findIndex(st=>st.g===g&&st.c===c&&st.n===n);const st={g,c,n,name};if(i>=0)ROSTER[i]=st;else ROSTER.push(st);
+  store.set('pe.rgc',{g,c});saveRoster();$('#rN').value=String(n+1);$('#rName').value='';$('#rName').focus();
+  const row=[...$('#rList').children].find(r=>r.textContent.startsWith(`${g}학년 ${c}반 ${n}번`));row&&row.scrollIntoView({block:'nearest'})}
+$('#rAdd').onclick=addStu;
+$('#rName').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();addStu()}});
+['#rG','#rC','#rN'].forEach(q=>$(q).addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();$('#rName').focus()}}));
+['#rG','#rC'].forEach(q=>$(q).addEventListener('change',()=>{const g=parseInt($('#rG').value,10),c=parseInt($('#rC').value,10);if(g>0&&c>0)$('#rN').value=String(nextNo(g,c))}));
+function openRoster(){const gc=store.get('pe.rgc',null);if(gc){$('#rG').value=gc.g;$('#rC').value=gc.c;$('#rN').value=String(nextNo(gc.g,gc.c))}else if(!$('#rN').value)$('#rN').value='1';
+  renderRoster();rErr('');$('#scrim').hidden=false;$('#rosterBox').hidden=false;const touch=matchMedia('(pointer:coarse)').matches;(touch?$('#rosterClose'):(gc?$('#rName'):$('#rG'))).focus({preventScroll:true})}
+function closeRoster(){$('#rosterBox').hidden=true;$('#scrim').hidden=true;renderStuSel()}
+$('#rosterBtn').onclick=openRoster;$('#rosterClose').onclick=closeRoster;
+$('#rClear').onclick=()=>{if(!ROSTER.length)return;$('#rosterBox').hidden=true;ask({title:'학생 명단을 모두 지울까요?',msg:`등록된 <b>${ROSTER.length}명</b>이 명단에서 지워져요.<br>평가 기록은 지워지지 않아요.`,btns:[{label:'취소',fn:()=>{$('#scrim').hidden=false;$('#rosterBox').hidden=false}},{label:'모두 지우기',cls:'danger',fn:()=>{ROSTER=[];saveRoster();$('#scrim').hidden=false;$('#rosterBox').hidden=false}}]})};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#rosterBox').hidden)closeRoster()});
+{const sd=$('#scrim').onclick;$('#scrim').onclick=()=>{if(!$('#rosterBox').hidden){closeRoster();return}sd&&sd()}}
+
+/* ---- 엑셀(xlsx) 양식 만들기 · 읽기 (외부 도구 없이) ---- */
+const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return b=>{let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=t[(c^b[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}})();
+function zipStore(files){const enc=new TextEncoder();const parts=[],cen=[];let off=0;
+  const u16=n=>[n&255,(n>>8)&255],u32=n=>[n&255,(n>>8)&255,(n>>16)&255,(n>>>24)&255];
+  for(const [name,txt] of files){const nb=enc.encode(name),db=enc.encode(txt),crc=CRC(db);
+    const lh=new Uint8Array([0x50,0x4b,3,4,...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(crc),...u32(db.length),...u32(db.length),...u16(nb.length),...u16(0)]);
+    parts.push(lh,nb,db);cen.push(new Uint8Array([0x50,0x4b,1,2,...u16(20),...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(crc),...u32(db.length),...u32(db.length),...u16(nb.length),...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(off)]),nb);
+    off+=lh.length+nb.length+db.length}
+  const cl=cen.reduce((a,b)=>a+b.length,0);const end=new Uint8Array([0x50,0x4b,5,6,0,0,0,0,...u16(files.length),...u16(files.length),...u32(cl),...u32(off),0,0]);
+  return new Blob([...parts,...cen,end],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})}
+function xlsxTemplate(rows){const x=v=>String(v).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+  const col='ABCD';const head=['학년','반','번호','이름'];const all=[head,...rows];
+  const sd=all.map((r,ri)=>`<row r="${ri+1}">`+r.map((v,ci)=>{const ref=col[ci]+(ri+1);return(ri>0&&ci<3&&v!=='')?`<c r="${ref}"><v>${x(v)}</v></c>`:`<c r="${ref}" t="inlineStr"${ri===0?' s="1"':''}><is><t>${x(v)}</t></is></c>`}).join('')+'</row>').join('');
+  return zipStore([
+   ['[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'],
+   ['_rels/.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
+   ['xl/workbook.xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="학생명단" sheetId="1" r:id="rId1"/></sheets></workbook>'],
+   ['xl/_rels/workbook.xml.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'],
+   ['xl/styles.xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="맑은 고딕"/></font><font><b/><sz val="11"/><name val="맑은 고딕"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFE7F2EA"/></patternFill></fill></fills><borders count="1"><border/></borders><cellStyleXfs count="1"><xf/></cellStyleXfs><cellXfs count="2"><xf/><xf fontId="1" fillId="2" applyFont="1" applyFill="1"/></cellXfs></styleSheet>'],
+   ['xl/worksheets/sheet1.xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols><col min="1" max="3" width="9" customWidth="1"/><col min="4" max="4" width="16" customWidth="1"/></cols><sheetData>'+sd+'</sheetData></worksheet>']])}
+async function unzip(buf){const u=new Uint8Array(buf),dv=new DataView(buf);let e=u.length-22;while(e>=0&&dv.getUint32(e,true)!==0x06054b50)e--;if(e<0)throw new Error('엑셀 파일을 읽지 못했어요.');
+  const cnt=dv.getUint16(e+10,true);let p=dv.getUint32(e+16,true);const out={};const dec=new TextDecoder();
+  for(let i=0;i<cnt;i++){const meth=dv.getUint16(p+10,true),csz=dv.getUint32(p+20,true),nl=dv.getUint16(p+28,true),xl=dv.getUint16(p+30,true),cl=dv.getUint16(p+32,true),lo=dv.getUint32(p+42,true);
+    const name=dec.decode(u.subarray(p+46,p+46+nl));p+=46+nl+xl+cl;
+    if(!/^xl\/(sharedStrings\.xml|worksheets\/sheet\d+\.xml|workbook\.xml)$/.test(name))continue;
+    const lnl=dv.getUint16(lo+26,true),lxl=dv.getUint16(lo+28,true);const data=u.subarray(lo+30+lnl+lxl,lo+30+lnl+lxl+csz);
+    let bytes;if(meth===0)bytes=data;else if(meth===8){if(typeof DecompressionStream==='undefined')throw new Error('이 브라우저에서는 엑셀 파일을 읽을 수 없어요. CSV로 저장해서 올려 주세요.');
+      bytes=new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer())}else continue;
+    out[name]=dec.decode(bytes)}return out}
+function parseSheetXml(xml,ss){const doc=new DOMParser().parseFromString(xml,'application/xml');const rows=[];
+  doc.querySelectorAll('sheetData row').forEach(r=>{const row=[];r.querySelectorAll('c').forEach(c=>{const ref=c.getAttribute('r')||'';const ci=(ref.match(/^[A-Z]+/)||['A'])[0].split('').reduce((a,ch)=>a*26+ch.charCodeAt(0)-64,0)-1;
+    const t=c.getAttribute('t');let v='';if(t==='s')v=ss[+(c.querySelector('v')||{}).textContent]||'';else if(t==='inlineStr')v=[...c.querySelectorAll('is t')].map(n=>n.textContent).join('');else v=(c.querySelector('v')||{}).textContent||'';row[ci]=v});rows.push(row)});return rows}
+async function readRosterFile(file){const name=file.name.toLowerCase();let rows=[];
+  if(name.endsWith('.csv')||file.type==='text/csv'){let txt=await file.text();rows=txt.replace(/^﻿/,'').split(/\r?\n/).map(l=>l.split(',').map(x=>x.trim().replace(/^"|"$/g,'')))}
+  else{const f=await unzip(await file.arrayBuffer());let ss=[];if(f['xl/sharedStrings.xml']){const d=new DOMParser().parseFromString(f['xl/sharedStrings.xml'],'application/xml');ss=[...d.querySelectorAll('si')].map(si=>[...si.querySelectorAll('t')].map(t=>t.textContent).join(''))}
+    const sheetName=Object.keys(f).filter(k=>/worksheets\/sheet\d+\.xml$/.test(k)).sort()[0];if(!sheetName)throw new Error('시트를 찾지 못했어요.');rows=parseSheetXml(f[sheetName],ss)}
+  const out=[];rows.forEach(r=>{if(!r)return;const g=parseInt(r[0],10),c=parseInt(r[1],10),n=parseInt(r[2],10),nm=String(r[3]||'').trim();if(g>0&&c>0&&n>0&&nm)out.push({g,c,n,name:nm})});return out}
+async function saveFile(blob,name){let dl=null;try{dl=window.claude&&await window.claude.use('downloads')}catch(e){}
+  if(dl){await dl.save({filename:name,data:blob});return}
+  const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),30000)}
+$('#rTpl').onclick=async()=>{try{const gc=store.get('pe.rgc',null);const rows=ROSTER.length?ROSTER.map(st=>[st.g,st.c,st.n,st.name]):[];await saveFile(xlsxTemplate(rows),ROSTER.length?'학생명단.xlsx':'학생명단_양식.xlsx');rErr('')}catch(e){if(!(e&&e.code==='declined'))rErr('양식을 저장하지 못했어요.')}};
+$('#rFile').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+  try{const list=await readRosterFile(f);if(!list.length){rErr('읽을 수 있는 학생이 없어요. A열 학년, B열 반, C열 번호, D열 이름으로 적어 주세요.');return}
+    list.forEach(st=>{const i=ROSTER.findIndex(x=>x.g===st.g&&x.c===st.c&&x.n===st.n);if(i>=0)ROSTER[i]=st;else ROSTER.push(st)});saveRoster();
+    const l=list[list.length-1];store.set('pe.rgc',{g:l.g,c:l.c});$('#rG').value=l.g;$('#rC').value=l.c;$('#rN').value=String(nextNo(l.g,l.c));
+    rErr('');$('#rCnt').textContent=`${ROSTER.length}명 (방금 ${list.length}명 불러옴)`}
+  catch(err){console.error(err);rErr(err.message||'파일을 읽지 못했어요.')}});
+enhanceSelect($('#mStu'));renderStuSel();
+
+/* ================= 다음 학생 촬영하기 ================= */
+function syncNextBtn(){const b=$('#nextBtn');if(!b)return;b.hidden=!(MODE==='eval'&&ROSTER.length>1)}
+function nextAfter(st){sortRoster();const i=st?ROSTER.findIndex(x=>stuKey(x)===stuKey(st)):-1;return ROSTER[i+1]||null}
+function promptNext(st){if(!st){ask({title:'다음 학생이 없어요',msg:'명단의 마지막 학생까지 확인했어요.',btns:[{label:'확인'}]});return}
+  ask({title:'다음 학생 촬영',msg:`<b>${stuLabel(st).replace(/[<>&]/g,'')}</b> 학생 평가를<br>시작하시겠습니까?`,btns:[
+    {label:'건너뛰기',fn:()=>promptNext(nextAfter(st))},
+    {label:'촬영하기',cls:'primary',fn:()=>{const s=$('#mStu');s.value=stuKey(st);s._refresh&&s._refresh();store.set('pe.stu',s.value);$('#metaErr').hidden=true;
+      if(!metaOk())return;$('#'+lastCap).click()}}]})}
+$('#nextBtn').onclick=()=>promptNext(nextAfter(curStu()));
+syncNextBtn();
+
+applyMode();
 
 /* 평가 기준표 다운로드 */
 $('#dlRubric').onclick=async()=>{const msg=$('#dlMsg');const btn=$('#dlRubric');msg.hidden=true;
