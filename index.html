@@ -518,7 +518,7 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
 .metabox .daterow .btn{padding:0 14px}
 .evalbtns{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
 .evalbtns .btn.dlpdf{min-height:46px;font-size:14.5px;padding:0 10px;gap:6px}
-.evalbtns .btn.ghost{min-height:46px;font-size:13px}.evalbtns .btn{white-space:nowrap}@media (max-width:420px){.evalbtns .btn.dlpdf{font-size:13.5px;padding:0 8px;gap:4px}.evalbtns .btn.ghost{font-size:12.5px;padding:0 10px}}
+.evalbtns .btn.ghost{min-height:46px;font-size:13px}.evalbtns .btn{white-space:nowrap}.evalbtns .btn.dlpdf{overflow:hidden;font-size:var(--bf,14.5px)!important}.evalbtns .btn.dlpdf .bt{white-space:nowrap;flex:none}.evalbtns .btn.dlpdf svg{flex:none}@media (max-width:380px){.evalbtns{gap:6px}.evalbtns .btn.ghost{padding:0 8px!important;font-size:12px!important}.evalbtns .btn.dlpdf{padding:0 8px!important;gap:4px!important}}@media (max-width:340px){.evalbtns .btn.dlpdf svg{display:none}}@media (max-width:420px){.evalbtns .btn.dlpdf{font-size:13.5px;padding:0 8px;gap:4px}.evalbtns .btn.ghost{font-size:12.5px;padding:0 10px}}
 @media (min-width:1024px){
   body.mode-eval .side .rec{display:none}
   .side .tips summary{min-height:28px}
@@ -730,13 +730,13 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
     <div class="hist" id="histBox">
       <div class="boxhead"><b>분석 기록</b><span class="cnt" id="histCnt"></span></div>
       <div class="field"><label for="histSel" class="sr">분석 기록 선택</label><select id="histSel"></select></div>
-      <div class="evalbtns"><button class="btn primary dlpdf" type="button" id="histPdf"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>전체 PDF 다운로드</button><button class="btn small ghost" type="button" id="histClear">목록 비우기</button></div>
+      <div class="evalbtns"><button class="btn primary dlpdf" type="button" id="histPdf"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg><span class="bt">전체 PDF 다운로드</span></button><button class="btn small ghost" type="button" id="histClear">목록 비우기</button></div>
       <p class="note" id="histMsg" hidden></p>
     </div>
     <div class="evalbox" id="evalBox" hidden>
       <div class="boxhead evalhead"><b>평가 기록</b><span class="cnt" id="evalCnt"></span></div>
       <div class="field"><label for="evalSel" class="sr">평가 기록 선택</label><select id="evalSel"></select></div>
-      <div class="evalbtns"><button class="btn primary dlpdf" type="button" id="evalPdf"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>전체 PDF 다운로드</button><button class="btn small ghost" type="button" id="evalClear">목록 비우기</button></div>
+      <div class="evalbtns"><button class="btn primary dlpdf" type="button" id="evalPdf"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg><span class="bt">전체 PDF 다운로드</span></button><button class="btn small ghost" type="button" id="evalClear">목록 비우기</button></div>
       <p class="note" id="evalMsg" hidden></p>
     </div>
     <p class="warnline" id="reloadWarn" hidden><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 4 2.5 20h19Z"/><path d="M12 10v4.5M12 17.2v.1"/></svg><span class="wt">앱을 재 실행하거나 새로고침 하면 <span id="warnKind">평가기록</span> 목록이 삭제될 수 있어요.</span></p>
@@ -2366,7 +2366,7 @@ function applyMode(){document.body.classList.toggle('mode-eval',MODE==='eval');
   $('#modeBadge').textContent=MODE==='eval'?'수행평가 모드':'체육수업 모드';
   $('#modeBtn .lbl').textContent=MODE==='eval'?'수업 모드':'평가 모드';
   $('#modeBtn').setAttribute('aria-label',(MODE==='eval'?'체육수업':'수행평가')+' 모드로 바꾸기');
-  $('#histBox').hidden=MODE==='eval';$('#evalBox').hidden=MODE!=='eval';$('#metaBox').hidden=MODE!=='eval';$('#reloadWarn').hidden=false;$('#warnKind').textContent=MODE==='eval'?'평가기록':'분석기록';syncNextBtn();requestAnimationFrame(()=>{typeof fitWarn==='function'&&fitWarn();typeof fitStu==='function'&&fitStu();window.fitPh&&window.fitPh()});renderLists()}
+  $('#histBox').hidden=MODE==='eval';$('#evalBox').hidden=MODE!=='eval';$('#metaBox').hidden=MODE!=='eval';$('#reloadWarn').hidden=false;$('#warnKind').textContent=MODE==='eval'?'평가기록':'분석기록';syncNextBtn();requestAnimationFrame(()=>{typeof fitWarn==='function'&&fitWarn();typeof fitStu==='function'&&fitStu();window.fitPh&&window.fitPh();window.fitPdfBtns&&window.fitPdfBtns()});renderLists()}
 $('#modeBtn').onclick=()=>{MODE=MODE==='eval'?'class':'eval';store.set('pe.mode',MODE);applyMode();hideResults()};
 
 /* 학생 정보 */
@@ -2571,6 +2571,8 @@ function renderStuSel(){const s=$('#mStu');const keep=s.value||store.get('pe.stu
   const on=ROSTER.length>0;$('#stuRow').hidden=!on;$('#metaBox').classList.toggle('roster',on);syncNextBtn();requestAnimationFrame(fitStu)}
 function fitStu(){const b=$('#mStuBtn');if(!b||b.offsetParent===null)return;const sp=b.querySelector('span')||b;let f=13.5;b.style.setProperty('--sf',f+'px');while(sp.scrollWidth>sp.clientWidth&&f>10){f-=0.5;b.style.setProperty('--sf',f+'px')}}
 window.fitStu=fitStu;
+function fitPdfBtns(){['#histPdf','#evalPdf'].forEach(q=>{const b=$(q);if(!b||b.offsetParent===null)return;const t=b.querySelector('.bt');let f=innerWidth>=1024?14:14.5;b.style.setProperty('--bf',f+'px');const cs=getComputedStyle(b);const room=()=>b.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight)-(b.querySelector('svg')?.getBoundingClientRect().width||0)-parseFloat(cs.columnGap||0)-1;while(t.getBoundingClientRect().width>room()&&f>9){f-=0.25;b.style.setProperty('--bf',f+'px')}})}
+window.fitPdfBtns=fitPdfBtns;addEventListener('resize',fitPdfBtns);document.fonts&&document.fonts.ready.then(fitPdfBtns);
 function fitPh(){const el=$('#mNo');if(!el||el.offsetParent===null)return;const cs=getComputedStyle(el);const c=fitPh.c||(fitPh.c=document.createElement('canvas').getContext('2d'));c.font=`${cs.fontWeight} 12.5px ${cs.fontFamily}`;const tw=c.measureText(el.placeholder).width;const room=el.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight)-2;el.style.setProperty('--phf',Math.max(7,Math.min(12.5,12.5*room/tw)).toFixed(2)+'px')}
 addEventListener('resize',fitPh);['input','blur'].forEach(t=>$('#mNo').addEventListener(t,()=>requestAnimationFrame(fitPh)));window.fitPh=fitPh;addEventListener('resize',()=>fitStu());document.fonts&&document.fonts.ready.then(()=>fitStu());$('#mStu').addEventListener('change',()=>requestAnimationFrame(fitStu));
 $('#mStu').addEventListener('change',()=>{store.set('pe.stu',$('#mStu').value);$('#metaErr').hidden=true});
