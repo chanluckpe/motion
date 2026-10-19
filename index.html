@@ -643,23 +643,29 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
 
 /* 학생 정보: 날짜-오늘-학생 한 줄 */
 .dwrap{position:relative;display:block;min-width:0}.dwrap input{width:100%}.dlabel{display:none}
-.metabox.roster .dwrap{flex:none}
-.metabox.roster .dlabel{display:flex;align-items:center;position:absolute;inset:0;padding:0 8px;pointer-events:none;font-family:var(--f-num);font-weight:700;font-size:13px;letter-spacing:-.02em;white-space:nowrap}
-.metabox.roster .field input[type=date]{color:transparent}
-.metabox.roster .field input[type=date]::-webkit-datetime-edit{opacity:0}
-.metabox.roster .metagrid{display:flex;align-items:center;gap:4px}
-.metabox.roster .mdate{flex:none;min-width:0}
-.metabox.roster .daterow{display:flex;gap:4px}
-.metabox.roster .field input[type=date]{width:88px;min-width:0;font-size:12.5px;padding:0 6px;letter-spacing:-.03em;cursor:pointer}
-.metabox.roster .field input[type=date]::-webkit-calendar-picker-indicator{display:none}
-.metabox.roster .field input[type=date]::-webkit-datetime-edit{padding:0}
-.metabox.roster .daterow .btn{padding:0 8px;font-size:12.5px;min-width:0}
-.metabox.roster{padding-left:9px;padding-right:9px}
+.metabox .dwrap{flex:none}
+.metabox .dlabel{display:flex;align-items:center;position:absolute;inset:0;padding:0 8px;pointer-events:none;font-family:var(--f-num);font-weight:700;font-size:13px;letter-spacing:-.02em;white-space:nowrap}
+.metabox .field input[type=date]{color:transparent}
+.metabox .field input[type=date]::-webkit-datetime-edit{opacity:0}
+.metabox .metagrid{display:flex;align-items:center;gap:4px}
+.metabox .mdate{flex:none;min-width:0}
+.metabox .daterow{display:flex;gap:4px}
+.metabox .field input[type=date]{width:88px;min-width:0;font-size:12.5px;padding:0 6px;letter-spacing:-.03em;cursor:pointer}
+.metabox .field input[type=date]::-webkit-calendar-picker-indicator{display:none}
+.metabox .field input[type=date]::-webkit-datetime-edit{padding:0}
+.metabox .daterow .btn{padding:0 8px;font-size:12.5px;min-width:0}
+.metabox{padding-left:9px;padding-right:9px}
 .metabox .boxhead b{white-space:nowrap}
-.metabox.roster .stuwrap{flex:1 1 0;min-width:0}
-.metabox.roster .stuwrap .csel-btn{font-size:var(--sf,13.5px);padding:0 19px 0 8px;letter-spacing:-.02em}
-.metabox.roster .stuwrap .csel-btn::after{right:8px;width:6px;height:6px}
-.metabox.roster .field input,.metabox.roster .daterow .btn,.metabox.roster .csel-btn{min-height:42px;border-radius:11px}
+.metabox .stuwrap{flex:1 1 0;min-width:0}
+.metabox .stuwrap .csel-btn{font-size:var(--sf,13.5px);padding:0 19px 0 8px;letter-spacing:-.02em}
+.metabox .stuwrap .csel-btn::after{right:8px;width:6px;height:6px}
+.metabox .field input,.metabox .daterow .btn,.metabox .csel-btn{min-height:42px;border-radius:11px}
+
+.metabox .manual{flex:1 1 0;min-width:0}
+.metabox .manual input{width:100%;font-size:13px;padding:0 8px;letter-spacing:-.02em}
+.metabox .manual input::placeholder{font-size:12.5px}
+.metabox #mNo{font-family:var(--f-num)}.metabox .manual:has(#mNo){flex:.8 1 0}.metabox .manual:has(#mName){flex:1.2 1 0}
+@media (max-width:380px){.metabox .manual input{padding:0 5px!important;font-size:12px!important}.metabox .field input[type=date]{width:80px}.metabox .dlabel{font-size:12px;padding:0 6px}.metabox .daterow .btn{padding:0 6px;font-size:12px}.metabox .manual input{font-size:12px;padding:0 6px}}
 </style>
 
 </head>
@@ -693,7 +699,7 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
         <div class="metagrid">
           <div class="field mdate"><label for="mDate" class="sr">날짜</label><div class="daterow"><span class="dwrap"><input type="date" id="mDate" aria-label="날짜"><span class="dlabel" id="mDateLbl" aria-hidden="true"></span></span><button class="btn small" type="button" id="mToday">오늘</button></div></div>
           <div class="field stuwrap" id="stuRow" hidden><label for="mStu" class="sr">학생 선택</label><select id="mStu"></select></div>
-          <div class="field manual"><label for="mNo" class="sr">학번</label><input type="text" id="mNo" inputmode="numeric" autocomplete="off" placeholder="학번 (예: 10101)"></div>
+          <div class="field manual"><label for="mNo" class="sr">학번</label><input type="text" id="mNo" inputmode="numeric" autocomplete="off" placeholder="학번"></div>
           <div class="field manual"><label for="mName" class="sr">이름</label><input type="text" id="mName" autocomplete="off" placeholder="이름"></div>
         </div>
         <p class="fberr" id="metaErr" hidden>날짜, 학번, 이름을 먼저 입력해 주세요.</p>
@@ -2364,7 +2370,7 @@ $('#modeBtn').onclick=()=>{MODE=MODE==='eval'?'class':'eval';store.set('pe.mode'
 
 /* 학생 정보 */
 const today=()=>{const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
-$('#mDate').addEventListener('click',e=>{if($('#metaBox').classList.contains('roster')&&e.target.showPicker)try{e.target.showPicker()}catch(_){}});
+$('#mDate').addEventListener('click',e=>{if(e.target.showPicker)try{e.target.showPicker()}catch(_){}});
 const syncDateLbl=()=>{const v=$('#mDate').value;$('#mDateLbl').textContent=v?v.replace(/-/g,'.'):'날짜 선택'};$('#mDate').addEventListener('input',syncDateLbl);$('#mDate').addEventListener('change',syncDateLbl);syncDateLbl();
 $('#mToday').onclick=()=>{$('#mDate').value=today();syncDateLbl();metaErrOff()};
 if(!$('#mDate').value)$('#mDate').value=store.get('pe.mdate',today());syncDateLbl();
@@ -2549,7 +2555,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#askBox').hidde
 function fitLine(el,max,min){if(!el||el.offsetParent===null)return;const t=el.querySelector('.wt')||el;let f=max;el.style.fontSize=f+'px';const lim=()=>el.getBoundingClientRect().right-parseFloat(getComputedStyle(el).paddingRight||0);while(t.getBoundingClientRect().right>lim()+.5&&f>min){f-=0.25;el.style.fontSize=f+'px'}}
 const fitWarn=()=>fitLine($('#reloadWarn'),innerWidth>=1024?11.5:12.5,7);addEventListener('resize',fitWarn);
 /* ================= 맨 위로 ================= */
-(function(){const b=$('#toTop');const f=()=>{b.hidden=scrollY<500};addEventListener('scroll',f,{passive:true});f();b.onclick=()=>scrollTo({top:0,behavior:'smooth'})})();
+(function(){const b=$('#toTop');const f=()=>{b.hidden=scrollY<Math.min(400,innerHeight*.25)};addEventListener('resize',f);addEventListener('scroll',f,{passive:true});f();b.onclick=()=>scrollTo({top:0,behavior:'smooth'})})();
 
 /* ================= 학생 명단 ================= */
 let ROSTER=store.get('pe.roster',[]);if(!Array.isArray(ROSTER))ROSTER=[];
