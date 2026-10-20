@@ -2363,13 +2363,13 @@ const DB=(()=>{let dbp=null,mem=[];
 const VIDS={};let ENTRIES=[];
 
 /* ================= 수업 / 수행평가 모드 ================= */
-let MODE=store.get('pe.mode','class');if(MODE!=='eval')MODE='class';
+let MODE='class';
 function applyMode(){document.body.classList.toggle('mode-eval',MODE==='eval');
   $('#modeBadge').textContent=MODE==='eval'?'수행평가 모드':'체육수업 모드';
   $('#modeBtn .lbl').textContent=MODE==='eval'?'수업 모드':'평가 모드';
   $('#modeBtn').setAttribute('aria-label',(MODE==='eval'?'체육수업':'수행평가')+' 모드로 바꾸기');
   $('#histBox').hidden=MODE==='eval';$('#evalBox').hidden=MODE!=='eval';$('#metaBox').hidden=MODE!=='eval';$('#reloadWarn').hidden=false;$('#warnKind').textContent=MODE==='eval'?'평가기록':'분석기록';syncNextBtn();requestAnimationFrame(()=>{typeof fitWarn==='function'&&fitWarn();typeof fitStu==='function'&&fitStu();window.fitPh&&window.fitPh();window.fitPdfBtns&&window.fitPdfBtns()});renderLists()}
-$('#modeBtn').onclick=()=>{MODE=MODE==='eval'?'class':'eval';store.set('pe.mode',MODE);applyMode();hideResults()};
+$('#modeBtn').onclick=()=>{MODE=MODE==='eval'?'class':'eval';applyMode();hideResults()};
 
 /* 학생 정보 */
 const today=()=>{const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
