@@ -691,6 +691,14 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
 .sumtrend{margin:4px 0 2px}.sumtrend h3{font-size:14px;margin:0 0 6px}
 .rhist .spark{display:block;width:84px;height:22px;margin-bottom:2px}
 .spark .tln{fill:none;stroke:var(--accent);stroke-width:2}.spark .tpt{stroke:none}.spark .tpt.good{fill:var(--good)}.spark .tpt.warn{fill:var(--warn)}.spark .tpt.bad{fill:var(--bad)}
+
+/* 기록 백업 */
+.bkbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bkbtns .btn{min-height:40px;font-size:13.5px;padding:0 8px;gap:6px;white-space:nowrap;justify-content:center}
+.bkbtns .btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.bkbtns .btn[disabled]{opacity:.45;pointer-events:none}
+@media (min-width:1024px){.side .bkbtns .btn{min-height:36px;font-size:13px}}
+@media (max-width:380px){.bkbtns{gap:6px}.bkbtns .btn{font-size:12.5px;padding:0 6px;gap:4px}}
 </style>
 
 </head>
@@ -754,12 +762,14 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
     <div class="hist" id="histBox">
       <div class="boxhead"><b>분석 기록</b><span class="cnt" id="histCnt"></span></div>
       <div class="field"><label for="histSel" class="sr">분석 기록 선택</label><select id="histSel"></select></div>
+      <div class="bkbtns"><button class="btn small" type="button" id="histBak"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>기록 다운받기</button><label class="btn small" for="histBakFile"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 19V8M7 13l5-5 5 5M5 4h14"/></svg>기록 불러오기</label><input type="file" id="histBakFile" accept=".json,application/json" hidden></div>
       <div class="evalbtns"><button class="btn primary dlpdf" type="button" id="histPdf"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg><span class="bt">전체 PDF 다운로드</span></button><button class="btn small ghost" type="button" id="histClear">목록 비우기</button></div>
       <p class="note" id="histMsg" hidden></p>
     </div>
     <div class="evalbox" id="evalBox" hidden>
       <div class="boxhead evalhead"><b>평가 기록</b><span class="cnt" id="evalCnt"></span></div>
       <div class="field"><label for="evalSel" class="sr">평가 기록 선택</label><select id="evalSel"></select></div>
+      <div class="bkbtns"><button class="btn small" type="button" id="evalBak"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>기록 다운받기</button><label class="btn small" for="evalBakFile"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 19V8M7 13l5-5 5 5M5 4h14"/></svg>기록 불러오기</label><input type="file" id="evalBakFile" accept=".json,application/json" hidden></div>
       <div class="evalbtns"><button class="btn primary dlpdf" type="button" id="evalPdf"><svg viewBox="0 0 24 24" aria-hidden="true" class="ln"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg><span class="bt">전체 PDF 다운로드</span></button><button class="btn small ghost" type="button" id="evalClear">목록 비우기</button></div>
       <p class="note" id="evalMsg" hidden></p>
     </div>
@@ -2435,10 +2445,10 @@ function entryLabel(e){const m=MOTION[e.sp+'.'+e.mo];return`${m?m.sport.name+' '
 function renderLists(){const cls=ENTRIES.filter(e=>e.mode==='class'),ev=ENTRIES.filter(e=>e.mode==='eval');
   const hs=$('#histSel');hs.innerHTML=`<option value="">${cls.length?'기록을 골라 결과 다시 보기':'분석한 영상이 여기에 순서대로 쌓여요'}</option>`+cls.map((e,i)=>`<option value="${e.id}">${i+1}. ${new Date(e.ts).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})} ${fmtTime(e.ts)} · ${entryLabel(e)} · ${e.total}%</option>`).join('');
   if(last&&last.entryId&&cls.some(e=>e.id===last.entryId))hs.value=last.entryId;hs._refresh&&hs._refresh();
-  $('#histCnt').textContent=cls.length?cls.length+'개':'';$('#histPdf').disabled=!cls.length;$('#histClear').disabled=!cls.length;
+  $('#histCnt').textContent=cls.length?cls.length+'개':'';$('#histPdf').disabled=!cls.length;$('#histBak').disabled=!cls.length;$('#histClear').disabled=!cls.length;
   const sel=$('#evalSel');sel.innerHTML=`<option value="">${ev.length?`평가 기록 ${ev.length}명 · 골라서 결과 보기`:'평가 기록이 아직 없어요'}</option>`+ev.map((e,i)=>`<option value="${e.id}">${i+1}. ${e.meta?`${String(e.meta.date||'').slice(5)} · ${whoOf(e.meta)}`:''} · ${entryLabel(e)} · ${e.total}%</option>`).join('');
   if(last&&last.entryId&&ev.some(e=>e.id===last.entryId))sel.value=last.entryId;sel._refresh&&sel._refresh();
-  $('#evalCnt').textContent=ev.length?ev.length+'명':'';$('#evalPdf').disabled=!ev.length}
+  $('#evalCnt').textContent=ev.length?ev.length+'명':'';$('#evalPdf').disabled=!ev.length;$('#evalBak').disabled=!ev.length}
 function markHist(id){['#evalSel','#histSel'].forEach(q=>{const s=$(q);if(id&&[...s.options].some(o=>o.value===id)){s.value=id;s._refresh&&s._refresh()}})}
 ['#evalSel','#histSel'].forEach(q=>$(q).addEventListener('change',e=>{if(e.target.value)showEntry(e.target.value)}));
 function twoTap(btn,label,fn){let armed=false,t=null;btn.onclick=()=>{if(!armed){armed=true;btn.textContent='한 번 더 누르면 지워져요';t=setTimeout(()=>{armed=false;btn.textContent=label},2500);return}clearTimeout(t);armed=false;btn.textContent=label;fn()}}
@@ -2596,6 +2606,30 @@ async function captureResults(h2c){const R=$('#results');const ta=$('#summary');
 async function savePdf(blob,name){let dl=null;try{dl=window.claude&&await window.claude.use('downloads')}catch(e){}
   if(dl){try{await dl.save({filename:name,data:blob});return 'saved'}catch(e){if(e&&e.code==='declined')return 'declined';throw e}}
   const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),30000);return 'saved'}
+
+/* ================= 기록 백업 (다운받기 / 불러오기) ================= */
+async function backupEntries(cls){const mode=cls?'class':'eval';const list=ENTRIES.filter(e=>e.mode===mode);const msg=$(cls?'#histMsg':'#evalMsg');if(!list.length)return;
+  const data={app:'pe-motion',kind:'records',version:1,mode,exported:new Date().toISOString(),count:list.length,entries:list};
+  const d=today();const name=cls?`수업_분석기록_백업_${d}_${list.length}개.json`:`수행평가_기록_백업_${d}_${list.length}명.json`;
+  try{const r=await savePdf(new Blob([JSON.stringify(data)],{type:'application/json'}),name);msg.hidden=false;msg.textContent=r==='saved'?`${cls?`분석 기록 ${list.length}개를`:`평가 기록 ${list.length}명을`} 파일로 저장했어요. '기록 불러오기'로 언제든 되살릴 수 있어요.`:'저장을 취소했어요.'}
+  catch(err){console.error(err);msg.hidden=false;msg.textContent='기록 파일을 만들지 못했어요.'}}
+async function restoreEntries(file,cls){const msg=$(cls?'#histMsg':'#evalMsg');msg.hidden=false;
+  try{const data=JSON.parse(await file.text());const arr=Array.isArray(data)?data:data&&Array.isArray(data.entries)?data.entries:null;
+    if(!arr||(data.app&&data.app!=='pe-motion'))throw new Error('bad');
+    const ok=arr.filter(e=>e&&typeof e==='object'&&typeof e.id==='string'&&(e.mode==='class'||e.mode==='eval')&&MOTION[e.sp+'.'+e.mo]&&e.raw&&Array.isArray(e.raw.F)&&typeof e.total==='number');
+    if(!ok.length){msg.textContent='불러올 수 있는 기록이 없어요. 이 앱에서 받은 기록 파일인지 확인해 주세요.';return}
+    let add=0,upd=0,skip=0;
+    for(const e of ok){if(ENTRIES.some(x=>x.id===e.id)){skip++;continue}
+      if(e.mode==='eval'&&e.meta){const k=evalKey(e);const old=ENTRIES.find(x=>x.mode==='eval'&&evalKey(x)===k);
+        if(old){if(e.total>old.total){await DB.del([old.id]);ENTRIES=ENTRIES.filter(x=>x.id!==old.id);ENTRIES.push(e);await DB.put(e);upd++}else skip++;continue}}
+      ENTRIES.push(e);await DB.put(e);add++}
+    ENTRIES.sort((a,b)=>a.ts-b.ts);renderLists();
+    const nc=ok.filter(e=>e.mode==='class').length,ne=ok.filter(e=>e.mode==='eval').length;
+    msg.textContent=`기록을 불러왔어요. 새로 추가 ${add}개`+(upd?`, 더 높은 기록으로 바꿈 ${upd}개`:'')+(skip?`, 이미 있어 건너뜀 ${skip}개`:'')+'.'+((cls&&ne&&!nc)?' 평가 기록 파일이라 수행평가 모드 목록에 들어갔어요.':(!cls&&nc&&!ne)?' 분석 기록 파일이라 수업 모드 목록에 들어갔어요.':'')}
+  catch(err){console.error(err);msg.textContent='기록 파일을 읽지 못했어요. 이 앱에서 받은 .json 파일인지 확인해 주세요.'}}
+$('#histBak').onclick=()=>backupEntries(true);$('#evalBak').onclick=()=>backupEntries(false);
+$('#histBakFile').onchange=e=>{const f=e.target.files[0];e.target.value='';if(f)restoreEntries(f,true)};
+$('#evalBakFile').onchange=e=>{const f=e.target.files[0];e.target.value='';if(f)restoreEntries(f,false)};
 async function exportPdf(cls){const list=ENTRIES.filter(e=>e.mode===(cls?'class':'eval'));if(!list.length||busy)return;
   const msg=$(cls?'#histMsg':'#evalMsg');const ov=$('#pdfBusy');const keepTheme=document.documentElement.dataset.theme;const keepId=last&&last.entryId;
   ov.hidden=false;$('#pdfBusyT').textContent='PDF 도구 준비 중…';$('#pdfBar').style.width='0%';
