@@ -669,6 +669,28 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
 .metabox .manual:has(#mNo:placeholder-shown){flex:1.5 1 0}.metabox .manual:has(#mNo:placeholder-shown)~.manual:has(#mName:placeholder-shown){flex:.7 1 0}
 .metabox #mNo{font-family:var(--f-num)}.metabox .manual:has(#mNo){flex:.8 1 0}.metabox .manual:has(#mName){flex:1.2 1 0;min-width:40px}
 @media (max-width:380px){.metabox .manual input{padding:0 5px!important;font-size:12px!important}.metabox .field input[type=date]{width:76px}.metabox .dlabel{font-size:12px;padding:0 6px}.metabox .daterow .btn{padding:0 6px;font-size:12px}.metabox .manual input{font-size:12px;padding:0 6px}}
+
+/* 회차별 일치도 변화 */
+.trendcard .sec-head{flex-wrap:wrap;gap:8px 14px}
+.trendstats{display:flex;gap:6px;flex-wrap:wrap}
+.trendstats span{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.trendstats span b{color:var(--ink);font-family:var(--f-num);margin-left:4px}
+.trendstats span.up b{color:var(--good)}.trendstats span.down b{color:var(--bad)}
+.trend svg{display:block;width:100%;height:auto}
+.trend .tg{stroke:var(--line);stroke-width:1}
+.trend .tgd{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4}
+.trend .tax{fill:var(--muted);font-size:11px;font-weight:600}
+.trend .tln{fill:none;stroke:var(--accent);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.trend .tar{fill:var(--accent-soft);stroke:none}
+.trend .tpt{stroke:var(--surface);stroke-width:2.5}
+.trend .tpt.good{fill:var(--good)}.trend .tpt.warn{fill:var(--warn)}.trend .tpt.bad{fill:var(--bad)}
+.trend .tcur{fill:none;stroke:var(--ink);stroke-width:2}
+.trend .tval{fill:var(--ink);font-size:12.5px;font-weight:800}
+.trend .tval.cur{font-size:14px}
+.trend .tbest{fill:var(--tape);font-size:10.5px;font-weight:800}
+.sumtrend{margin:4px 0 2px}.sumtrend h3{font-size:14px;margin:0 0 6px}
+.rhist .spark{display:block;width:84px;height:22px;margin-bottom:2px}
+.spark .tln{fill:none;stroke:var(--accent);stroke-width:2}.spark .tpt{stroke:none}.spark .tpt.good{fill:var(--good)}.spark .tpt.warn{fill:var(--warn)}.spark .tpt.bad{fill:var(--bad)}
 </style>
 
 </head>
@@ -779,6 +801,12 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
       </div>
       <div class="bestnote" id="bestNote" hidden></div>
       <div id="warns" style="display:flex;flex-direction:column;gap:8px"></div>
+    </section>
+
+    <section class="card trendcard" id="trendCard" hidden>
+      <div class="sec-head"><h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg><span id="trendTitle">회차별 일치도 변화</span></h2><div class="trendstats" id="trendStats"></div></div>
+      <p class="note" id="trendNote"></p>
+      <div class="trend" id="trend"></div>
     </section>
 
     <section class="card">
@@ -2145,7 +2173,7 @@ async function runStudent(file,range){if(busy)return;busy=true;$('#bestNote').hi
 /* ================= 결과 렌더링 ================= */
 function namedPhases(ev){return ev.m.phases.filter(p=>p.n&&ev.c.ph[p.k]>=0).map(p=>({k:p.k,n:p.n,i:ev.c.ph[p.k]})).sort((a,b)=>a.i-b.i)}
 function critPhase(cr){if(cr.at==='rep')return'B';if(cr.at==='repT')return'T';if(cr.at.includes(':')||cr.m==='dt')return null;return cr.at}
-async function renderResults(ev){const m=ev.m,c=ev.c;$('#results').hidden=false;setStep(4);
+async function renderResults(ev){const m=ev.m,c=ev.c;$('#results').hidden=false;setStep(4);try{renderTrend(ev)}catch(err){console.error(err)}
   $('#resTag').textContent=`${m.sport.name} · ${m.name} · ${VIEWNAME[ev.view]} 기준 분석`;{const rm=$('#resMeta');if(ev.meta){rm.textContent=`${ev.meta.date} · ${whoOf(ev.meta)}`;rm.hidden=false}else rm.hidden=true}markHist(ev.entryId);$('#otherBtn span').textContent=`${VIEWNAME[ev.view==='s'?'f':'s']}으로 분석하기`;
   const st=statusOf(ev.total);$('#scoreNum').textContent=ev.total;
   $('#dialArc').style.stroke=`var(--${st==='good'?'good':st==='warn'?'warn':'bad'})`;$('#dialArc').setAttribute('stroke-dashoffset',(270.2*(1-ev.total/100)).toFixed(1));
@@ -2397,12 +2425,12 @@ async function saveEntry(ev){const id='e'+Date.now().toString(36)+Math.random().
   const bn=$('#bestNote');bn.hidden=true;bn.className='bestnote';
   if(MODE==='eval'&&e.meta){const key=x=>`${x.meta.date}|${x.meta.no}|${x.meta.name}|${x.sp}.${x.mo}`;const old=ENTRIES.find(x=>x.mode==='eval'&&x.meta&&key(x)===key(e));
     if(old){const prevA=old.attempts&&old.attempts.length?old.attempts:[{ts:old.shotTs||old.ts,total:old.total}];e.attempts=prevA.concat([{ts:Date.now(),total:e.total}]);
-      if(e.total<=old.total){old.attempts=e.attempts;await DB.put(old);renderLists();bn.textContent=`이전 최고 기록 ${old.total}%보다 낮아서 저장하지 않았어요. (이번 ${e.total}%) 평가 기록에는 ${old.total}%가 그대로 남아 있어요.`;bn.classList.add('low');bn.hidden=false;ev.entryId=null;ev.when=e.ts;return}
+      if(e.total<=old.total){old.attempts=e.attempts;await DB.put(old);renderLists();bn.textContent=`이전 최고 기록 ${old.total}%보다 낮아서 저장하지 않았어요. (이번 ${e.total}%) 평가 기록에는 ${old.total}%가 그대로 남아 있어요.`;bn.classList.add('low');bn.hidden=false;ev.entryId=null;ev.when=e.ts;ev.fresh=true;renderTrend(ev);return}
       e.ts=old.ts;e.shotTs=Date.now();await DB.del([old.id]);ENTRIES=ENTRIES.filter(x=>x.id!==old.id);delete VIDS[old.id];
       bn.textContent=`최고 기록이 ${old.total}% → ${e.total}%로 바뀌었어요. 평가 기록을 이번 결과로 바꿨어요.`;bn.hidden=false}
     else{bn.textContent=`${whoOf(e.meta)} 학생의 결과를 평가 기록에 저장했어요.`;bn.hidden=false}}
   VIDS[id]=ev.raw.v;ev.entryId=id;ev.when=e.ts;ENTRIES.push(e);ENTRIES.sort((a,b)=>a.ts-b.ts);await DB.put(e);
-  renderLists();markHist(id);syncNextBtn()}
+  renderLists();markHist(id);syncNextBtn();ev.fresh=true;renderTrend(ev)}
 function entryLabel(e){const m=MOTION[e.sp+'.'+e.mo];return`${m?m.sport.name+' '+m.name:'동작'} · ${VIEWNAME[e.view]}`}
 function renderLists(){const cls=ENTRIES.filter(e=>e.mode==='class'),ev=ENTRIES.filter(e=>e.mode==='eval');
   const hs=$('#histSel');hs.innerHTML=`<option value="">${cls.length?'기록을 골라 결과 다시 보기':'분석한 영상이 여기에 순서대로 쌓여요'}</option>`+cls.map((e,i)=>`<option value="${e.id}">${i+1}. ${new Date(e.ts).toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})} ${fmtTime(e.ts)} · ${entryLabel(e)} · ${e.total}%</option>`).join('');
@@ -2417,6 +2445,44 @@ function twoTap(btn,label,fn){let armed=false,t=null;btn.onclick=()=>{if(!armed)
 $('#histClear').onclick=()=>{const n=ENTRIES.filter(e=>e.mode==='class').length;if(!n)return;ask({title:'분석 기록을 모두 지울까요?',msg:`분석 기록 <b>${n}개</b>가 모두 지워져요.<br>지운 기록은 되돌릴 수 없어요.<br>필요하면 먼저 PDF로 저장하세요.`,btns:[{label:'취소'},{label:'모두 지우기',cls:'danger',fn:async()=>{const ids=ENTRIES.filter(e=>e.mode==='class').map(e=>e.id);await DB.del(ids);ENTRIES=ENTRIES.filter(e=>!ids.includes(e.id));ids.forEach(id=>delete VIDS[id]);renderLists();if(last&&ids.includes(last.entryId))hideResults()}}]})};
 $('#evalClear').onclick=()=>{const n=ENTRIES.filter(e=>e.mode==='eval').length;if(!n)return;ask({title:'평가 기록을 모두 지울까요?',msg:`평가 기록 <b>${n}명</b>의 결과가 모두 지워져요.<br>지운 기록은 되돌릴 수 없어요.<br>필요하면 먼저 PDF로 저장하세요.`,btns:[{label:'취소'},{label:'모두 지우기',cls:'danger',fn:async()=>{const ids=ENTRIES.filter(e=>e.mode==='eval').map(e=>e.id);await DB.del(ids);ENTRIES=ENTRIES.filter(e=>!ids.includes(e.id));ids.forEach(id=>delete VIDS[id]);renderLists();if(last&&ids.includes(last.entryId))hideResults()}}]})};
 
+
+/* ================= 회차별 일치도 변화 ================= */
+function trendSvg(pts,o){o=o||{};const W=o.w||640,H=o.h||210,L=34,R=18,T=26,B=30;const n=pts.length;
+  const x=i=>n<=1?(L+(W-L-R)/2):L+12+(W-L-R-24)*i/(n-1),y=v=>T+(H-T-B)*(1-Math.max(0,Math.min(100,v))/100);
+  const ff='font-family="Pretendard Variable,Pretendard,system-ui,sans-serif"';
+  let g='';[0,25,50,75,100].forEach(v=>{g+=`<line class="${v%50?'tgd':'tg'}" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text class="tax" ${ff} x="${L-6}" y="${y(v)+4}" text-anchor="end">${v}</text>`});
+  const step=Math.max(1,Math.ceil(n/12));
+  pts.forEach((p,i)=>{if(i%step===0||i===n-1||p.cur)g+=`<text class="tax" ${ff} x="${x(i)}" y="${H-8}" text-anchor="middle">${p.label}</text>`});
+  if(n>1){const d=pts.map((p,i)=>`${i?'L':'M'}${x(i).toFixed(1)} ${y(p.v).toFixed(1)}`).join(' ');
+    g+=`<path class="tar" d="${d} L${x(n-1).toFixed(1)} ${y(0)} L${x(0).toFixed(1)} ${y(0)} Z" opacity=".55"/><path class="tln" d="${d}"/>`}
+  const bi=pts.reduce((b,p,i)=>p.v>pts[b].v?i:b,0);
+  pts.forEach((p,i)=>{const cx=x(i),cy=y(p.v);if(p.cur)g+=`<circle class="tcur" cx="${cx}" cy="${cy}" r="10"/>`;
+    g+=`<circle class="tpt ${statusOf(p.v)}" cx="${cx}" cy="${cy}" r="${p.cur?6.5:5}"/>`;
+    if(n<=16||p.cur||i===bi)g+=`<text class="tval${p.cur?' cur':''}" ${ff} x="${cx}" y="${cy-(p.cur?15:11)}" text-anchor="middle">${p.v}</text>`;
+    if(o.best&&i===bi&&n>1)g+=`<text class="tbest" ${ff} x="${cx}" y="${Math.min(H-B-4,cy+22)}" text-anchor="middle">최고</text>`});
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${o.aria||'회차별 일치도 변화 그래프'}">${g}</svg>`}
+function sparkSvg(vals){const W=84,H=22,n=vals.length;const x=i=>3+(W-6)*i/Math.max(1,n-1),y=v=>3+(H-6)*(1-v/100);
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" aria-hidden="true"><path class="tln" d="${vals.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ')}"/>${vals.map((v,i)=>`<circle class="tpt ${statusOf(v)}" cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="2.6"/>`).join('')}</svg>`}
+function evalKey(x){return x.meta?`${x.meta.date}|${x.meta.no}|${x.meta.name}|${x.sp}.${x.mo}`:''}
+function trendData(ev){const m=ev.m;if(!m)return null;let e=ev.entryId?ENTRIES.find(x=>x.id===ev.entryId):null;
+  const isEval=e?e.mode==='eval':(MODE==='eval'&&!!ev.meta);
+  if(isEval){if(!e&&ev.meta){const k=`${ev.meta.date}|${ev.meta.no}|${ev.meta.name}|${m.sport.id}.${m.id}`;e=ENTRIES.find(x=>x.mode==='eval'&&evalKey(x)===k)}
+    const at=e?(e.attempts&&e.attempts.length?e.attempts:[{ts:e.ts,total:e.total}]):[{ts:Date.now(),total:ev.total}];
+    let ci=ev.fresh?at.length-1:at.findIndex(a=>a.total===(e?e.total:ev.total));if(ci<0)ci=at.length-1;
+    return {kind:'eval',title:'시도별 일치도 변화',who:ev.meta?whoOf(ev.meta):'',best:e?e.total:ev.total,pts:at.map((a,i)=>({v:a.total,label:`${i+1}회차`,cur:i===ci}))}}
+  const sp=e?e.sp:m.sport.id,mo=e?e.mo:m.id,vw=e?e.view:ev.view;
+  const list=ENTRIES.filter(x=>x.mode==='class'&&x.sp===sp&&x.mo===mo&&x.view===vw);
+  if(!list.length)return {kind:'class',title:'회차별 일치도 변화',pts:[{v:ev.total,label:'1회',cur:true}]};
+  return {kind:'class',title:'회차별 일치도 변화',pts:list.map((x,i)=>({v:x.total,label:`${i+1}회`,cur:x.id===ev.entryId}))}}
+function renderTrend(ev){const card=$('#trendCard');const d=ev&&trendData(ev);if(!d){card.hidden=true;return}card.hidden=false;
+  const p=d.pts,n=p.length,first=p[0].v,lastv=p[n-1].v,best=Math.max(...p.map(q=>q.v)),diff=lastv-first;
+  $('#trendTitle').textContent=d.title;
+  const m=ev.m,mv=`${m.sport.name} ${m.name}(${VIEWNAME[ev.view]})`;
+  $('#trendStats').innerHTML=n>1?`<span>${d.kind==='eval'?'시도':'분석'}<b>${n}회</b></span><span>최고<b>${best}%</b></span><span class="${diff>0?'up':diff<0?'down':''}">처음 대비<b>${diff>0?'+':''}${diff}%p</b></span>`:'';
+  $('#trendNote').innerHTML=n>1?(d.kind==='eval'?`${d.who} 학생이 같은 날 같은 동작을 다시 촬영한 기록이에요. 평가에는 최고 기록 <b>${d.best}%</b>가 반영돼요.`:`${mv} 분석 기록을 순서대로 이은 그래프예요. 동그라미 표시가 지금 보고 있는 기록이에요.`)
+    :(d.kind==='eval'?'같은 학생이 다시 촬영하면 시도별 일치도 변화가 여기에 쌓여요.':'같은 동작을 다시 분석하면 회차별 일치도 변화가 여기에 쌓여요.');
+  const cw=$('#trend').clientWidth||640;const w=document.body.classList.contains('pdfmode')?760:Math.round(Math.max(300,Math.min(760,cw)));$('#trend').innerHTML=trendSvg(p,{best:true,w,h:w<520?200:220})}
+addEventListener('resize',()=>{clearTimeout(renderTrend.t);renderTrend.t=setTimeout(()=>{if(last&&!$('#trendCard').hidden&&!document.body.classList.contains('pdfmode'))renderTrend(last)},150)});
 /* 저장된 기록 다시 보기 (그때의 채점 기준으로 다시 채점) */
 async function withCfg(snap,fn){const keep={match:cfg.match,part:cfg.part,bands:cfg.bands,level:cfg.level};Object.assign(cfg,snap);applyLevel();try{return await fn()}finally{Object.assign(cfg,keep);applyLevel()}}
 async function showEntry(id,opt){const e=ENTRIES.find(x=>x.id===id);if(!e||busy)return;$('#bestNote').hidden=true;const m=MOTION[e.sp+'.'+e.mo];if(!m)return;
@@ -2502,6 +2568,7 @@ async function captureSummary(h2c,list,cls){
   box.innerHTML=`<div class="pdfhead"><div><h2>${cls?'수업 동작분석 · 분석 기록 요약':'수행평가 동작분석 · 전체 학생 요약'}</h2><span class="note">급식대장의 동작분석 · ${esc(motions.join(', '))}</span></div><div class="who">${cls?`분석 ${rows.length}회`:esc(gcLabel)}<small>${esc(cls?dateTxt(cd):dateTxt(dates))}</small></div></div>
   <div class="stats sumstats"><div class="stat"><span>${cls?'분석 횟수':'평가 인원'}</span><b>${rows.length}${cls?'회':'명'}</b></div><div class="stat"><span>평균 일치도</span><b>${avg}%</b></div><div class="stat"><span>최고</span><b>${tot.length?Math.max(...tot):0}%</b></div><div class="stat"><span>최저</span><b>${tot.length?Math.min(...tot):0}%</b></div>
     <div class="stat gradestat"><span>등급 분포</span><b>${['A','B','C','D','E'].map(g=>`<i>${g} ${gd[g]||0}</i>`).join('')}</b></div></div>
+  ${cls&&rows.length>1?`<div class="sumtrend trend"><h3>회차별 일치도 변화</h3>${trendSvg(rows.map((r,i)=>({v:r.e.total,label:`${i+1}회`})),{w:1000,h:230,best:true})}</div>`:''}
   ${cls?`<table class="sumtable cls"><thead><tr><th class="c">회차</th><th>분석 일시</th><th>동작</th><th class="c">측정방향</th><th class="c">일치</th><th class="c">부분일치</th><th class="c">불일치</th><th class="c">일치도</th><th class="c">등급</th></tr></thead><tbody>
   ${rows.map((r,i)=>`<tr><td class="c num">${i+1}회차</td><td>${ymd(r.e.ts)} <small>${fmtTime(r.e.ts)}</small></td><td><b>${esc(r.m.sport.name+' '+r.m.name)}</b></td><td class="c">${VIEWNAME[r.e.view]}</td>
     <td class="c num g">${r.n.good}</td><td class="c num w">${r.n.warn}</td><td class="c num b">${r.n.bad}</td>
@@ -2510,7 +2577,7 @@ async function captureSummary(h2c,list,cls){
   </tbody></table>`:`<table class="sumtable"><thead><tr><th class="c">학년</th><th class="c">반</th><th class="c">번호</th><th>이름</th><th>종목</th><th>동작</th><th class="c">측정방향</th><th class="c">일치</th><th class="c">부분일치</th><th class="c">불일치</th><th class="c">시도</th><th>기록변화</th><th class="c">일치도</th><th class="c">등급</th></tr></thead><tbody>
   ${rows.map((r,i)=>{const mt=r.e.meta||{};return`<tr><td class="c num">${mt.g||'-'}</td><td class="c num">${mt.c||'-'}</td><td class="c num">${mt.g?mt.n:esc(mt.no||'-')}</td><td><b>${esc(mt.name||'')}</b></td><td>${esc(r.m.sport.name)}</td><td>${esc(r.m.name)}</td><td class="c">${VIEWNAME[r.e.view]}</td>
     <td class="c num g">${r.n.good}</td><td class="c num w">${r.n.warn}</td><td class="c num b">${r.n.bad}</td><td class="c num">${r.att.length}회</td>
-    <td class="rhist">${r.att.map((a,k)=>`<span class="${a.total===r.e.total&&k===r.att.findIndex(x=>x.total===r.e.total)?'best':''}">${k+1}회차 ${a.total}</span>`).join('<i>→</i>')}</td>
+    <td class="rhist">${r.att.length>1?sparkSvg(r.att.map(a=>a.total)):''}${r.att.map((a,k)=>`<span class="${a.total===r.e.total&&k===r.att.findIndex(x=>x.total===r.e.total)?'best':''}">${k+1}회차 ${a.total}</span>`).join('<i>→</i>')}</td>
     <td class="c"><div class="sbar"><b>${r.e.total}%</b><i><em class="${r.st}" style="width:${r.e.total}%"></em></i></div></td>
     <td class="c"><span class="pill gr ${r.st}">${r.grade}</span></td></tr>`}).join('')}
   </tbody></table>`}
@@ -2518,7 +2585,7 @@ async function captureSummary(h2c,list,cls){
   $('#work').prepend(box);await new Promise(r=>setTimeout(r,80));inlineSvgPaint(box);
   const S=1.6;const bg=getComputedStyle(document.body).backgroundColor;
   const cv=await h2c(box,{scale:S,backgroundColor:bg,useCORS:true,logging:false,windowWidth:1180});
-  const top=box.getBoundingClientRect().top;const cuts=[...box.querySelectorAll('tbody tr, .sumstats, .pdfhead')].map(el=>(el.getBoundingClientRect().bottom-top)*S);
+  const top=box.getBoundingClientRect().top;const cuts=[...box.querySelectorAll('tbody tr, .sumstats, .sumtrend, .pdfhead')].map(el=>(el.getBoundingClientRect().bottom-top)*S);
   box.remove();return paginate(cv,cuts,S,bg)}
 async function captureResults(h2c){const R=$('#results');const ta=$('#summary');const sp=$('#sumPrint');sp.textContent=ta.value;sp.hidden=false;ta.hidden=true;inlineSvgPaint(R);
   const S=1.6;const bg=getComputedStyle(document.body).backgroundColor;
