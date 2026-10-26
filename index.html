@@ -803,12 +803,6 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
       <div id="warns" style="display:flex;flex-direction:column;gap:8px"></div>
     </section>
 
-    <section class="card trendcard" id="trendCard" hidden>
-      <div class="sec-head"><h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg><span id="trendTitle">회차별 일치도 변화</span></h2><div class="trendstats" id="trendStats"></div></div>
-      <p class="note" id="trendNote"></p>
-      <div class="trend" id="trend"></div>
-    </section>
-
     <section class="card">
       <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4Z"/><path d="M8 9h8M8 12h5"/></svg>동작 피드백</h2>
       <div class="fixgrid">
@@ -843,6 +837,12 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
       <div class="sec-head"><h2><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>결과 요약</h2><button class="btn small" id="copyBtn" type="button">요약 복사</button></div>
       <textarea id="summary" readonly aria-label="결과 요약"></textarea><div class="sumprint" id="sumPrint" hidden></div>
       <p class="note">복사해서 과제 제출란이나 기록지에 붙여 넣으세요.<br>자동 분석 결과는 교사의 최종 판단을 돕는 참고 자료예요.</p>
+    </section>
+
+    <section class="card trendcard" id="trendCard" hidden>
+      <div class="sec-head"><h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg><span id="trendTitle">회차별 일치도 변화</span></h2><div class="trendstats" id="trendStats"></div></div>
+      <p class="note" id="trendNote"></p>
+      <div class="trend" id="trend"></div>
     </section>
   </div>
 
@@ -2590,8 +2590,8 @@ async function captureSummary(h2c,list,cls){
 async function captureResults(h2c){const R=$('#results');const ta=$('#summary');const sp=$('#sumPrint');sp.textContent=ta.value;sp.hidden=false;ta.hidden=true;inlineSvgPaint(R);
   const S=1.6;const bg=getComputedStyle(document.body).backgroundColor;
   const cv=await h2c(R,{scale:S,backgroundColor:bg,useCORS:true,logging:false,windowWidth:1180,ignoreElements:el=>el.classList&&(el.classList.contains('replay')||el.classList.contains('cmpbtn')||el.classList.contains('resbtns')||el.id==='fbBar'||el.id==='copyBtn'||el.id==='noVid')});
-  ta.hidden=false;sp.hidden=true;
   const top=R.getBoundingClientRect().top;const cuts=[...R.children].filter(c=>!c.hidden&&c.offsetHeight).map(c=>(c.getBoundingClientRect().bottom-top)*S);
+  ta.hidden=false;sp.hidden=true;
   return paginate(cv,cuts,S,bg)}
 async function savePdf(blob,name){let dl=null;try{dl=window.claude&&await window.claude.use('downloads')}catch(e){}
   if(dl){try{await dl.save({filename:name,data:blob});return 'saved'}catch(e){if(e&&e.code==='declined')return 'declined';throw e}}
