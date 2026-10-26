@@ -696,6 +696,11 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
 .bkbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .bkbtns .btn{min-height:40px;font-size:13.5px;padding:0 8px;gap:6px;white-space:nowrap;justify-content:center}
 .bkbtns .btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.bkbtns .btn{font-weight:800;border-width:1.5px}
+.bkbtns .btn:first-child{background:var(--accent-soft);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+.bkbtns label.btn{background:var(--warn-soft);color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
+.bkbtns .btn:first-child:hover{background:color-mix(in srgb,var(--accent) 18%,var(--surface))}
+.bkbtns label.btn:hover{background:color-mix(in srgb,var(--warn) 18%,var(--surface))}
 .bkbtns .btn[disabled]{opacity:.45;pointer-events:none}
 @media (min-width:1024px){.side .bkbtns .btn{min-height:36px;font-size:13px}}
 @media (max-width:380px){.bkbtns{gap:6px}.bkbtns .btn{font-size:12.5px;padding:0 6px;gap:4px}}
