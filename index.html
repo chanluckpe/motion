@@ -704,6 +704,50 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
 .bkbtns .btn[disabled]{opacity:.45;pointer-events:none}
 @media (min-width:1024px){.side .bkbtns .btn{min-height:36px;font-size:13px}}
 @media (max-width:380px){.bkbtns{gap:6px}.bkbtns .btn{font-size:12.5px;padding:0 6px;gap:4px}}
+
+/* ===== 사용 방법 (새 구성) ===== */
+.howto li::before{content:none!important;display:none!important}.howto li b{display:inline;font-size:inherit}.howto li>div{min-width:0}
+.helpbox.howto{width:min(1120px,calc(100% - 32px));padding:0;gap:0;background:var(--bg)}
+.howto .hhead{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--line)}
+.howto .hhead h2{margin:0;font-size:21px;letter-spacing:-.03em}
+.howto .hhead p{margin:2px 0 0;font-size:12.5px;color:var(--muted)}
+.howto .hk{display:inline-block;padding:0 7px;margin:1px 1px;border-radius:7px;background:var(--accent-soft);color:var(--accent);font-weight:800;font-size:.93em;line-height:1.65;white-space:nowrap}
+.howto .hsteps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:16px 20px 6px}
+.hstep{--c:var(--accent);--cs:var(--accent-soft);background:var(--surface);border:2px solid color-mix(in srgb,var(--c) 55%,var(--line));border-radius:18px;padding:14px 14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.hstep.s2{--c:#2F6FD6;--cs:color-mix(in srgb,#2F6FD6 13%,var(--surface))}
+.hstep.s3{--c:#D9822B;--cs:color-mix(in srgb,#D9822B 14%,var(--surface))}
+.hstep.s4{--c:var(--maroon);--cs:var(--maroon-soft)}
+.hstep header{display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1.5px dashed var(--line)}
+.hsimg{width:64px;height:auto;max-height:52px;object-fit:contain;flex:none}
+.hstep em{font-style:normal;font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--c)}
+.hstep h3{margin:0;font-size:21px;line-height:1.15;letter-spacing:-.03em}
+.hstep header p{margin:2px 0 0;font-size:12.5px;color:var(--muted);line-height:1.3}
+.hstep ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.hstep li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px;align-items:start;font-size:14px;line-height:1.5}
+.hstep li .hn{width:24px;height:24px;border-radius:50%;background:var(--c);color:#fff;font-family:var(--f-num);font-weight:800;font-size:12.5px;display:grid;place-items:center;margin-top:1px}
+.hstep li small{display:block;font-size:12px;color:var(--muted);line-height:1.4;margin-top:1px}
+.hstep .hk{background:var(--cs);color:var(--c)}
+.howto .htiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:10px 20px 18px}
+.htile{display:grid;grid-template-columns:38px minmax(0,1fr);gap:10px;align-items:start;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:12px 14px}
+.htile .hico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.htile .hico svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.htile.t2 .hico,.htile.t3 .hico{background:var(--maroon-soft);color:var(--maroon)}
+.htile.t4 .hico{background:color-mix(in srgb,#2F6FD6 13%,var(--surface));color:#2F6FD6}
+.htile.t5 .hico{background:var(--warn-soft);color:var(--warn)}
+.htile.t6 .hico{background:color-mix(in srgb,#D9822B 14%,var(--surface));color:#D9822B}
+.htile>div>b{display:block;font-size:15px;letter-spacing:-.02em}.htile p b{color:var(--ink)}
+.htile p{margin:2px 0 0;font-size:13px;line-height:1.5;color:var(--muted)}
+.howto .hfoot{position:sticky;bottom:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;background:var(--surface);border-top:1px solid var(--line)}
+.howto .hfoot span{font-size:13px;color:var(--muted);min-width:0}
+.howto .hfoot span b{color:var(--ink)}
+.howto .hfoot .btn{min-height:46px;padding:0 26px;font-size:16px;flex:none}
+@media (max-width:1023px){.howto .hsteps{grid-template-columns:repeat(2,minmax(0,1fr))}.howto .htiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.helpbox.howto{width:calc(100% - 20px);max-height:calc(100% - 24px)}
+  .howto .hhead{padding:12px 14px}.howto .hhead h2{font-size:19px}.howto .hhead p{font-size:11.5px}
+  .howto .hsteps{grid-template-columns:1fr;gap:10px;padding:12px 12px 4px}.howto .htiles{grid-template-columns:1fr;gap:8px;padding:8px 12px 14px}
+  .hstep{padding:12px 12px 14px;gap:8px}.hsimg{width:54px;max-height:44px}.hstep h3{font-size:19px}.hstep li{font-size:13.5px}
+  .htile{padding:10px 12px;grid-template-columns:34px minmax(0,1fr)}.htile .hico{width:34px;height:34px}.htile p{font-size:12.5px}
+  .howto .hfoot{padding:10px 14px}.howto .hfoot span{font-size:12px}.howto .hfoot .btn{min-height:42px;padding:0 18px;font-size:15px}}
 </style>
 
 </head>
@@ -909,19 +953,11 @@ body.pdfmode #bestNote,body.pdfmode .replay,body.pdfmode #fbBar,body.pdfmode .re
   </div>
   <p class="note">엑셀 양식: A열 학년, B열 반, C열 번호, D열 이름 (첫 줄은 제목)</p>
 </div>
-<div class="helpbox" id="helpBox" role="dialog" aria-modal="true" aria-labelledby="helpTitle" hidden>
-  <div class="sec-head"><h2 id="helpTitle" style="font-size:20px">사용 방법</h2><button class="btn small" type="button" id="closeHelp">닫기</button></div>
-  <ol>
-    <li><div><b>종목·동작 고르기</b><span>왼쪽에서 종목과 동작을 골라요.<br>오른쪽에 기준 자세 그림과 채점 항목이 나와요.</span></div></li>
-    <li class="sub"><div><b>채점 기준(수행평가) 설정하기</b><span>오른쪽 위 '채점 기준'에서 일치·부분 일치 기준 점수, 등급 구간, 기준 난이도(학생용·선수용)를 정해요.<br>설정은 이 기기에 저장되고, 맨 아래에서 평가 기준표(PDF)도 내려받을 수 있어요.<br>*채점 기준을 설정하지 않아도 동작분석을 사용할 수 있어요.</span></div></li>
-    <li><div><b>촬영 방향 정하기</b><span>측면 또는 정면을 골라요.<br>추천 방향으로 찍으면 더 정확해요.</span></div></li>
-    <li><div><b>촬영하거나 영상 올리기</b><span>'촬영하기'는 뒤 카메라, '셀프 촬영'은 앞 카메라로 찍어요.<br>찍어 둔 영상은 '영상 불러오기'로 올려요.<br>전신이 나오게, 한 사람만, 3~8초로 찍어요.<br>찍은 뒤에는 분석할 동작 구간만 남기도록 자르고, 필요 없으면 '바로 분석하기(건너뛰기)'를 눌러요.</span></div></li>
-    <li><div><b>결과 확인하기</b><span>기준 자세와의 일치율과 등급, 수정할 동작과 잘한 동작을 확인해요.</span></div></li>
-    <li><div><b>영상으로 비교하기</b><span>'내 동작 다시 보기'의 '피드백' 탭과 항목별 '영상에서 확인하기'로 기준값(초록)과 내 값(노랑)을 비교해요.</span></div></li>
-    <li><div><b>다른 방향·결과 저장</b><span>'다른 방향으로 분석하기'로 같은 영상을 다시 채점할 수 있어요.<br>'요약 복사'로 결과를 제출란에 붙여 넣어요.</span></div></li>
-    <li><div><b>수업 모드 · 수행평가 모드</b><span>오른쪽 위 버튼으로 바꿔요.<br>수업 모드: 분석한 영상이 왼쪽 '분석 기록'에 순서대로 쌓이고, 누르면 결과를 다시 볼 수 있어요.<br>수행평가 모드: 날짜·학번·이름을 입력하고 촬영하면 '평가 기록'에 쌓이고, 전체 결과를 PDF 한 파일로 내려받을 수 있어요.<br>'학생명단관리'에 명단을 넣어 두면 학생을 골라 촬영하고, '다음 학생 촬영하기'로 차례대로 평가할 수 있어요. 같은 학생을 다시 찍으면 더 높은 점수만 남아요.<br>기록은 이 기기에만 저장돼요.</span></div></li>
-  </ol>
-  <p class="note">영상은 이 기기에서만 분석되고 저장·전송되지 않아요.</p>
+<div class="helpbox howto" id="helpBox" role="dialog" aria-modal="true" aria-labelledby="helpTitle" hidden>
+  <div class="hhead"><div><h2 id="helpTitle">사용 방법</h2><p>4단계로 끝나는 동작분석 · 버튼 이름은 <span class="hk">이렇게</span> 표시했어요</p></div><button class="btn small" type="button" id="closeHelp">닫기</button></div>
+  <div class="hsteps"><article class="hstep s1"><header><img class="hsimg" data-s="1" alt=""><div><em>STEP 1</em><h3>준비</h3><p>무엇을 분석할지 정하기</p></div></header><ol><li><span class="hn">1</span><div><span class="hk">종목</span> <span class="hk">동작</span> 고르기<small>오른쪽에 기준 자세 그림과 채점 항목이 나와요</small></div></li><li><span class="hn">2</span><div><span class="hk">촬영 방향</span> 측면·정면 고르기<small>추천 방향으로 찍으면 더 정확해요</small></div></li><li><span class="hn">3</span><div><span class="hk">채점 기준</span>에서 기준 점수·등급 정하기<small>선택 사항 · 평가 기준표(PDF)도 받을 수 있어요</small></div></li></ol></article><article class="hstep s2"><header><img class="hsimg" data-s="2" alt=""><div><em>STEP 2</em><h3>촬영</h3><p>전신이 나오게 찍기</p></div></header><ol><li><span class="hn">1</span><div><span class="hk">촬영하기</span> 뒤 카메라 · <span class="hk">셀프 촬영</span> 앞 카메라</div></li><li><span class="hn">2</span><div>찍어 둔 영상은 <span class="hk">영상 불러오기</span></div></li><li><span class="hn">3</span><div><b>전신</b>·<b>한 사람</b>·<b>3~8초</b>로 찍기<small>배경이 단순하고 밝을수록 좋아요</small></div></li><li><span class="hn">4</span><div>동작 구간만 남기고 <span class="hk">자르고 분석하기</span><small>자를 필요 없으면 '바로 분석하기'</small></div></li></ol></article><article class="hstep s3"><header><img class="hsimg" data-s="3" alt=""><div><em>STEP 3</em><h3>결과</h3><p>일치도와 고칠 점 보기</p></div></header><ol><li><span class="hn">1</span><div><b>일치도·등급</b>과 수정할 동작·잘한 동작 확인</div></li><li><span class="hn">2</span><div><span class="hk">피드백</span> <span class="hk">영상에서 확인하기</span>로 비교<small>기준값은 초록, 내 값은 노랑으로 보여요</small></div></li><li><span class="hn">3</span><div><span class="hk">정면으로 분석하기</span>로 다른 방향 채점<small>같은 영상을 다시 촬영하지 않아도 돼요</small></div></li><li><span class="hn">4</span><div><b>회차별 일치도 변화</b> 그래프로 성장 확인</div></li></ol></article><article class="hstep s4"><header><img class="hsimg" data-s="4" alt=""><div><em>STEP 4</em><h3>기록</h3><p>저장하고 내보내기</p></div></header><ol><li><span class="hn">1</span><div><span class="hk">분석 기록</span> <span class="hk">평가 기록</span>에서 다시 보기</div></li><li><span class="hn">2</span><div><span class="hk">전체 PDF 다운로드</span>로 한 파일에 정리<small>첫 장은 요약표, 다음 장부터 회차·학생별 결과</small></div></li><li><span class="hn">3</span><div>가끔 <span class="hk">기록 다운받기</span>로 백업<small>되살릴 때는 기록 불러오기</small></div></li><li><span class="hn">4</span><div><span class="hk">요약 복사</span>로 제출란에 붙여 넣기</div></li></ol></article></div>
+  <div class="htiles"><div class="htile t1"><span class="hico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h13l-3-3M20 17H7l3 3"/></svg></span><div><b>수업 모드 · 수행평가 모드</b><p>오른쪽 위 <span class="hk">평가 모드</span> 버튼으로 바꿔요. 수업 모드는 분석이 회차별로 쌓이고, 수행평가 모드는 학생별로 쌓여요.</p></div></div><div class="htile t2"><span class="hico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 8h5M16 12h5M17 16h4"/></svg></span><div><b>학생명단관리</b><p>학년·반은 한 번만, 이름 쓰고 <b>엔터</b>면 다음 번호로. <span class="hk">엑셀 양식 다운받기</span>로 한 번에 넣어도 돼요.</p></div></div><div class="htile t3"><span class="hico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12M13 7l5 5-5 5"/><path d="M5 5v14"/></svg></span><div><b>다음 학생 · 최고 기록</b><p>평가 후 <span class="hk">다음 학생 촬영하기</span>로 명단 순서대로 이어가요. 다시 찍으면 <b>더 높은 점수만</b> 평가에 반영돼요.</p></div></div><div class="htile t4"><span class="hico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/></svg></span><div><b>촬영 요령</b><p>왼쪽 '촬영 요령(펼치기)'에 동작별 카메라 위치와 거리가 나와요. 카메라는 고정하고 가로로 찍어요.</p></div></div><div class="htile t5"><span class="hico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><div><b>개인정보</b><p>영상은 이 기기 안에서만 분석되고 어디에도 전송·저장되지 않아요.</p></div></div><div class="htile t6"><span class="hico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5Z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></svg></span><div><b>기록 보관</b><p>기록은 이 기기 브라우저에만 남아요. 새로고침·앱 재실행 때 지워질 수 있으니 <span class="hk">기록 다운받기</span>로 백업해 두세요.</p></div></div></div>
+  <div class="hfoot"><span id="helpNow"></span><button class="btn primary" type="button" id="helpStart">시작하기</button></div>
 </div>
 <div class="helpbox fbbox" id="fbBox" role="dialog" aria-modal="true" aria-labelledby="fbTitle" hidden>
   <div class="fbhead"><div class="fbtitle"><h2 id="fbTitle">급식대장에게 의견전송</h2><p class="lead" id="fbLead">새로운 아이디어, 기능추가, 오류, 질문, 사용법, 평가문의 등 의견을 꼭 보내주세요!</p></div><button class="btn small" type="button" id="fbClose">닫기</button></div>
@@ -2383,7 +2419,11 @@ function popModal(){if(!MSTACK.length)return;MSTACK.pop();try{popIgnore++;histor
 addEventListener('popstate',()=>{if(popIgnore>0){popIgnore--;return}const f=MSTACK.pop();if(f)f(true)});
 function openDrawer(){pushModal(closeDrawer);$('#scrim').hidden=false;$('#drawer').hidden=false;$('#thMatch').focus()}
 function closeDrawer(fromBack){if(fromBack!==true)popModal();$('#scrim').hidden=true;$('#drawer').hidden=true;$('#openSettings').focus()}
-function openHelp(){pushModal(closeHelp);$('#scrim').hidden=false;$('#helpBox').hidden=false;$('#closeHelp').focus()}
+function openHelp(){pushModal(closeHelp);
+  document.querySelectorAll('#helpBox .hsimg').forEach(im=>{if(!im.src){const src=document.querySelector(`.step[data-s="${im.dataset.s}"] .stimg`);if(src)im.src=src.src}});
+  try{const m=MOTION[sel.sport+'.'+sel.motion];$('#helpNow').innerHTML=`지금 설정 · <b>${m?m.sport.name+' '+m.name:''}</b> · ${VIEWNAME[sel.view]||''} 촬영 · <b>${MODE==='eval'?'수행평가 모드':'수업 모드'}</b>`}catch(e){}
+  $('#scrim').hidden=false;$('#helpBox').hidden=false;$('#helpBox').scrollTop=0;$('#closeHelp').focus()}
+$('#helpStart').onclick=()=>closeHelp();
 function closeHelp(fromBack){if(fromBack!==true)popModal();$('#helpBox').hidden=true;$('#scrim').hidden=true;$('#helpBtn').focus()}
 $('#helpBtn').onclick=openHelp;$('#closeHelp').onclick=closeHelp;
 $('#openSettings').onclick=openDrawer;$('#closeSettings').onclick=closeDrawer;$('#scrim').onclick=()=>{if(!$('#fbBox').hidden)closeFb();else if(!$('#helpBox').hidden)closeHelp();else closeDrawer()};
