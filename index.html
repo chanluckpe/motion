@@ -2072,13 +2072,14 @@ let model=null,modelKind=null;
 async function loadModel(){if(typeof tf==='undefined')throw new Error('분석 엔진을 불러오지 못했어요. 인터넷 연결을 확인하고 페이지를 새로고침해 주세요.');
   const kind=cfg.fast?'lightning':'thunder';if(model&&modelKind===kind)return model;
   setProg('자세 인식 모델 불러오는 중… (처음 한 번만, '+(kind==='thunder'?'약 12MB':'약 5MB')+')',0.02);
-  await tf.ready();try{if(tf.getBackend()!=='webgl')await tf.setBackend('webgl')}catch(e){}
+  await tf.ready();const want=store.get('pe.backend','webgl')==='cpu'?'cpu':'webgl';try{if(tf.getBackend()!==want)await tf.setBackend(want)}catch(e){}
   model=await tf.loadGraphModel('model/movenet-'+kind+'.json');modelKind=kind;model.inSize=kind==='thunder'?256:192;
   tf.tidy(()=>model.execute(tf.zeros([1,model.inSize,model.inSize,3],'int32')));return model}
 const inCan=document.createElement('canvas');const inCtx=inCan.getContext('2d',{willReadFrequently:true});
-async function detect(src,W,H,crop){const n=model.inSize;inCan.width=n;inCan.height=n;inCtx.fillStyle='#000';inCtx.fillRect(0,0,n,n);
+let DET_FILTER='none';
+async function detect(src,W,H,crop){const n=model.inSize;inCan.width=n;inCan.height=n;inCtx.filter='none';inCtx.fillStyle='#000';inCtx.fillRect(0,0,n,n);
   const sx=Math.max(0,crop.x),sy=Math.max(0,crop.y),ex=Math.min(W,crop.x+crop.size),ey=Math.min(H,crop.y+crop.size);
-  const sc=n/crop.size;if(ex>sx&&ey>sy)inCtx.drawImage(src,sx,sy,ex-sx,ey-sy,(sx-crop.x)*sc,(sy-crop.y)*sc,(ex-sx)*sc,(ey-sy)*sc);
+  const sc=n/crop.size;try{inCtx.filter=DET_FILTER}catch(e){}if(ex>sx&&ey>sy)inCtx.drawImage(src,sx,sy,ex-sx,ey-sy,(sx-crop.x)*sc,(sy-crop.y)*sc,(ex-sx)*sc,(ey-sy)*sc);inCtx.filter='none';
   const out=tf.tidy(()=>model.execute(tf.browser.fromPixels(inCan).expandDims(0).toInt()));const d=await out.data();out.dispose();
   const k=[];for(let i=0;i<17;i++)k.push({x:crop.x+d[i*3+1]*crop.size,y:crop.y+d[i*3]*crop.size,s:d[i*3+2]});return k}
 function fullCrop(W,H){const s=Math.max(W,H);return{x:(W-s)/2,y:(H-s)/2,size:s}}
@@ -2087,22 +2088,58 @@ function cropFrom(k,W,H){const g=k.filter(p=>p.s>=0.3);if(g.length<6)return null
   const cx=(x0+x1)/2,cy=(y0+y1)/2,size=Math.max(x1-x0,y1-y0)*1.6+0.08*Math.max(W,H);
   return{x:cx-size/2,y:cy-size/2,size:Math.min(size,Math.max(W,H)*1.2)}}
 const meanS=k=>k.reduce((a,p)=>a+p.s,0)/k.length;
+/* 사람 인식 품질: 몸통 관절 + 잘 보이는 관절 수 */
+const torsoOk=k=>[5,6,11,12].filter(i=>k[i].s>=MINC).length>=3;
+const kScore=k=>(torsoOk(k)?10:0)+k.filter(p=>p.s>=0.3).length+meanS(k);
+const goodK=k=>torsoOk(k)&&k.filter(p=>p.s>=0.3).length>=7;
+/* 사람이 작게 찍혔거나 한쪽에 있을 때: 화면을 나눠서 찾기 */
+function searchCrops(W,H){const L=Math.max(W,H),Sm=Math.min(W,H);const out=[fullCrop(W,H)];
+  for(const side of [Sm,Sm*0.6,Sm*0.38]){if(side<120)continue;const st=side/2;
+    for(let y=0;y<=H-side+1;y+=st)for(let x=0;x<=W-side+1;x+=st)out.push({x,y,size:side});
+    if((W-side)%st>1)for(let y=0;y<=H-side+1;y+=st)out.push({x:W-side,y,size:side});
+    if((H-side)%st>1)for(let x=0;x<=W-side+1;x+=st)out.push({x,y:H-side,size:side})}
+  return out.slice(0,24)}
+async function findPerson(v,W,H){let best=null,bs=-1;for(const c of searchCrops(W,H)){const k=await detect(v,W,H,c);const sc=kScore(k);if(sc>bs){bs=sc;best=k}}return best}
+/* 프레임 밝기·빈 화면 확인 */
+const chkCan=document.createElement('canvas');chkCan.width=32;chkCan.height=32;const chkCtx=chkCan.getContext('2d',{willReadFrequently:true});
+function frameStat(v){try{chkCtx.drawImage(v,0,0,32,32);const d=chkCtx.getImageData(0,0,32,32).data;let s=0,s2=0;const n=d.length/4;for(let i=0;i<d.length;i+=4){const y=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];s+=y;s2+=y*y}const m=s/n;return{mean:m,sd:Math.sqrt(Math.max(0,s2/n-m*m))}}catch(e){return{mean:128,sd:50}}}
+const nextFrame=v=>new Promise(r=>{let done=false;const f=()=>{if(!done){done=true;r()}};if(v.requestVideoFrameCallback)v.requestVideoFrameCallback(f);setTimeout(f,120)});
 function loadVideo(file){return new Promise((res,rej)=>{const v=document.createElement('video');v.muted=true;v.playsInline=true;v.preload='auto';
-  v.onloadeddata=()=>res(v);v.onerror=()=>rej(new Error('이 영상 형식을 열 수 없어요. 휴대폰 기본 카메라로 찍은 MP4 또는 MOV 파일을 올려 주세요.'));
+  v.onloadeddata=async()=>{try{const pr=v.play();if(pr&&pr.then)await Promise.race([pr,new Promise(r=>setTimeout(r,800))]);v.pause()}catch(e){}res(v)};v.onerror=()=>rej(new Error('이 영상 형식을 열 수 없어요. 휴대폰 기본 카메라로 찍은 MP4 또는 MOV 파일을 올려 주세요.'));
   v.src=URL.createObjectURL(file);v.load()})}
 function seek(v,t){return new Promise(res=>{let done=false;const fin=()=>{if(!done){done=true;v.removeEventListener('seeked',fin);res()}};v.addEventListener('seeked',fin);v.currentTime=t;setTimeout(fin,1500)})}
 async function analyzeVideo(file,label,range){
   const v=await loadVideo(file);await loadModel();
   const W=v.videoWidth,H=v.videoHeight;if(!W||!H)throw new Error('영상 크기를 읽지 못했어요. 다른 영상으로 시도해 주세요.');
   const t0=range?range.t0:0;const dur=range?Math.min(range.t1-range.t0,15):Math.min(v.duration||0,15);if(!(dur>0.5))throw new Error('영상이 너무 짧아요. 동작 전체가 담긴 3~10초 영상을 올려 주세요.');
-  const fps=cfg.fast?12:20;const n=Math.floor(dur*fps);const F=[];let prev=null;
+  const fps=cfg.fast?12:20;const n=Math.floor(dur*fps);const F=[];let prev=null,lost=0,blank=0,good=0,bright=[],gpuChecked=false,switchedCpu=false,searches=0;
+  DET_FILTER='none';
   for(let i=0;i<n;i++){await seek(v,t0+i/fps);
+    let st=frameStat(v);if(st.sd<2){await nextFrame(v);st=frameStat(v);if(st.sd<2){await seek(v,t0+i/fps+0.001);await nextFrame(v);st=frameStat(v)}}
+    if(st.sd<2)blank++;bright.push(st.mean);
+    if(i===0)DET_FILTER=st.mean<70?'brightness(1.6) contrast(1.15)':st.mean<100?'brightness(1.3) contrast(1.08)':st.mean>200?'brightness(0.85) contrast(1.1)':'none';
     const crop=prev?cropFrom(prev,W,H):null;let k=await detect(v,W,H,crop||fullCrop(W,H));
-    if(crop&&meanS(k)<0.3){const k2=await detect(v,W,H,fullCrop(W,H));if(meanS(k2)>meanS(k))k=k2}
-    if(meanS(k)>=0.25)prev=k;F.push({t:t0+i/fps,k});
+    if(crop&&!goodK(k)){const k2=await detect(v,W,H,fullCrop(W,H));if(kScore(k2)>kScore(k))k=k2}
+    if(!good&&!goodK(k)&&!gpuChecked&&st.sd>=2&&tf.getBackend()==='webgl'){gpuChecked=true;
+      /* 기기 그래픽(WebGL) 계산이 부정확한 태블릿: CPU 계산과 비교해 보고 더 잘 되면 CPU로 전환 */
+      setProg(`${label} 기기 호환성 확인 중…`,0.1+0.85*(i+1)/n);
+      const cs=[fullCrop(W,H),...searchCrops(W,H).slice(1,5)];let gBest=-1;for(const c of cs){const kg=await detect(v,W,H,c);gBest=Math.max(gBest,kScore(kg))}
+      const gm=model;if(gBest<17)try{await tf.setBackend('cpu');await tf.ready();model=await tf.loadGraphModel('model/movenet-'+modelKind+'.json');model.inSize=gm.inSize;let cBest=-1,kc=null;for(const c of cs){const kk=await detect(v,W,H,c);const sc=kScore(kk);if(sc>cBest){cBest=sc;kc=kk}}
+        if(kc&&goodK(kc)&&cBest>gBest+3){store.set('pe.backend','cpu');switchedCpu=true;k=kc;try{gm.dispose()}catch(_){}}else{try{model.dispose()}catch(_){}model=gm;await tf.setBackend('webgl');await tf.ready()}}
+      catch(e){console.error(e);model=gm;try{await tf.setBackend('webgl')}catch(_){}}}
+    if(!goodK(k)&&(prev===null||lost%5===0)&&searches<6&&(good>0||lost%10===0)){searches++;setProg(`${label} 사람 찾는 중… ${i+1}/${n} 프레임`,0.1+0.85*(i+1)/n);const k3=await findPerson(v,W,H);if(k3&&kScore(k3)>kScore(k))k=k3}
+    if(goodK(k)){prev=k;lost=0;good++}else{lost++;if(lost>8)prev=null}
+    F.push({t:t0+i/fps,k});
     setProg(`${label} 분석 중… ${i+1}/${n} 프레임`,0.1+0.85*(i+1)/n);
     if(i%6===0)await new Promise(r=>setTimeout(r,0))}
-  return{v,W,H,fps,t0,F:smooth(F),truncated:!range&&(v.duration||0)>15}}
+  let f32=null;try{f32=tf.env().getBool('WEBGL_RENDER_FLOAT32_CAPABLE')}catch(e){}
+  const diag={n,good,blank,bright:Math.round(bright.reduce((a,b)=>a+b,0)/Math.max(1,bright.length)),backend:tf.getBackend(),f32,switchedCpu,W,H};
+  const dtag=` (진단: 인식 ${good}/${n} · 빈 화면 ${blank} · 밝기 ${diag.bright} · ${diag.backend}${f32===false?' · f16':''} · ${W}×${H})`;
+  if(good<Math.max(3,n*0.15)){
+    if(blank>n*0.5)throw new Error('이 기기에서 영상 화면을 읽지 못했어요. 브라우저(크롬·사파리)를 최신으로 업데이트하거나, 카메라 설정에서 \'고효율 동영상(HEVC)\'을 끄고 다시 찍어 주세요.'+dtag);
+    if(diag.bright<60)throw new Error('영상이 너무 어두워서 사람을 찾지 못했어요. 밝은 곳에서, 빛을 등지지 말고 다시 찍어 주세요.'+dtag);
+    throw new Error('영상에서 사람을 거의 찾지 못했어요. 머리부터 발끝까지 화면에 다 나오게, 화면 높이의 절반 이상을 차지하도록 가까이에서 한 사람만 찍어 주세요.'+dtag)}
+  return{v,W,H,fps,t0,F:smooth(F),diag,truncated:!range&&(v.duration||0)>15}}
 function smooth(F){return F.map((f,i)=>({t:f.t,k:f.k.map((p,j)=>{let sx=0,sy=0,sw=0;
   for(let d=-1;d<=1;d++){const q=F[i+d];if(!q)continue;const pp=q.k[j];if(pp.s<MINC)continue;const w=(d===0?2:1)*pp.s;sx+=pp.x*w;sy+=pp.y*w;sw+=w}
   return sw?{x:sx/sw,y:sy/sw,s:p.s}:{...p}})}))}
